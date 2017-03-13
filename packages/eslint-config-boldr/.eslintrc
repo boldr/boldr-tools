@@ -1,0 +1,9 @@
+{
+  "root": true,
+  "extends": "./index.js",
+  "parserOptions": "script",
+  "rules": {
+    "quote-props": 'off',
+    "comma-dangle": 0
+    }
+}

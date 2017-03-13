@@ -1,0 +1,54 @@
+{
+  "name": "boldr-cli",
+  "version": "0.1.2",
+  "description": "Commandline interface for Boldr",
+  "main": "dist/boldr-cli.js",
+  "license": "MIT",
+  "author": "Steven Truesdell <steven@strues.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boldr/getBoldr.git"
+  },
+  "bugs": "https://github.com/boldr/getBoldr/issues",
+  "homepage": "https://github.com/boldr/getBoldr#readme",
+  "jsnext:main": "es/boldr-cli.js",
+  "files": [
+    "dist",
+    "es",
+    "src"
+  ],
+  "bin": {
+    "boldr-cli": "dist/boldr-cli.js"
+  },
+  "scripts": {
+    "build": "npm run build:commonjs && npm run build:es",
+    "build:commonjs": "BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
+    "build:es": "BABEL_ENV=es babel src --out-dir es",
+    "clean": "rimraf dist && rimraf es",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "boldr-utils": "0.1.10",
+    "commander": "2.9.0",
+    "inquirer": "3.0.6",
+    "lodash.uniq": "4.5.0",
+    "semver": "5.3.0",
+    "shelljs": "0.7.7",
+    "simple-git": "1.67.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.2.1",
+    "rimraf": "^2.6.1"
+  },
+  "keywords": [
+    "boldr",
+    "cli",
+    "boldr-cli"
+  ]
+}

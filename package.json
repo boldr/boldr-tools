@@ -1,0 +1,52 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "description": "<p align=\"center\"><img src=\"/docs/assets/boldr-logo-sm.svg\"></p>",
+  "main": "index.js",
+  "author": "Steven Truesdell <steven@strues.io>",
+  "license": "MIT",
+  "repository": "git+https://github.com/strues/getBoldr",
+  "bugs": "https://github.com/strues/getBoldr/issues",
+  "homepage": "https://github.com/strues/getBoldr#readme",
+  "directories": {
+    "doc": "docs"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/packages/boldr-base-*",
+      "<rootDir>/packages/boldr-dx/cli/actions/test.js",
+      "<rootDir>/e2e_tests"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/packages/*/node_modules",
+      "<rootDir>/packages/boldr-base-*",
+      "<rootDir>/coverage",
+      "<rootDir>/packages/boldr-dx/src/utils/jest"
+    ]
+  },
+  "scripts": {
+    "bootstrap": "node_modules/.bin/lerna bootstrap",
+    "test": "jest && cd packages/boldr-base-project && node_modules/boldr-dx/dist/cli/index.js test",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "e2e:clean": "yarn cache clean && yarn run e2e",
+    "e2e": "jest --config ./e2e_tests/jest.config.json --verbose --no-cache",
+    "lint": "packages/boldr-dx/node_modules/.bin/eslint ./"
+  },
+  "dependencies": {
+    "babel-eslint": "^7.1.1",
+    "jest": "19.0.2",
+    "ps-tree": "1.1.0",
+    "semver": "5.3.0",
+    "shelljs": "0.7.7"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-boldr": "^0.8.1",
+    "lerna": "2.0.0-beta.38"
+  }
+}

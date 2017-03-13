@@ -1,0 +1,112 @@
+{
+  "name": "boldr-dx",
+  "version": "0.1.1",
+  "description": "Webpack and build toolkit for Boldr development",
+  "license": "MIT",
+  "author": "Steven Truesdell <steven@strues.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boldr/getBoldr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/boldr/getBoldr/issues"
+  },
+  "homepage": "https://github.com/boldr/getBoldr#readme",
+  "bin": {
+    "boldr-dx": "./dist/boldr-dx.js"
+  },
+  "main": "dist/boldr-dx.js",
+  "jsnext:main": "es/boldr-dx.js",
+  "files": [
+    "dist",
+    "es",
+    "src"
+  ],
+  "engines": {
+    "node": ">=6.1.0"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:commonjs && npm run build:es",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "clean": "rimraf dist && rimraf es",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "assets-webpack-plugin": "3.5.1",
+    "babel-cli": "6.23.0",
+    "babel-core": "6.23.1",
+    "babel-eslint": "7.1.1",
+    "babel-jest": "19.0.0",
+    "babel-loader": "6.4.0",
+    "babel-preset-boldr": "^0.7.8",
+    "babili-webpack-plugin": "^0.0.11",
+    "bluebird": "^3.5.0",
+    "boldr-utils": "^0.1.10",
+    "case-sensitive-paths-webpack-plugin": "^1.1.4",
+    "chalk": "^1.1.3",
+    "chokidar": "1.6.1",
+    "chunk-manifest-webpack-plugin": "^1.0.0",
+    "circular-dependency-plugin": "^2.0.0",
+    "commander": "2.9.0",
+    "cross-env": "^3.2.3",
+    "css-loader": "0.27.1",
+    "detect-port": "1.1.0",
+    "eslint": "3.17.1",
+    "eslint-config-boldr": "0.8.1",
+    "eslint-loader": "^1.6.3",
+    "express": "4.15.2",
+    "extract-text-webpack-plugin": "2.1.0",
+    "file-loader": "0.10.1",
+    "filesize": "3.5.6",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "glob": "7.1.1",
+    "gzip-size": "3.0.0",
+    "happypack": "^3.0.3",
+    "identity-obj-proxy": "3.0.0",
+    "inquirer": "3.0.6",
+    "jest": "19.0.2",
+    "lodash": "^4.17.4",
+    "node-sass": "4.5.0",
+    "nodemon": "1.11.0",
+    "object-assign": "^4.1.1",
+    "path-exists": "^3.0.0",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-import": "^9.1.0",
+    "postcss-loader": "1.3.3",
+    "promise": "^7.1.1",
+    "ps-tree": "1.1.0",
+    "purifycss-webpack": "^0.5.0",
+    "react-hot-loader": "3.0.0-beta.6",
+    "sass-loader": "6.0.3",
+    "shelljs": "0.7.7",
+    "source-map-support": "0.4.11",
+    "strip-ansi": "3.0.1",
+    "style-loader": "0.13.2",
+    "stylelint": "7.9.0",
+    "stylelint-config-standard": "16.0.0",
+    "url-loader": "0.5.8",
+    "webpack": "2.2.1",
+    "webpack-dev-middleware": "1.10.1",
+    "webpack-hot-middleware": "2.17.1",
+    "webpack-manifest-plugin": "^1.1.0",
+    "webpack-md5-hash": "^0.0.5",
+    "webpack-merge": "4.0.0",
+    "webpack-node-externals": "1.5.4",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "keywords": [
+    "boldr",
+    "dx",
+    "boldr-dx"
+  ],
+  "devDependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.2.1",
+    "rimraf": "^2.6.1"
+  }
+}
