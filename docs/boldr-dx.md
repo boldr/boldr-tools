@@ -15,7 +15,7 @@ Add Boldr-DX to your dependencies.
 
 2. `yarn add --dev boldr-dx`  
 
-Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.config.js](packages/boldr-base-project/.boldr/boldr.config.js) and [dllConfig.js](packages/boldr-base-project/.boldr/boldr.config.js)  
+Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.config.js](https://github.com/boldr/getBoldr/blob/master/packages/boldr-base-project/.boldr/boldr.config.js) and [dllConfig.js](https://github.com/boldr/getBoldr/blob/master/packages/boldr-base-project/.boldr/dllConfig.js)  
 
 3. `mkdir .boldr && touch boldr.config.js dllConfig.js`
 

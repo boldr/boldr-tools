@@ -20,5 +20,12 @@ Grab the Boldr Base Project directory and move it somewhere.
 
 Now you have a ready to rock, preconfigure, universal rendering React application.
 
+## Documentation
+
+- [boldr-dx](docs/boldr-dx.md)  
+- [boldr-cli](docs/boldr-cli.md)  
+- [babel-preset-boldr](babel-preset-boldr.md)  
+- [eslint-config-boldr](docs/eslint-config-boldr.md)  
+
 
 > This project will adhere to semver upon the 1.0.0 release.

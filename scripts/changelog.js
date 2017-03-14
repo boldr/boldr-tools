@@ -30,7 +30,7 @@ const headings = {
   'change: breaking change': '💥  Breaking Change',
   'change: bug fix': '🐛  Bug Fix',
   'change: enhancement': '🌟  Enhancement',
-  'change: documentation': '📝  Documentation',
+  'change: docs': '📝  Documentation',
   'change: internal': '🏠  Internal',
   [unlabeledLabel]: '❓  Other',
 };
