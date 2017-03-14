@@ -147,10 +147,10 @@ module.exports = (config, flags) => {
     });
 
     // Clean the build directory.
-    if (shell.test('-d', paths.ASSETS_DIR) && shell.rm(`${paths.ASSETS_DIR}/*`).code === 0) {
+    if (shell.test('-d', paths.ASSETS_DIR) && shell.rm(`${paths.ASSETS_DIR}/*.*`).code === 0) {
       logger.task('Purged assets directory.');
     }
-    if (shell.test('-d', paths.COMPILED_DIR) && shell.rm(`${paths.COMPILED_DIR}/*`).code === 0) {
+    if (shell.test('-d', paths.COMPILED_DIR) && shell.rm('-rf', `${paths.COMPILED_DIR}/*`).code === 0) {
       logger.task('Cleaned compiled server files. Ready for development!');
     }
     const startClient = () => {

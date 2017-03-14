@@ -17,6 +17,8 @@ module.exports = (config, environment = 'development') => {
    serverPort,
    serverHost,
    hmrPort,
+   enableDebug,
+   isVerbose,
    reactHotLoader,
    productionPublicPath,
   } = config;
@@ -31,6 +33,8 @@ module.exports = (config, environment = 'development') => {
     hmrPort,
     productionPublicPath,
     environment,
+    isVerbose,
+    enableDebug,
     publicPath: `http://${serverHost}:${hmrPort}/assets/`,
     publicDir: paths.PUBLIC_DIR,
     clientAssetsFile: 'assets.json',

@@ -16,7 +16,7 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 module.exports = options => {
   const main = [
     'react-hot-loader/patch',
-    `webpack-hot-middleware/client?reload=true&timeout=20000&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`,
+    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`,
     require.resolve('../polyfills'),
     `${paths.CLIENT_SRC_DIR}/index.js`,
   ];
@@ -37,7 +37,12 @@ module.exports = options => {
       publicPath: options.publicPath,
       libraryTarget: 'var',
     },
-
+    node: {
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty',
+      dirname: true,
+    },
     plugins: [
       new WebpackMd5Hash(),
       happyPackPlugin('happyjs', [
@@ -94,6 +99,7 @@ module.exports = options => {
         path: paths.ASSETS_DIR,
         prettyPrint: true,
       }),
+
       new webpack.HotModuleReplacementPlugin(),
     ],
     module: {

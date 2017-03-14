@@ -3,6 +3,9 @@ const glob = require('glob');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
+const BundleAnalyzerPlugin = require(
+  'webpack-bundle-analyzer',
+).BundleAnalyzerPlugin;
 const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const BabiliWebpackPlugin = require('babili-webpack-plugin');
@@ -12,13 +15,12 @@ const paths = require('../paths');
 
 module.exports = options => ({
   target: 'web',
-
   devtool: 'hidden-source-map',
-
+  profile: true,
+  bail: true,
   entry: {
     main: [require.resolve('../polyfills'), `${paths.CLIENT_SRC_DIR}/index.js`],
   },
-
   output: {
     path: paths.ASSETS_DIR,
     pathinfo: true,
@@ -27,7 +29,12 @@ module.exports = options => ({
     publicPath: options.publicPath,
     libraryTarget: 'var',
   },
-
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    dirname: true,
+  },
   module: {
     rules: [
       {
@@ -82,7 +89,6 @@ module.exports = options => ({
       minimize: true,
       debug: false,
     }),
-
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: module => /node_modules/.test(module.resource),
@@ -90,8 +96,8 @@ module.exports = options => ({
     new BabiliWebpackPlugin(),
     new PurifyCSSPlugin({
       paths: [
-        ...(glob.sync(`${paths.SHARED_DIR}/**/*.js`)),
-        ...(glob.sync(`${paths.SHARED_DIR}/**/*.(scss|css)`)),
+        ...glob.sync(`${paths.SHARED_DIR}/**/*.js`),
+        ...glob.sync(`${paths.SHARED_DIR}/**/*.(scss|css)`),
       ],
       styleExtensions: ['.css', '.scss'],
       moduleExtensions: [],
@@ -101,7 +107,13 @@ module.exports = options => ({
         rejected: true,
       },
     }),
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+      analyzerMode: 'static',
+      logLevel: 'error',
+    }),
     new webpack.HashedModuleIdsPlugin(),
+
     new webpack.optimize.AggressiveMergingPlugin(),
     new ManifestPlugin({
       fileName: 'asset-manifest.json',

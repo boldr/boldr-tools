@@ -4,12 +4,6 @@ const paths = require('../paths');
 
 module.exports = options => ({
   target: 'node',
-
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
-
   externals: [
     nodeExternals({
       whitelist: [
@@ -21,11 +15,9 @@ module.exports = options => ({
       ],
     }),
   ],
-
   entry: {
     main: [`${paths.SERVER_SRC_DIR}/index.js`],
   },
-
   output: {
     path: paths.COMPILED_DIR,
     filename: '[name].js',

@@ -1,4 +1,4 @@
-<p align="center"><img src="/docs/assets/boldr-logo-sm.svg"></p>
+<p align="center"><img src="/docs/assets/logo-small.png"></p>
 
 # Get Boldr
 
@@ -10,3 +10,15 @@
 3. `boldr-cli init` -
 4. `npm run dev`
 5. Check out `http://localhost:3000`
+
+**Alternatively**, clone this repo  
+`git clone https://github.com/boldr/getBoldr.git`
+
+Grab the Boldr Base Project directory and move it somewhere.
+
+`yarn install`
+
+Now you have a ready to rock, preconfigure, universal rendering React application.
+
+
+> This project will adhere to semver upon the 1.0.0 release.

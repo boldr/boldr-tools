@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "0.0.0",
-  "description": "<p align=\"center\"><img src=\"/docs/assets/boldr-logo-sm.svg\"></p>",
+  "description": "<p align=\"center\"><img src=\"/docs/assets/logo-small.png\"></p>",
   "main": "index.js",
   "author": "Steven Truesdell <steven@strues.io>",
   "license": "MIT",

@@ -4,12 +4,6 @@ const paths = require('../paths');
 
 module.exports = options => ({
   target: 'node',
-
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
-
   externals: [
     nodeExternals({
       whitelist: [
@@ -76,6 +70,7 @@ module.exports = options => ({
   },
 
   plugins: [
+    new webpack.optimize.OccurrenceOrderPlugin(true),
     new webpack.BannerPlugin({
       banner: 'require("source-map-support").install();',
       raw: true,

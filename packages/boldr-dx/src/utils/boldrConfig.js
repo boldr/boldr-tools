@@ -17,8 +17,8 @@ module.exports = (optionalConfig) => {
     serverPort: 3000,
     serverHost: 'localhost',
     hmrPort: 3001,
-    hasServer: true,
-    debug: false,
+    isVerbose: true,
+    enableDebug: false,
     reactHotLoader: true,
   };
 

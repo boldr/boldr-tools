@@ -5,7 +5,6 @@ const chalk = require('chalk');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
-
 const {
   removeNil,
   mergeDeep,
@@ -32,11 +31,6 @@ module.exports = options => {
   };
 
   return {
-    node: {
-      __dirname: true,
-      __filename: true,
-    },
-
     devtool: 'source-map',
 
     resolve: {
@@ -61,7 +55,17 @@ module.exports = options => {
 
     // Report the first error as a hard error instead of tolerating it.
     bail: isProd,
-
+    stats: {
+      colors: true,
+      reasons: options.enableDebug,
+      hash: options.isVerbose,
+      version: options.isVerbose,
+      timings: true,
+      chunks: options.isVerbose,
+      chunkModules: options.isVerbose,
+      cached: options.isVerbose,
+      cachedAssets: options.isVerbose,
+    },
     plugins: removeNil([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || options.environment),
@@ -74,6 +78,7 @@ module.exports = options => {
           ASSETS_MANIFEST: JSON.stringify(path.join(paths.ASSETS_DIR || '', options.clientAssetsFile || '')),
         },
       }),
+      new webpack.optimize.OccurrenceOrderPlugin(true),
       ifDev(
         new webpack.LoaderOptionsPlugin({
           minimize: false,
@@ -103,6 +108,7 @@ module.exports = options => {
       new FriendlyErrorsPlugin({
         clearConsole: false,
       }),
+      // Helps solve problems caused by MacOS which does not follow strict path case sensitivity
       new CaseSensitivePathsPlugin(),
     ]),
 
@@ -132,12 +138,25 @@ module.exports = options => {
           loader: 'file-loader?name=[name].[ext]',
         },
         {
-          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2)$/,
-          loader: 'url-loader',
-          options: {
-            limit: 20000,
-          },
+          test: /\.(eot|svg|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 8096,
+              name: 'fonts/[name].[ext]'
+            }
+          }
         },
+        {
+          test: /\.(gif|jpe?g|png)/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 2000,
+              name: 'img/[name].[ext]'
+            }
+          }
+        }
       ]),
     },
   };
