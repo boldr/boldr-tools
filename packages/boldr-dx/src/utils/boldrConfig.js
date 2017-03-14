@@ -7,8 +7,7 @@ import { logger } from 'boldr-utils';
 
 const paths = require('../config/paths');
 
-
-module.exports = (optionalConfig) => {
+module.exports = optionalConfig => {
   let config;
 
   // base config options
@@ -22,9 +21,7 @@ module.exports = (optionalConfig) => {
     reactHotLoader: true,
   };
 
-  const boldrConfigPath = optionalConfig
-    ? path.join(paths.ROOT_DIR, optionalConfig)
-    : paths.USER_BOLDR_CONFIG_PATH;
+  const boldrConfigPath = optionalConfig ? path.join(paths.ROOT_DIR, optionalConfig) : paths.USER_BOLDR_CONFIG_PATH;
 
   // Find user config
   if (shell.test('-f', boldrConfigPath)) {
@@ -41,7 +38,7 @@ module.exports = (optionalConfig) => {
 
   config = merge({}, baseConfig, config);
   // Create default identity functions for modify functions
-  ['editWebpackCfg', 'modifyJestConfig'].forEach((m) => {
+  ['editWebpackCfg', 'modifyJestConfig'].forEach(m => {
     if (typeof config[m] !== 'function') {
       config[m] = c => c;
     }

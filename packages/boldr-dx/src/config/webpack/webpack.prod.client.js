@@ -3,9 +3,7 @@ const glob = require('glob');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
-const BundleAnalyzerPlugin = require(
-  'webpack-bundle-analyzer',
-).BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const BabiliWebpackPlugin = require('babili-webpack-plugin');

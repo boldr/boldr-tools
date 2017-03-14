@@ -16,7 +16,7 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 module.exports = options => {
   const main = [
     'react-hot-loader/patch',
-    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`,
+    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`, // eslint-disable-line
     require.resolve('../polyfills'),
     `${paths.CLIENT_SRC_DIR}/index.js`,
   ];

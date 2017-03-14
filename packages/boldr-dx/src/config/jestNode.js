@@ -9,7 +9,7 @@ const setupTestsFile = pathExists.sync(path.resolve(ROOT, './.boldr/nodeSetup.js
 
 const coverageDir = path.resolve(ROOT, 'coverage');
 
-module.exports = (rootDir) => ({
+module.exports = rootDir => ({
   moduleFileExtensions: ['jsx', 'js', 'json'],
   moduleNameMapper: Object.assign(
     {

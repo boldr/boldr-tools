@@ -143,9 +143,9 @@ module.exports = options => {
             loader: 'url-loader',
             options: {
               limit: 8096,
-              name: 'fonts/[name].[ext]'
-            }
-          }
+              name: 'fonts/[name].[ext]',
+            },
+          },
         },
         {
           test: /\.(gif|jpe?g|png)/,
@@ -153,10 +153,10 @@ module.exports = options => {
             loader: 'url-loader',
             options: {
               limit: 2000,
-              name: 'img/[name].[ext]'
-            }
-          }
-        }
+              name: 'img/[name].[ext]',
+            },
+          },
+        },
       ]),
     },
   };

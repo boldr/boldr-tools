@@ -11,6 +11,7 @@ module.exports = {
     'array-callback-return': 2,
     // treat var statements as if they were block scoped
     'block-scoped-var': 2,
+    'class-methods-use-this': 2,
     // specify the maximum cyclomatic complexity allowed in a program
     complexity: [0, 1],
     // require return statements to either always or never specify values
@@ -44,9 +45,9 @@ module.exports = {
     'no-div-regex': 0,
     // disallow else after a return in an if
     'no-else-return': 0,
-    // disallow Unnecessary Labels
-    // http://eslint.org/docs/rules/no-extra-label
-    'no-extra-label': 2,
+    'no-empty-function': 0,
+    'no-empty-pattern': 2,
+
     // disallow comparisons to null without a type-checking operator
     'no-eq-null': 0,
     // disallow use of eval()
@@ -55,15 +56,21 @@ module.exports = {
     'no-extend-native': 1,
     // disallow unnecessary function binding
     'no-extra-bind': 1,
+    // disallow Unnecessary Labels
+    // http://eslint.org/docs/rules/no-extra-label
+    'no-extra-label': 2,
     // disallow fallthrough of case statements
     'no-fallthrough': 1,
     // disallow the use of leading or trailing decimal points in numeric literals
     'no-floating-decimal': 2,
+    // disallow var and named functions in global scope
+    // http://eslint.org/docs/rules/no-implicit-globals
+    'no-implicit-globals': 0,
     // disallow the type conversions with shorter notations
     'no-implicit-coercion': 0,
     // disallow use of eval()-like methods
     'no-implied-eval': 2,
-    // disallow this keywords outside of classes or class-like objects
+    // @NOTE: exists in rules/babel.js -- disallow this keywords outside of classes or class-like objects
     'no-invalid-this': 0,
     // disallow usage of __iterator__ property
     'no-iterator': 2,
@@ -105,8 +112,6 @@ module.exports = {
     // disallow parameter object manipulation
     // rule: http://eslint.org/docs/rules/no-param-reassign.html
     'no-param-reassign': 0,
-    // disallow use of process.env
-    'no-process-env': 0,
     // disallow usage of __proto__ property
     'no-proto': 2,
     // disallow declaring the same variable more then once
@@ -130,25 +135,27 @@ module.exports = {
     // http://eslint.org/docs/rules/no-unused-labels
     'no-unused-labels': 2,
 
-        // disallow unnecessary .call() and .apply()
+    // disallow unnecessary .call() and .apply()
     'no-useless-call': 0,
-        // disallow unnecessary string escaping
-        // http://eslint.org/docs/rules/no-useless-escape
+    // disallow unnecessary string escaping
+    // http://eslint.org/docs/rules/no-useless-escape
     'no-useless-escape': 2,
-        // disallow use of void operator
+    // disallow use of void operator
     'no-void': 0,
-        // disallow usage of configurable 1 terms in comments: e.g. todo
-    'no-1-comments': 0,
-        // disallow use of the with statement
+    // disallow usage of configurable 1 terms in comments: e.g. todo
+    'no-warning-comments': 0,
+    // disallow use of the with statement
     'no-with': 2,
-        // require use of the second argument for parseInt()
+    // require use of the second argument for parseInt()
     radix: 2,
-        // requires to declare all vars on top of their containing scope
+    // disallow the catch clause parameter name being the same as a variable in the outer scope
+    'no-catch-shadow': 0,
+    // requires to declare all vars on top of their containing scope
     'vars-on-top': 2,
-        // require immediate function invocation to be wrapped in parentheses
-        // http://eslint.org/docs/rules/wrap-iife.html
+    // require immediate function invocation to be wrapped in parentheses
+    // http://eslint.org/docs/rules/wrap-iife.html
     'wrap-iife': [2, 'outside'],
-        // require or disallow Yoda conditions
+    // require or disallow Yoda conditions
     yoda: [
       2,
       'never',
@@ -157,13 +164,16 @@ module.exports = {
         onlyEquality: false,
       },
     ],
-    'comma-dangle': [2, {
-      arrays: 'always-multiline',
-      objects: 'always-multiline',
-      imports: 'always-multiline',
-      exports: 'always-multiline',
-      functions: 'always-multiline',
-    }],
+    'comma-dangle': [
+      2,
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'always-multiline',
+      },
+    ],
 
     'object-property-newline': 2,
     'object-curly-newline': 0,
@@ -171,7 +181,6 @@ module.exports = {
     'no-useless-rename': 2,
     'no-useless-concat': 2,
     'no-useless-computed-key': 0,
-
 
     'no-return-await': 2,
     'no-restricted-syntax': 0,
@@ -181,47 +190,112 @@ module.exports = {
     'no-negated-condition': 0,
     'func-call-spacing': [2, 'never'],
     'max-params': 0,
-    'line-comment-position': [2, {
-      'position': 'above'
-    }],
+    'line-comment-position': [
+      2,
+      {
+        position: 'above',
+      },
+    ],
     'lines-around-directive': 0,
     'multiline-ternary': 0,
 
     'func-name-matching': [2, 'always'],
 
-    'prefer-promise-reject-2s': 0,
+    'prefer-promise-reject-errors': 0,
     'prefer-numeric-literals': 1,
     'nonblock-statement-body-position': [2, 'beside'],
     'no-useless-return': 2,
 
-    'prefer-destructuring': [1, {
-      'array': false,
-      'object': true,
-    }, {
-      'enforceForRenamedProperties': false
-    }],
+    'prefer-destructuring': [
+      1,
+      {
+        array: false,
+        object: true,
+      },
+      {
+        enforceForRenamedProperties: false,
+      },
+    ],
     'require-await': 2,
     'rest-spread-spacing': [2, 'never'],
 
     'symbol-description': 1,
 
-    'strict': [2, 'never'],
+    strict: [2, 'never'],
 
     'unicode-bom': [1, 'never'],
     'require-jsdoc': 0,
     'template-tag-spacing': 0,
-    'class-methods-use-this': 2,
     // enforce the spacing around the * in generator functions
     'generator-star-spacing': 1,
     // disallow modifying variables of class declarations
     'no-class-assign': 0,
-    // disallow arrow functions where they could be confused with comparisons
-    // http://eslint.org/docs/rules/no-confusing-arrow
-    'no-confusing-arrow': [
-      2,
+
+    // disallow use of undefined when initializing variables
+    'no-undef-init': 1,
+    // disallow use of undeclared variables unless mentioned in a /*global */ block
+    'no-undef': 1,
+    // disallow use of undefined variable
+    'no-undefined': 0,
+    // disallow declaration of variables that are not used in the code
+    'no-unused-vars': 0,
+    // disallow labels that share a name with a variable
+    'no-label-var': 0,
+    // disallow self assignment
+    // http://eslint.org/docs/rules/no-self-assign
+    'no-self-assign': 2,
+    // redefining undefined, NaN, Infinity, arguments, and eval is bad, mkay?
+    'no-shadow-restricted-names': 2,
+    // disallow declaration of variables already declared in the outer scope
+    'no-shadow': 0,
+    // disallow deletion of variables | is a strict mode violation
+    'no-delete-var': 2,
+    // enforce return after a callback
+    'callback-return': 0,
+    // specify the maximum depth callbacks can be nested
+    'max-nested-callbacks': 0,
+    // @NOTE exists in rules/babel.js -- require a capital letter for constructors
+    'new-cap': 0,
+    // disallow the omission of parentheses when invoking a constructor with no arguments
+    'new-parens': 0,
+    // allow/disallow an empty newline after var statement
+    'newline-after-var': 0,
+    // http://eslint.org/docs/rules/newline-before-return
+    'newline-before-return': 0,
+    // enforces new line after each method call in the chain to make it
+    // more readable and easy to maintain
+    // http://eslint.org/docs/rules/newline-per-chained-call
+    'newline-per-chained-call': [
+      0,
       {
-        allowParens: true,
+        ignoreChainWithDepth: 3,
       },
     ],
+    // enforces 2 handling in callbacks (node environment)
+    'handle-callback-err': 1,
+    // disallow mixing regular variable and require declarations
+    'no-mixed-requires': [
+      2,
+      {
+        grouping: true,
+        allowCall: false,
+      },
+    ],
+    // disallow use of new operator with the require function
+    'no-new-require': 2,
+    // disallow string concatenation with __dirname and __filename
+    'no-path-concat': 0,
+    // disallow process.exit()
+    'no-process-exit': 0,
+    // restrict usage of specified node modules
+    'no-restricted-modules': 0,
+    // disallow use of synchronous methods (0 by default)
+    'no-sync': 0,
+    'no-await-in-loop': 0,
+    'no-global-assign': 0,
+    'no-magic-numbers': 0,
+    'no-mixed-operators': 0,
+    // disallow use of process.env
+    'no-process-env': 0,
   },
-};
+}
