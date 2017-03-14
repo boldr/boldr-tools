@@ -7,7 +7,7 @@ class Home extends Component {
   static propTypes = {
     data: PropTypes.array,
     loaded: PropTypes.boolean,
-  }
+  };
 
   renderList = () => {
     return (
@@ -15,7 +15,7 @@ class Home extends Component {
         { this.props.data.map(p => <li key={ p.id }>{p.title}</li>) }
       </ul>
     );
-  }
+  };
   render() {
     // if (!this.props.loaded) {
     //   return (
@@ -32,7 +32,7 @@ class Home extends Component {
           { /* this.renderList() */ }
 
 
-          </div>
+        </div>
       </div>
     );
   }

@@ -29,13 +29,19 @@
     ]
   },
   "scripts": {
+        "authors": "node ./scripts/authors",
     "bootstrap": "node_modules/.bin/lerna bootstrap",
+    "clean": "node ./scripts/clean",
+    "changelog": "node ./scripts/changelog",
+    "postinstall": "lerna bootstrap",
+    "precoverage": "rimraf ./coverage",
+    "release": "node ./scripts/release",
     "test": "jest && cd packages/boldr-base-project && node_modules/boldr-dx/dist/cli/index.js test",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "e2e:clean": "yarn cache clean && yarn run e2e",
     "e2e": "jest --config ./e2e_tests/jest.config.json --verbose --no-cache",
-    "lint": "packages/boldr-dx/node_modules/.bin/eslint ./"
+    "lint": "lerna run lint"
   },
   "dependencies": {
     "babel-eslint": "^7.1.1",
@@ -45,8 +51,12 @@
     "shelljs": "0.7.7"
   },
   "devDependencies": {
+    "dotenv": "^4.0.0",
     "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.1",
-    "lerna": "2.0.0-beta.38"
+    "eslint-config-boldr": "^0.8.4",
+    "lerna": "2.0.0-beta.38",
+    "minimist": "^1.2.0",
+    "node-fetch": "^1.6.3",
+    "rimraf": "^2.6.1"
   }
 }

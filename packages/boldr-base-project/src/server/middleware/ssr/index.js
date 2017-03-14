@@ -16,10 +16,11 @@ export default (async function ssrMiddleware(req, res, next) {
   const context = {};
   const WrappedApp = (
     <Provider store={ store }>
-      <Root server={ {
-        context,
-        location: req.url,
-      } }
+      <Root
+        server={ {
+          context,
+          location: req.url,
+        } }
       >
         <App />
       </Root>

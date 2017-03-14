@@ -64,7 +64,7 @@ program
   .action(() => executeCmd(lintScriptAction));
 
 program
-  .command('styelint')
+  .command('lint:css')
   .description('')
   .action(() => executeCmd(lintStyleAction));
 

@@ -7,8 +7,8 @@ class Root extends PureComponent {
  server, children,
 } = this.props;
     return (
-    <div>
-      {
+      <div>
+        {
         server &&
         <StaticRouter { ...server }>
           <div>
@@ -16,7 +16,7 @@ class Root extends PureComponent {
           </div>
         </StaticRouter>
       }
-      {
+        {
         !server &&
         <BrowserRouter>
           <div>
@@ -24,7 +24,7 @@ class Root extends PureComponent {
           </div>
         </BrowserRouter>
       }
-    </div>
+      </div>
     );
   }
 }

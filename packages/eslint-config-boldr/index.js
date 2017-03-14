@@ -14,7 +14,6 @@ module.exports = {
     './rules/stylistic.js',
     './rules/best-practices.js',
     './rules/possible-errors.js',
-    './rules/es6.js',
-    './rules/babel.js'
+    './rules/es6.js'
   ]
-}
+};

@@ -15,12 +15,12 @@ class HomeContainer extends Component {
     loaded: PropTypes.boolean,
     dispatchLoadData: PropTypes.func,
     data: PropTypes.array,
+  };
+  componentDidMount() {
+    if (!this.props.loaded) {
+      this.props.dispatchLoadData();
+    }
   }
-  // componentDidMount() {
-  //   if (!this.props.loaded) {
-  //     this.props.dispatchLoadData();
-  //   }
-  // }
 
   render() {
     return (

@@ -16,12 +16,12 @@ const store = configureStore(preloadedState);
 function renderApp(BoldrApp) {
   ReactDOM.render(
     <ReactHotLoader>
-    <Provider store={ store }>
-      <Root server={ false }>
-        <App />
-      </Root>
-    </Provider>
-  </ReactHotLoader>, MOUNT_POINT);
+      <Provider store={ store }>
+        <Root server={ false }>
+          <App />
+        </Root>
+      </Provider>
+    </ReactHotLoader>, MOUNT_POINT);
 }
 
 if (process.env.NODE_ENV === 'development' && module.hot) {

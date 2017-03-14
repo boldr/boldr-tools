@@ -1,5 +1,5 @@
 {
   "extends": [
-    "boldr"
+    "./packages/eslint-config-boldr/index.js"
   ]
 }

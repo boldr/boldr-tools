@@ -66,4 +66,4 @@ module.exports = {
     // too noisy
     'no-use-before-define': 0
   },
-}
+};

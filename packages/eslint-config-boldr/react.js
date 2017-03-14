@@ -42,7 +42,7 @@ module.exports = {
     'react/no-array-index-key': 2,
     'react/jsx-no-target-blank': 2,
     'react/no-unused-prop-types': 0,
-    'react/no-comment-textnodes': 2,
+
     'react/require-optimization': 0,
     'react/forbid-foreign-prop-types': 0,
     'react/forbid-elements': 0,
@@ -58,7 +58,7 @@ module.exports = {
     'react/jsx-tag-spacing': [
       2,
       {
-        closingSlash: 'always',
+        closingSlash: 'never',
         beforeSelfClosing: 'always',
         afterOpening: 'never',
       },
@@ -207,15 +207,7 @@ module.exports = {
     'react/no-did-update-set-state': 2,
     'react/no-find-dom-node': 2,
     'react/no-is-mounted': 2,
-    // appears the same as the below rule. doesnt exist on the plugin docs
-    'react/wrap-multilines': [
-      2,
-      {
-        declaration: true,
-        assignment: true,
-        return: true,
-      },
-    ],
+
     // Prevent missing parentheses around multilines JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
     'react/jsx-wrap-multilines': [
@@ -226,5 +218,8 @@ module.exports = {
         return: true,
       },
     ],
+    // @NOTE deprecated
+    'react/wrap-multilines': 0,
+    'react/no-comment-textnodes': 0
   },
 };

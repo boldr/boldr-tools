@@ -1,6 +1,7 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable max-statements */
 /* eslint-disable max-lines */
+/* eslint-disable camelcase */
+/* eslint-disable max-statements */
+
 const path = require('path');
 const fs = require('fs');
 const shell = require('shelljs');
@@ -25,7 +26,7 @@ module.exports = (flags, args) => {
   shell.config.silent = true;
   const date = Date.now();
 
-  let paths = {};
+  const paths = {};
   let tmpProject,
     ypm,
     tmpPkgJson,
@@ -129,14 +130,13 @@ module.exports = (flags, args) => {
       'test:node',
       'lint',
       'lint:all',
-      'stylelint',
+      'lint:css',
     ];
 
     // for commands that aren't 1:1 name:script
     const commandMap = {
-      start: 'node build/server/main.js',
+      start: 'node compiled/main.js',
       'test:watch': 'boldr-dx test -- --watch',
-      'test:coverage': 'boldr-dx test -- --coverage',
       'test:browser': 'boldr-dx test',
       'test:node': 'boldr-dx test:node',
       'lint:all': 'npm run lint && npm run stylelint',

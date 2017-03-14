@@ -25,7 +25,7 @@ class App extends Component {
                 return <Route key={ route.path } { ...route } />;
               })
             }
-           <Route component={ NotFound } />
+            <Route component={ NotFound } />
           </Switch>
         </RouterWrapper>
       </div>

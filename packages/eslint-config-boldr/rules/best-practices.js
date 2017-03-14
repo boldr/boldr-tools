@@ -11,7 +11,7 @@ module.exports = {
     'array-callback-return': 2,
     // treat var statements as if they were block scoped
     'block-scoped-var': 2,
-    'class-methods-use-this': 2,
+    'class-methods-use-this': 0,
     // specify the maximum cyclomatic complexity allowed in a program
     complexity: [0, 1],
     // require return statements to either always or never specify values
@@ -298,4 +298,4 @@ module.exports = {
     // disallow use of process.env
     'no-process-env': 0,
   },
-}
+};

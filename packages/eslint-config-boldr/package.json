@@ -1,11 +1,15 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.8.2",
+  "version": "0.8.4",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
     "index.js",
-    "react.js"
+    "react.js",
+    "flowtype.js",
+    "import.js",
+    "jsx-a11y.js",
+    "prettier.js"
   ],
   "scripts": {
     "find-new-rules": "eslint-find-rules --unused ./index.js",
