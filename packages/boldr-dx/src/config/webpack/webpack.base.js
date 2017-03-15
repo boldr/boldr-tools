@@ -57,7 +57,7 @@ module.exports = options => {
     bail: isProd,
     stats: {
       colors: true,
-      reasons: options.enableDebug,
+      reasons: options.isDebug,
       hash: options.isVerbose,
       version: options.isVerbose,
       timings: true,
@@ -69,14 +69,12 @@ module.exports = options => {
     plugins: removeNil([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || options.environment),
-        BOLDR: {
-          SERVER_PORT: JSON.stringify(options.serverPort || ''),
-          SERVER_HOST: JSON.stringify(process.env.SERVER_PORT || options.serverHost || ''),
-          HMR_PORT: JSON.stringify(process.env.HMR_PORT || options.hmrPort || ''),
-          PUBLIC_PATH: JSON.stringify(options.publicPath || ''),
-          PUBLIC_DIR: JSON.stringify(options.publicDir || ''),
-          ASSETS_MANIFEST: JSON.stringify(path.join(paths.ASSETS_DIR || '', options.clientAssetsFile || '')),
-        },
+        SERVER_PORT: JSON.stringify(process.env.SERVER_PORT || options.serverPort || ''),
+        SERVER_HOST: JSON.stringify(process.env.SERVER_HOST || options.serverHost || ''),
+        HMR_PORT: JSON.stringify(process.env.HMR_PORT || options.hmrPort || ''),
+        PUBLIC_PATH: JSON.stringify(options.publicPath || ''),
+        PUBLIC_DIR: JSON.stringify(options.publicDir || ''),
+        ASSETS_MANIFEST: JSON.stringify(path.join(paths.ASSETS_DIR || '', options.clientAssetsFile || '')),
       }),
       new webpack.optimize.OccurrenceOrderPlugin(true),
       ifDev(

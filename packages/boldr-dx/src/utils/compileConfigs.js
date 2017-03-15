@@ -17,10 +17,9 @@ module.exports = (config, environment = 'development') => {
    serverPort,
    serverHost,
    hmrPort,
-   enableDebug,
+   isDebug,
    isVerbose,
-   reactHotLoader,
-   productionPublicPath,
+   serveAssetsFrom,
   } = config;
 
   let clientConfig = clientDevConfig;
@@ -31,14 +30,13 @@ module.exports = (config, environment = 'development') => {
     serverPort,
     serverHost,
     hmrPort,
-    productionPublicPath,
+    serveAssetsFrom,
     environment,
     isVerbose,
-    enableDebug,
+    isDebug,
     publicPath: `http://${serverHost}:${hmrPort}/assets/`,
     publicDir: paths.PUBLIC_DIR,
     clientAssetsFile: 'assets.json',
-    reactHotLoader,
   };
 
   if (environment === 'production') {
@@ -46,7 +44,7 @@ module.exports = (config, environment = 'development') => {
     serverConfig = serverProdConfig;
 
     clientOptions = merge(clientOptions, {
-      publicPath: clientOptions.productionPublicPath,
+      publicPath: clientOptions.serveAssetsFrom,
       publicDir: paths.PUBLIC_DIR,
     });
   }

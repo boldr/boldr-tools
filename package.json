@@ -29,12 +29,13 @@
     ]
   },
   "scripts": {
-        "authors": "node ./scripts/authors",
+    "authors": "node ./scripts/authors",
     "bootstrap": "node_modules/.bin/lerna bootstrap",
     "clean": "node ./scripts/clean",
     "changelog": "node ./scripts/changelog",
     "postinstall": "lerna bootstrap",
     "precoverage": "rimraf ./coverage",
+    "format": "prettier-eslint \"packages/**/*.js\"",
     "release": "node ./scripts/release",
     "test": "jest && cd packages/boldr-base-project && node_modules/boldr-dx/dist/cli/index.js test",
     "test:watch": "jest --watch",
@@ -43,20 +44,27 @@
     "e2e": "jest --config ./e2e_tests/jest.config.json --verbose --no-cache",
     "lint": "lerna run lint"
   },
-  "dependencies": {
-    "babel-eslint": "^7.1.1",
-    "jest": "19.0.2",
-    "ps-tree": "1.1.0",
-    "semver": "5.3.0",
-    "shelljs": "0.7.7"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.2.2",
     "dotenv": "^4.0.0",
     "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.4",
+    "eslint-config-boldr": "^0.8.6",
+    "flow-bin": "^0.41.0",
+    "jest": "19.0.2",
     "lerna": "2.0.0-beta.38",
     "minimist": "^1.2.0",
     "node-fetch": "^1.6.3",
-    "rimraf": "^2.6.1"
+    "prettier-eslint-cli": "^3.1.2",
+    "ps-tree": "1.1.0",
+    "rimraf": "^2.6.1",
+    "semver": "5.3.0",
+    "shelljs": "0.7.7"
   }
 }

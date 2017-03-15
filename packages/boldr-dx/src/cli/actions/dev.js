@@ -1,5 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable global-require */
+/* eslint-disable babel/new-cap */
+
 import fs from 'fs';
 import path from 'path';
 import cloneDeep from 'lodash/cloneDeep';
@@ -134,14 +136,11 @@ module.exports = (config, flags) => {
       serverHost,
       serverPort,
       hmrPort,
-      reactHotLoader,
       hasServer,
     } = config;
     const DEV_PORT = parseInt(hmrPort, 10);
     const afterClientCompile = once(() => {
-      if (reactHotLoader) {
-        logger.task('React Hot  ♨️  Loader enabled.');
-      }
+      logger.task('React Hot  ♨️  Loader enabled.');
       logger.task('Starting up server');
       logger.task(`Client assets serving from ${clientCompiler.options.output.publicPath}`);
     });

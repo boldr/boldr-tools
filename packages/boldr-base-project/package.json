@@ -1,58 +1,15 @@
 {
   "name": "boldr-base-project",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "NODE_ENV=production boldr-dx build",
-    "dev": "boldr-dx dev",
-    "lint:all": "npm run lint && npm run lint:css",
-    "start": "node compiled/main.js",
-    "lint:css": "boldr-dx lint:css",
-    "test": "npm run test:browser && npm run test:node && node ./.boldr/mapCoverage.js",
-    "test:browser": "boldr-dx test",
-    "test:node": "boldr-dx test:node",
-    "test:watch": "boldr-dx test -- --watch"
-  },
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boldr/getBoldr.git"
+    "url": "git+https://github.com/boldr/getBoldr/packages/boldr-base-project.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/boldr/getBoldr/issues"
   },
-  "homepage": "https://github.com/boldr/getBoldr#readme",
-  "dependencies": {
-    "boldr-utils": "^0.1.10",
-    "compression": "1.6.2",
-    "debug": "^2.6.2",
-    "express": "4.15.2",
-    "lodash": "^4.17.4",
-    "normalize.css": "^5.0.0",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
-    "react-helmet": "4.0.0",
-    "react-redux": "5.0.3",
-    "react-router": "4.0.0",
-    "react-router-dom": "4.0.0",
-    "redux": "^3.6.0",
-    "redux-logger": "2.8.2",
-    "redux-thunk": "2.2.0",
-    "serialize-javascript": "1.3.0",
-    "styled-components": "^1.4.4",
-    "unfetch": "^2.1.2",
-    "uuid": "^3.0.1"
-  },
-  "devDependencies": {
-    "boldr-dx": "0.1.1",
-    "enzyme": "2.7.1",
-    "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.4",
-    "identity-obj-proxy": "^3.0.0",
-    "istanbul-api": "^1.1.1",
-    "istanbul-lib-coverage": "^1.0.1",
-    "react-addons-test-utils": "15.4.2",
-    "react-hot-loader": "^3.0.0-beta.6"
-  }
+  "homepage": "https://github.com/boldr/getBoldr#readme"
 }

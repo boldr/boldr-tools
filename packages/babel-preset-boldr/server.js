@@ -7,11 +7,12 @@ module.exports = {
     [
       require.resolve('babel-preset-env'), {
         useBuiltIns: false,
+        debug: false,
         targets: {
           node: 'current',
         },
         include: ['transform-es2015-destructuring'],
-        exclude: ['transform-async-to-generator', 'transform-regenerator']
+        exclude: ['transform-async-to-generator', 'transform-regenerator'],
       },
     ],
     require.resolve('babel-preset-react'),
@@ -28,7 +29,7 @@ module.exports = {
     require.resolve('babel-plugin-transform-decorators-legacy'),
 
     require.resolve('babel-plugin-syntax-dynamic-import'),
-    [require.resolve('fast-async'), { spec: true }]
+    [require.resolve('fast-async'), { spec: true }],
   ],
 };
 

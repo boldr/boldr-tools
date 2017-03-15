@@ -1,5 +1,16 @@
 {
   "extends": [
-    "./packages/eslint-config-boldr/index.js"
-  ]
+    "boldr",
+    "boldr/import",
+    "boldr/flowtype"
+  ],
+
+  "env": {
+  },
+
+  "plugins": [
+  ],
+
+  "rules": {
+  }
 }

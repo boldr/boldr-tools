@@ -23,7 +23,7 @@ module.exports = {
   OUR_NODE_MODULES,
   BOLDR_DIR,
   PUBLIC_DIR: path.join(ROOT_DIR, 'public'),
-  DLL_CONFIG: path.join(BOLDR_DIR, 'dllConfig.js'),
+  DLL_CONFIG: path.join(BOLDR_DIR, 'dll.config.js'),
   COMPILED_DIR: path.join(ROOT_DIR, 'compiled'),
   ASSETS_DIR: path.join(ROOT_DIR, 'public', 'assets'),
   DLL_DIR: path.join(ROOT_DIR, 'public', 'assets', 'dlls'),

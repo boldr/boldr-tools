@@ -16,9 +16,7 @@ const lintStyleAction = require('./actions/lintStyle');
 // https://github.com/babel/babel-loader/pull/391
 process.noDeprecation = true;
 
-// Comment the following to see verbose shell ouput.
-// shell.config.silent = true;
-
+shell.config.silent = true;
 // Kill the process if the user did not run the command from the root of their project.
 if (!shell.test('-f', paths.USER_PKGJSON_PATH)) {
   logger.error('Sorry, but boldr-dx must be run from the root of your project.');

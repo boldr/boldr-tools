@@ -1,3 +1,4 @@
+/* eslint-disable babel/new-cap */
 const path = require('path');
 const os = require('os');
 const HappyPack = require('happypack');

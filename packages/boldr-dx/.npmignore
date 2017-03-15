@@ -3,4 +3,7 @@ images
 __tests__
 __mocks__
 coverage
-yarn.lock
+.babelrc
+*.log
+src
+node_modules

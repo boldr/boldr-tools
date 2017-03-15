@@ -3,7 +3,7 @@
     "plugins":[
       "transform-flow-strip-types",
       "transform-object-rest-spread",
-       "transform-export-extensions",
-      "syntax-trailing-function-commas"
+      "transform-export-extensions",
+      "syntax-trailing-function-commas",
     ]
 }

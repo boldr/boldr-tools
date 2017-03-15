@@ -7,7 +7,7 @@
 
 1. Install [Node.js](https://nodejs.org/) (v6.0+ required).
 2. `npm install -g boldr-cli`
-3. `boldr-cli init` -
+3. `boldr-cli init`
 4. `npm run dev`
 5. Check out `http://localhost:3000`
 
@@ -22,10 +22,10 @@ Now you have a ready to rock, preconfigure, universal rendering React applicatio
 
 ## Documentation
 
-- [boldr-dx](docs/boldr-dx.md)  
-- [boldr-cli](docs/boldr-cli.md)  
-- [babel-preset-boldr](babel-preset-boldr.md)  
-- [eslint-config-boldr](docs/eslint-config-boldr.md)  
+- [boldr-dx](/docs/dx.md)  
+- [boldr-cli](/docs/cli.md)  
+- [babel-preset-boldr](/docs/babel.md)  
+- [eslint-config-boldr](/docs/eslint.md)  
 
 
 > This project will adhere to semver upon the 1.0.0 release.

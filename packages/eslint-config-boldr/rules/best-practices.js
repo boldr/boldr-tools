@@ -233,8 +233,8 @@ module.exports = {
 
     // disallow use of undefined when initializing variables
     'no-undef-init': 1,
-    // disallow use of undeclared variables unless mentioned in a /*global */ block
-    'no-undef': 1,
+    // @NOTE: Super annoying with react. disallow use of undeclared variables unless mentioned in a /*global */ block
+    'no-undef': 0,
     // disallow use of undefined variable
     'no-undefined': 0,
     // disallow declaration of variables that are not used in the code

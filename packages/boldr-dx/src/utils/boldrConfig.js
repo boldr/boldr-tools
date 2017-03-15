@@ -12,13 +12,12 @@ module.exports = optionalConfig => {
 
   // base config options
   const baseConfig = {
-    productionPublicPath: '/assets/',
+    serveAssetsFrom: '/assets/',
     serverPort: 3000,
     serverHost: 'localhost',
     hmrPort: 3001,
     isVerbose: true,
-    enableDebug: false,
-    reactHotLoader: true,
+    isDebug: false,
   };
 
   const boldrConfigPath = optionalConfig ? path.join(paths.ROOT_DIR, optionalConfig) : paths.USER_BOLDR_CONFIG_PATH;

@@ -6,7 +6,8 @@ module.exports = {
   presets: [
     [require.resolve('babel-preset-env'), {
       modules: false,
-      exclude: ['transform-async-to-generator', 'transform-regenerator']
+      debug: false,
+      exclude: ['transform-async-to-generator', 'transform-regenerator'],
     }],
     require.resolve('babel-preset-react'),
   ],
@@ -27,7 +28,7 @@ module.exports = {
     }],
     require.resolve('babel-plugin-syntax-trailing-function-commas'),
     require.resolve('babel-plugin-transform-unicode-property-regex'),
-    [require.resolve('fast-async'), { spec: true }]
+    [require.resolve('fast-async'), { spec: true }],
 
 
   ],

@@ -1,11 +1,15 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.8.4",
+  "version": "0.8.6",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
     "index.js",
     "react.js",
+    "rules/best-practices.js",
+    "rules/stylistic.js",
+    "rules/es6.js",
+    "rules/possible-errors.js",
     "flowtype.js",
     "import.js",
     "jsx-a11y.js",
