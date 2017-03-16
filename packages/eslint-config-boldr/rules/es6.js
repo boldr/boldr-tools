@@ -51,7 +51,6 @@ module.exports = {
     // verify super() callings in constructors
     'constructor-super': 2,
     'new-cap': 0,
-    'global-require': 0,
     // disallow modifying variables that are declared using const
     'no-const-assign': 2,
     // disallow duplicate class members

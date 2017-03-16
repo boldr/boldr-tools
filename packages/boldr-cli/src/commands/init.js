@@ -139,7 +139,7 @@ module.exports = (options, args) => {
       'test:browser',
       'test:node',
       'lint',
-      'lint:all',
+      'lint:js',
       'lint:css',
     ];
 
@@ -149,7 +149,9 @@ module.exports = (options, args) => {
       'test:watch': 'boldr-dx test -- --watch',
       'test:browser': 'boldr-dx test',
       'test:node': 'boldr-dx test:node',
-      'lint:all': 'npm run lint && npm run stylelint',
+      'lint:js': 'boldr-dx lint:js',
+      'lint:css': 'boldr-dx lint:css',
+      lint: 'npm run lint:js && npm run lint:css',
     };
 
     // Merge the boldr-pack script names into the list of commands.

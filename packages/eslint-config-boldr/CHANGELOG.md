@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.7
+- Adds `jsx-a11y`
+- Separate files into composable pieces.
+
 ## 0.8.1
 - Disable `object-curly-spacing` and `max-len` for better utilization of `prettier`.
 

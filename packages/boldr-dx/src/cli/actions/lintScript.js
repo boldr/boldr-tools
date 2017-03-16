@@ -9,7 +9,7 @@ module.exports = (config, flags) => {
   const eslintrc = glob.sync(`${paths.ROOT_DIR}/.*eslintrc*`);
   const configFile = eslintrc.length
       ? eslintrc[0]
-      : path.join(__dirname, '../../config/.eslintrc');
+      : path.join(__dirname, '../../config/.eslintrc.base.json');
 
   logger.info(`Using ESLint file: ${configFile}`);
 

@@ -1,6 +1,6 @@
 {
   "name": "boldr-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Commandline interface for Boldr",
   "main": "dist/boldr-cli.js",
   "license": "MIT",

@@ -2352,6 +2352,14 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
+lerna-changelog@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/lerna-changelog/-/lerna-changelog-0.3.0.tgz#40421509edd3e2ba20d2818c2972323fc1c9c9cd"
+  dependencies:
+    chalk "^1.1.3"
+    mkdirp "^0.5.1"
+    yargs "^6.6.0"
+
 lerna@2.0.0-beta.38:
   version "2.0.0-beta.38"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.0.0-beta.38.tgz#99236416a6699707336dcbdeef83c315d1f71833"

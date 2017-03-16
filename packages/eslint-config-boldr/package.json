@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
@@ -9,6 +9,7 @@
     "rules/best-practices.js",
     "rules/stylistic.js",
     "rules/es6.js",
+    "rules/node.js",
     "rules/possible-errors.js",
     "flowtype.js",
     "import.js",
@@ -46,6 +47,7 @@
     "eslint": "^3.17.1"
   },
   "devDependencies": {
+    "cz-conventional-changelog": "^2.0.0",
     "eslint": "^3.17.1",
     "eslint-find-rules": "^1.14.3",
     "npm-run-all": "^4.0.2"
@@ -57,5 +59,10 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "6.10.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

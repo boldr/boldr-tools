@@ -6,17 +6,19 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 import ManifestPlugin from 'webpack-manifest-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 
-const postCssImport = require('postcss-import');
-const postCssCssNext = require('postcss-cssnext');
-const happyPackPlugin = require('../../utils/happyPackPlugin');
-const paths = require('../paths');
+import postCssImport from 'postcss-import';
+import postCssCssNext from 'postcss-cssnext';
+import happyPackPlugin from '../../utils/happyPackPlugin';
+import paths from '../paths';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
+const HMR_PORT = process.env.HMR_PORT || 3001;
+const SERVER_HOST = process.env.SERVER_HOST || 'localhost';
 
 module.exports = options => {
   const main = [
     'react-hot-loader/patch',
-    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`, // eslint-disable-line
+    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${HMR_PORT}/__webpack_hmr`, // eslint-disable-line
     require.resolve('../polyfills'),
     `${paths.CLIENT_SRC_DIR}/index.js`,
   ];

@@ -57,12 +57,12 @@ program
   });
 
 program
-  .command('lint')
+  .command('lint:js')
   .description('lints .js files in the ./src directory.')
   .action(() => executeCmd(lintScriptAction));
 
 program
-  .command('lint:css')
+  .command('lint:styles')
   .description('')
   .action(() => executeCmd(lintStyleAction));
 

@@ -32,35 +32,28 @@ module.exports = (config, flags) => {
   // Kill the server on exit.
   process.on('SIGINT', process.exit);
 
-  return new Promise.all([
-    handleDlls(),
-    startCompilation(),
-  ]);
+  return new Promise.all([handleDlls(), startCompilation()]);
 
   function handleDlls() {
     logger.start('Starting DLLs plugin');
 
     const dllConfig = require(paths.DLL_CONFIG);
 
-
     const devDLLDependencies = dllConfig.sort();
 
     // We calculate a hash of the package.json's dependencies, which we can use
     // to determine if dependencies have changed since the last time we built
     // the vendor dll.
-    const currentDependenciesHash = md5(JSON.stringify(
-      devDLLDependencies.map(dep =>
+    const currentDependenciesHash = md5(
+      JSON.stringify(
+        devDLLDependencies.map(dep => [dep, pkg.dependencies[dep], pkg.devDependencies[dep]]),
         // We do this to include any possible version numbers we may have for
         // a dependency. If these change then our hash should too, which will
         // result in a new dev dll build.
-        [dep, pkg.dependencies[dep], pkg.devDependencies[dep]],
       ),
-    ));
-
-    const vendorDLLHashFilePath = path.resolve(
-      paths.DLL_DIR,
-      '__boldr_dlls__hash',
     );
+
+    const vendorDLLHashFilePath = path.resolve(paths.DLL_DIR, '__boldr_dlls__hash');
 
     function webpackConfigFactory() {
       return {
@@ -76,10 +69,7 @@ module.exports = (config, flags) => {
         },
         plugins: [
           new webpack.DllPlugin({
-            path: path.resolve(
-              paths.DLL_DIR,
-              '__boldr_dlls__.json',
-            ),
+            path: path.resolve(paths.DLL_DIR, '__boldr_dlls__.json'),
             name: '__boldr_dlls__',
           }),
         ],
@@ -88,17 +78,19 @@ module.exports = (config, flags) => {
 
     function buildVendorDLL() {
       return new Promise((resolve, reject) => {
-        logger.info(`Vendor DLL build complete. The following dependencies have been
-          included:\n\t-${devDLLDependencies.join('\n\t-')}\n`);
+        logger.info(
+          `Vendor DLL build complete. The following dependencies have been
+          included:\n\t-${devDLLDependencies.join('\n\t-')}\n`,
+        );
 
         const webpackConfig = webpackConfigFactory();
         const vendorDLLCompiler = webpack(webpackConfig);
-        vendorDLLCompiler.run((err) => {
+        vendorDLLCompiler.run(err => {
           if (err) {
             reject(err);
             return;
           }
-            // Update the dependency hash
+          // Update the dependency hash
           fs.writeFileSync(vendorDLLHashFilePath, currentDependenciesHash);
 
           resolve();
@@ -128,8 +120,7 @@ module.exports = (config, flags) => {
   }
 
   function startCompilation() {
-    let clientCompiler,
-      serverCompiler;
+    let clientCompiler, serverCompiler;
     const { clientConfig, serverConfig } = compileConfigs(config);
 
     const {
@@ -177,13 +168,16 @@ module.exports = (config, flags) => {
     };
 
     const startServer = () => {
-      const serverPaths = Object.keys(serverCompiler.options.entry)
-        .map(entry => path.join(serverCompiler.options.output.path, `${entry}.js`));
+      const serverPaths = Object.keys(serverCompiler.options.entry).map(entry =>
+        path.join(serverCompiler.options.output.path, `${entry}.js`));
       const mainPath = path.join(serverCompiler.options.output.path, 'main.js');
 
       const nodemonOpts = {
         script: mainPath,
         watch: serverPaths,
+        verbose: false,
+        stdout: false,
+        ext: 'js',
         nodeArgs: flags,
       };
       nodemon(nodemonOpts)

@@ -1,7 +1,5 @@
 module.exports = {
-  plugins: [
-    'import',
-  ],
+  plugins: ['import'],
   env: {
     es6: true,
   },
@@ -11,11 +9,7 @@ module.exports = {
     ecmaFeatures: { experimentalObjectRestSpread: true },
   },
   settings: {
-    'import/ignore': [
-      'node_modules',
-      '.json$',
-      '.(scss|less|css|styl)$',
-    ],
+    'import/ignore': ['node_modules', '.json$', '.(scss|less|css|styl)$'],
   },
   rules: {
     // https://www.npmjs.com/package/eslint-plugin-import#rules
@@ -30,14 +24,10 @@ module.exports = {
     'import/no-named-as-default': 0,
     'import/no-named-as-default-member': 0,
     'import/order': [
-      1,
+      2,
       {
-        groups: [
-          'builtin',
-          ['external', 'internal'],
-          'parent',
-          ['sibling', 'index'],
-        ],
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'ignore',
       },
     ],
     'import/no-duplicates': 2,
@@ -56,14 +46,17 @@ module.exports = {
     'import/newline-after-import': 1,
     'import/no-amd': 2,
     'import/no-commonjs': 0,
+    // This is broken in so many ways
     'import/no-extraneous-dependencies': 0,
-    'import/no-mutable-exports': 2,
+    // annoying for wrapped components like redux-form.
+    'import/no-mutable-exports': 0,
 
     'import/no-namespace': 0,
     'import/no-nodejs-modules': 0,
     'import/no-restricted-paths': 0,
 
     'import/prefer-default-export': 0,
+    // only disabled until this is fixed: https://github.com/benmosher/eslint-plugin-import/issues/671
     'import/no-unassigned-import': 0,
   },
 };

@@ -5,7 +5,8 @@
   "scripts": {
     "build": "NODE_ENV=production boldr-dx build",
     "dev": "boldr-dx dev",
-    "lint:all": "npm run lint && npm run lint:css",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:js": "boldr-dx lint:js",
     "start": "node compiled/main.js",
     "lint:css": "boldr-dx lint:css",
     "test": "npm run test:browser && npm run test:node && node ./.boldr/mapCoverage.js",
@@ -27,6 +28,7 @@
     "boldr-utils": "^0.1.12",
     "compression": "1.6.2",
     "debug": "^2.6.3",
+    "dotenv": "^4.0.0",
     "express": "4.15.2",
     "lodash": "^4.17.4",
     "normalize.css": "^5.0.0",
@@ -45,10 +47,10 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "boldr-dx": "0.1.2",
+    "boldr-dx": "0.1.4",
     "enzyme": "2.7.1",
     "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.6",
+    "eslint-config-boldr": "^0.8.7",
     "identity-obj-proxy": "^3.0.0",
     "istanbul-api": "^1.1.1",
     "istanbul-lib-coverage": "^1.0.1",

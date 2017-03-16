@@ -7,8 +7,10 @@ import ssrMiddleware from './middleware/ssr';
 
 const app = new Express();
 const server = http.createServer(app);
-const host = SERVER_HOST || '0.0.0.0';
-const port = parseInt(SERVER_PORT, 10);
+const host = process.env.SERVER_HOST || 'localhost';
+const processPort = process.env.SERVER_PORT;
+
+const port = parseInt(processPort, 10) || 3000;
 
 // Remove annoying Express header addition.
 app.disable('x-powered-by');

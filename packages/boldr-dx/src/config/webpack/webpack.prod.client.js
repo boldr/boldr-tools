@@ -1,15 +1,15 @@
-const path = require('path');
-const glob = require('glob');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const AssetsPlugin = require('assets-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const BabiliWebpackPlugin = require('babili-webpack-plugin');
-const PurifyCSSPlugin = require('purifycss-webpack');
-const WebpackMd5Hash = require('webpack-md5-hash');
-const paths = require('../paths');
+import path from 'path';
+import glob from 'glob';
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import AssetsPlugin from 'assets-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
+import ManifestPlugin from 'webpack-manifest-plugin';
+import BabiliWebpackPlugin from 'babili-webpack-plugin';
+import PurifyCSSPlugin from 'purifycss-webpack';
+import WebpackMd5Hash from 'webpack-md5-hash';
+import paths from '../paths';
 
 module.exports = options => ({
   target: 'web',

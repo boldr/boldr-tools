@@ -1,17 +1,12 @@
-const path = require('path');
-const webpack = require('webpack');
-const shell = require('shelljs');
-const chalk = require('chalk');
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-
-const {
-  removeNil,
-  mergeDeep,
-  ifElse,
-} = require('boldr-utils');
-const paths = require('../paths');
-const getPostCSSConfig = require('../postCSSconfig');
+import path from 'path';
+import webpack from 'webpack';
+import shell from 'shelljs';
+import chalk from 'chalk';
+import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+import { removeNil, mergeDeep, ifElse } from 'boldr-utils';
+import paths from '../paths';
+import getPostCSSConfig from '../postCSSconfig';
 
 module.exports = options => {
   const isDev = options.environment === 'development';
@@ -69,9 +64,6 @@ module.exports = options => {
     plugins: removeNil([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || options.environment),
-        SERVER_PORT: JSON.stringify(process.env.SERVER_PORT || options.serverPort || ''),
-        SERVER_HOST: JSON.stringify(process.env.SERVER_HOST || options.serverHost || ''),
-        HMR_PORT: JSON.stringify(process.env.HMR_PORT || options.hmrPort || ''),
         PUBLIC_PATH: JSON.stringify(options.publicPath || ''),
         PUBLIC_DIR: JSON.stringify(options.publicDir || ''),
         ASSETS_MANIFEST: JSON.stringify(path.join(paths.ASSETS_DIR || '', options.clientAssetsFile || '')),

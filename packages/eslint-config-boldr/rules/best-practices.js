@@ -250,8 +250,6 @@ module.exports = {
     'no-shadow': 0,
     // disallow deletion of variables | is a strict mode violation
     'no-delete-var': 2,
-    // enforce return after a callback
-    'callback-return': 0,
     // specify the maximum depth callbacks can be nested
     'max-nested-callbacks': 0,
     // @NOTE exists in rules/babel.js -- require a capital letter for constructors
@@ -271,31 +269,9 @@ module.exports = {
         ignoreChainWithDepth: 3,
       },
     ],
-    // enforces 2 handling in callbacks (node environment)
-    'handle-callback-err': 1,
-    // disallow mixing regular variable and require declarations
-    'no-mixed-requires': [
-      2,
-      {
-        grouping: true,
-        allowCall: false,
-      },
-    ],
-    // disallow use of new operator with the require function
-    'no-new-require': 2,
-    // disallow string concatenation with __dirname and __filename
-    'no-path-concat': 0,
-    // disallow process.exit()
-    'no-process-exit': 0,
-    // restrict usage of specified node modules
-    'no-restricted-modules': 0,
-    // disallow use of synchronous methods (0 by default)
-    'no-sync': 0,
     'no-await-in-loop': 0,
     'no-global-assign': 0,
     'no-magic-numbers': 0,
     'no-mixed-operators': 0,
-    // disallow use of process.env
-    'no-process-env': 0,
   },
 };

@@ -1,6 +1,6 @@
-const webpack = require('webpack');
-const nodeExternals = require('webpack-node-externals');
-const paths = require('../paths');
+import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
+import paths from '../paths';
 
 module.exports = options => ({
   target: 'node',
