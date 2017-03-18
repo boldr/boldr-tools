@@ -47,10 +47,10 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "boldr-dx": "0.1.4",
+    "boldr-dx": "0.1.6",
     "enzyme": "2.7.1",
-    "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.7",
+    "eslint": "^3.18.0",
+    "eslint-config-boldr": "^0.8.8",
     "identity-obj-proxy": "^3.0.0",
     "istanbul-api": "^1.1.1",
     "istanbul-lib-coverage": "^1.0.1",

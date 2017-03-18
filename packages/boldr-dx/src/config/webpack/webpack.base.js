@@ -2,8 +2,6 @@ import path from 'path';
 import webpack from 'webpack';
 import shell from 'shelljs';
 import chalk from 'chalk';
-import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import { removeNil, mergeDeep, ifElse } from 'boldr-utils';
 import paths from '../paths';
 import getPostCSSConfig from '../postCSSconfig';
@@ -95,11 +93,6 @@ module.exports = options => {
           },
         }),
       ),
-      new FriendlyErrorsPlugin({
-        clearConsole: false,
-      }),
-      // Helps solve problems caused by MacOS which does not follow strict path case sensitivity
-      new CaseSensitivePathsPlugin(),
     ]),
 
     module: {

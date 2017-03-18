@@ -30,7 +30,6 @@
   "dependencies": {
     "boldr-utils": "^0.1.12",
     "caporal": "^0.3.0",
-    "commander": "^2.9.0",
     "fs-extra": "^2.1.0",
     "inquirer": "^3.0.6",
     "lodash.uniq": "^4.5.0",

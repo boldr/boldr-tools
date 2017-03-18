@@ -32,6 +32,14 @@ module.exports = options => ({
     net: 'empty',
     tls: 'empty',
     dirname: true,
+    __dirname: true,
+    __filename: true,
+    global: true,
+    crypto: 'empty',
+    process: true,
+    module: false,
+    clearImmediate: false,
+    setImmediate: false,
   },
   module: {
     rules: [

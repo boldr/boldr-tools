@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const appRootDir = require('app-root-dir');
 
-
-const ROOT_DIR = fs.realpathSync(process.cwd());
+const ROOT_DIR = appRootDir.get();
 
 function resolveApp(relativePath) {
   return path.resolve(ROOT_DIR, relativePath);

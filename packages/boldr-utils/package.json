@@ -39,8 +39,8 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.2.1",
-    "eslint": "^3.17.1",
-    "eslint-config-boldr": "^0.8.6",
+    "eslint": "^3.18.0",
+    "eslint-config-boldr": "^0.8.8",
     "rimraf": "^2.6.1"
   }
 }

@@ -3,7 +3,7 @@ import { logger } from 'boldr-utils';
 
 module.exports = (webpackConfig, cb) => {
   let webpackCompiler;
-  const type = webpackConfig.target === 'web' ? 'Client' : 'Server';
+  const type = webpackConfig.target === 'web' ? 'client' : 'server';
 
   // Compile the webpack config
   try {

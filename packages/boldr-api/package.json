@@ -1,0 +1,60 @@
+{
+  "name": "boldr-api",
+  "version": "0.1.0",
+  "description": "API server and database for Boldr CMS",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Steven Truesdell <steven@strues.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boldr/getBoldr.git"
+  },
+  "bugs": "https://github.com/boldr/getBoldr/issues",
+  "homepage": "https://github.com/boldr/getBoldr#readme",
+  "scripts": {
+    "dev": "cross-env DEBUG=boldrAPI:* nodemon --exec babel-node ./src/index.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "chalk": "^1.1.3",
+    "debug": "^2.6.3",
+    "dotenv": "^4.0.0",
+    "ioredis": "^2.5.0",
+    "jsonwebtoken": "^7.3.0",
+    "kcors": "2",
+    "knex": "^0.12.8",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.1.0",
+    "koa-compose": "^3.2.1",
+    "koa-compress": "^2.0.0",
+    "koa-convert": "^1.2.0",
+    "koa-helmet": "next",
+    "koa-mount": "next",
+    "koa-router": "7.1.0",
+    "koa-session2": "babel",
+    "koa-static": "^3.0.0",
+    "objection": "^0.7.8",
+    "pg": "^6.1.4",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-env": "^1.2.2",
+    "cross-env": "^3.2.4",
+    "eslint": "^3.18.0",
+    "eslint-config-boldr": "^0.8.8",
+    "eslint-plugin-flowtype": "^2.30.3",
+    "fast-async": "^6.2.1",
+    "flow-bin": "^0.42.0",
+    "nodemon": "^1.11.0",
+    "rimraf": "^2.6.1"
+  },
+  "keywords": [
+    "boldr",
+    "cli",
+    "boldr-cli"
+  ]
+}

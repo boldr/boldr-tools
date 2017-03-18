@@ -351,13 +351,14 @@ module.exports = (options, args) => {
   }
   // Checks to see if user would like src backed up before continuing
   function askToBackupSrc(projectChoice) {
-    // Check if src already exists
+    // Check src directory at process.cwd()/src
+    // if it's found, ask about backing it up.
     if (shell.test('-d', SRC_DIR)) {
       const question = [
         {
           type: 'confirm',
           name: 'srcBackup',
-          message: 'You already have a src directory. Would you like boldr-dx to backup src/ and continue?', // eslint-disable-line
+          message: 'Found a prexisting src directory. Should we back it up and continue? Or exit?', // eslint-disable-line
           default: true,
         },
       ];
@@ -399,9 +400,9 @@ module.exports = (options, args) => {
           name: 'repoUrl',
           message: 'Enter a git repository URL (https or ssh)',
           validate: answer => {
-            const httpsPass = answer.match(/^https:\/\/.*.git$/);
-            const sshPass = answer.match(/^git@github.com:.*.git$/);
-            if (httpsPass || sshPass) {
+            const isValidHttps = answer.match(/^https:\/\/.*.git$/);
+            const isValidSsh = answer.match(/^git@github.com:.*.git$/);
+            if (isValidHttps || isValidSsh) {
               return true;
             }
             return 'Please enter a valid repo url';
@@ -433,18 +434,16 @@ module.exports = (options, args) => {
     logger.task(`Creating your new project at ${dirName}`);
 
     let output = shell.mkdir(dirName);
-    console.log(output);
     verifyExit(output.code);
 
     output = shell.cd(dirName);
-    console.log(output);
     verifyExit(output.code);
   };
 
   const defineTemportyPaths = () => {
     tmpProject = path.resolve(process.cwd(), '.boldrdx-tmp'); // eslint-disable-line no-useless-escape
     tmpDir = tmpProject;
-    repoURL = 'https://github.com/boldr/get-boldr.git';
+    repoURL = 'https://github.com/boldr/getBoldr.git';
   };
 
   const askProjectSetupQs = () => {

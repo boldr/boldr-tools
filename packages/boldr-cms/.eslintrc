@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "boldr",
+    "boldr/react",
+    "boldr/import",
+    "boldr/jsx-a11y",
+    "boldr/flowtype"
+  ],
+
+  "env": {
+  },
+
+  "plugins": [
+  ],
+
+  "rules": {
+  }
+}

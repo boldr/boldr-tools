@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
@@ -44,11 +44,11 @@
     "node": ">= 7"
   },
   "peerDependencies": {
-    "eslint": "^3.17.1"
+    "eslint": "^3.18.0"
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
-    "eslint": "^3.17.1",
+    "eslint": "^3.18.0",
     "eslint-find-rules": "^1.14.3",
     "npm-run-all": "^4.0.2"
   },

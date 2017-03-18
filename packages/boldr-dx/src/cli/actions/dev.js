@@ -5,6 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import cloneDeep from 'lodash/cloneDeep';
+import chalk from 'chalk';
 import merge from 'webpack-merge';
 import shell from 'shelljs';
 import webpack from 'webpack';
@@ -146,8 +147,11 @@ module.exports = (config, flags) => {
     const startClient = () => {
       const app = express();
       const wpDevMwOpts = {
-        quiet: true,
-        noInfo: false,
+        quiet: false,
+        noInfo: true,
+        stats: {
+          colors: true,
+        },
         lazy: false,
         hot: true,
         serverSideRender: true,
@@ -194,6 +198,7 @@ module.exports = (config, flags) => {
     // Compile Client Webpack Config
     clientCompiler = webpackCompiler(clientConfig, stats => {
       if (stats.hasErrors()) {
+        console.log(chalk.red(stats));
         return;
       }
       afterClientCompile();
@@ -215,7 +220,10 @@ module.exports = (config, flags) => {
       checkPort(PORT, startServer);
     });
     serverCompiler = webpackCompiler(serverConfig, stats => {
-      if (stats.hasErrors()) return;
+      if (stats.hasErrors()) {
+        console.log(chalk.red(stats));
+        return;
+      }
       startServerOnce();
     });
     checkPort(DEV_PORT, startClient);

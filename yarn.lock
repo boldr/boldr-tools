@@ -942,7 +942,7 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
 
-concat-stream@^1.4.6:
+concat-stream@^1.4.6, concat-stream@^1.5.2:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-1.6.0.tgz#0aac662fd52be78964d5532f694784e70110acf7"
   dependencies:
@@ -957,6 +957,10 @@ contains-path@^0.1.0:
 content-type-parser@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/content-type-parser/-/content-type-parser-1.0.1.tgz#c3e56988c53c65127fb46d4032a3a900246fdc94"
+
+conventional-commit-types@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/conventional-commit-types/-/conventional-commit-types-2.1.0.tgz#45d860386c9a2e6537ee91d8a1b61bd0411b3d04"
 
 convert-source-map@^1.1.0:
   version "1.4.0"
@@ -998,6 +1002,17 @@ currently-unhandled@^0.4.1:
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
   dependencies:
     array-find-index "^1.0.1"
+
+cz-conventional-changelog@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cz-conventional-changelog/-/cz-conventional-changelog-2.0.0.tgz#55a979afdfe95e7024879d2a0f5924630170b533"
+  dependencies:
+    conventional-commit-types "^2.0.0"
+    lodash.map "^4.5.1"
+    longest "^1.0.1"
+    pad-right "^0.2.2"
+    right-pad "^1.0.1"
+    word-wrap "^1.0.3"
 
 d@^0.1.1, d@~0.1.1:
   version "0.1.1"
@@ -1087,6 +1102,13 @@ dlv@^1.1.0:
 doctrine@1.5.0, doctrine@^1.2.2:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-1.5.0.tgz#379dce730f6166f76cefa4e6707a159b02c5a6fa"
+  dependencies:
+    esutils "^2.0.2"
+    isarray "^1.0.0"
+
+doctrine@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.0.0.tgz#c73d8d2909d22291e1a007a395804da8b665fe63"
   dependencies:
     esutils "^2.0.2"
     isarray "^1.0.0"
@@ -1224,9 +1246,9 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-config-boldr@^0.8.6:
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-boldr/-/eslint-config-boldr-0.8.6.tgz#8935736191d22f5f30024432e5a51b14533f92a9"
+eslint-config-boldr@^0.8.8:
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/eslint-config-boldr/-/eslint-config-boldr-0.8.8.tgz#3537ee356ebdb0afc24878349553e0779c495474"
   dependencies:
     babel-eslint "^7.1.1"
     eslint-plugin-babel "^4.1.1"
@@ -1296,7 +1318,7 @@ eslint-plugin-react@6.10.0:
     jsx-ast-utils "^1.3.4"
     object.assign "^4.0.4"
 
-eslint@^3.17.0, eslint@^3.17.1:
+eslint@^3.17.0:
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.17.1.tgz#b80ae12d9c406d858406fccda627afce33ea10ea"
   dependencies:
@@ -1307,6 +1329,46 @@ eslint@^3.17.0, eslint@^3.17.1:
     doctrine "^1.2.2"
     escope "^3.6.0"
     espree "^3.4.0"
+    estraverse "^4.2.0"
+    esutils "^2.0.2"
+    file-entry-cache "^2.0.0"
+    glob "^7.0.3"
+    globals "^9.14.0"
+    ignore "^3.2.0"
+    imurmurhash "^0.1.4"
+    inquirer "^0.12.0"
+    is-my-json-valid "^2.10.0"
+    is-resolvable "^1.0.0"
+    js-yaml "^3.5.1"
+    json-stable-stringify "^1.0.0"
+    levn "^0.3.0"
+    lodash "^4.0.0"
+    mkdirp "^0.5.0"
+    natural-compare "^1.4.0"
+    optionator "^0.8.2"
+    path-is-inside "^1.0.1"
+    pluralize "^1.2.1"
+    progress "^1.1.8"
+    require-uncached "^1.0.2"
+    shelljs "^0.7.5"
+    strip-bom "^3.0.0"
+    strip-json-comments "~2.0.1"
+    table "^3.7.8"
+    text-table "~0.2.0"
+    user-home "^2.0.0"
+
+eslint@^3.18.0:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.18.0.tgz#647e985c4ae71502d20ac62c109f66d5104c8a4b"
+  dependencies:
+    babel-code-frame "^6.16.0"
+    chalk "^1.1.3"
+    concat-stream "^1.5.2"
+    debug "^2.1.1"
+    doctrine "^2.0.0"
+    escope "^3.6.0"
+    espree "^3.4.0"
+    esquery "^1.0.0"
     estraverse "^4.2.0"
     esutils "^2.0.2"
     file-entry-cache "^2.0.0"
@@ -1350,6 +1412,12 @@ esprima@^3.1.1:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
 
+esquery@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/esquery/-/esquery-1.0.0.tgz#cfba8b57d7fba93f17298a8a006a04cda13d80fa"
+  dependencies:
+    estraverse "^4.0.0"
+
 esrecurse@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/esrecurse/-/esrecurse-4.1.0.tgz#4713b6536adf7f2ac4f327d559e7756bff648220"
@@ -1361,7 +1429,7 @@ estraverse@^1.9.1:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-1.9.3.tgz#af67f2dc922582415950926091a4005d29c9bb44"
 
-estraverse@^4.1.1, estraverse@^4.2.0:
+estraverse@^4.0.0, estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.2.0.tgz#0dee3fed31fcd469618ce7342099fc1afa0bdb13"
 
@@ -1513,9 +1581,9 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flow-bin@^0.41.0:
-  version "0.41.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.41.0.tgz#8badac9a19da45004997e599bd316518db489b2e"
+flow-bin@^0.42.0:
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.42.0.tgz#05dd754b6b052de7b150f9210e2160746961e3cf"
 
 flow-parser@0.40.0:
   version "0.40.0"
@@ -2352,14 +2420,6 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-lerna-changelog@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/lerna-changelog/-/lerna-changelog-0.3.0.tgz#40421509edd3e2ba20d2818c2972323fc1c9c9cd"
-  dependencies:
-    chalk "^1.1.3"
-    mkdirp "^0.5.1"
-    yargs "^6.6.0"
-
 lerna@2.0.0-beta.38:
   version "2.0.0-beta.38"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.0.0-beta.38.tgz#99236416a6699707336dcbdeef83c315d1f71833"
@@ -2416,6 +2476,10 @@ locate-path@^2.0.0:
 lodash.cond@^4.3.0:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/lodash.cond/-/lodash.cond-4.5.2.tgz#f471a1da486be60f6ab955d17115523dd1d255d5"
+
+lodash.map@^4.5.1:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.map/-/lodash.map-4.6.0.tgz#771ec7839e3473d9c4cde28b19394c3562f4f6d3"
 
 lodash.memoize@^4.1.2:
   version "4.1.2"
@@ -2730,6 +2794,12 @@ p-locate@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-locate/-/p-locate-2.0.0.tgz#20a0103b222a70c8fd39cc2e580680f3dde5ec43"
   dependencies:
     p-limit "^1.1.0"
+
+pad-right@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/pad-right/-/pad-right-0.2.2.tgz#6fbc924045d244f2a2a244503060d3bfc6009774"
+  dependencies:
+    repeat-string "^1.5.2"
 
 parse-glob@^3.0.4:
   version "3.0.4"
@@ -3116,6 +3186,10 @@ right-align@^0.1.1:
   resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
   dependencies:
     align-text "^0.1.1"
+
+right-pad@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/right-pad/-/right-pad-1.0.1.tgz#8ca08c2cbb5b55e74dafa96bf7fd1a27d568c8d0"
 
 rimraf@^2.2.8, rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.6.1:
   version "2.6.1"
@@ -3529,6 +3603,10 @@ which@^1.1.1, which@^1.2.12, which@^1.2.9:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
+
+word-wrap@^1.0.3:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.1.tgz#248f459b465d179a17bc407c854d3151d07e45d8"
 
 wordwrap@0.0.2:
   version "0.0.2"

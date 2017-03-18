@@ -18,6 +18,8 @@ flow-typed
 
 *.log
 
+packages/boldr-core/
+
 **/dist
 **/build
 lib/
