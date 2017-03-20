@@ -26,7 +26,7 @@ export async function listAttachments(req, res, next) {
 
     return responseHandler(res, 200, medias);
   } catch (error) {
-  /* istanbul ignore next */
+    /* istanbul ignore next */
     return next(error);
   }
 }
@@ -57,9 +57,7 @@ export async function getAttachment(req, res, next) {
  */
 export async function updateAttachment(req, res, next) {
   try {
-    const updatedAttachment = await Attachment
-    .query()
-    .patchAndFetchById(req.params.id, req.body);
+    const updatedAttachment = await Attachment.query().patchAndFetchById(req.params.id, req.body);
 
     await Activity.query().insert({
       user_id: req.user.id,
@@ -144,7 +142,7 @@ export async function uploadAttachment(req, res, next) {
       // create a readstream
       const readstream = fs.createReadStream(fileLoc);
       // send through graphicsmagick
-      gm(readstream).noProfile().quality(70).write(`./public/files/${newFileName}`, async (err) => {
+      gm(readstream).noProfile().quality(70).write(`./public/files/${newFileName}`, async err => {
         if (err) {
           return res.status(400).send('Could not parse upload completely.');
         }
@@ -172,7 +170,7 @@ export async function uploadAttachment(req, res, next) {
     });
   });
   // if theres an error with busboy, return it.
-  busboy.on('error', (error) => {
+  busboy.on('error', error => {
     console.log('Error', 'Something went wrong parsing the form', error);
     res.status(500).send('Could not parse upload completely.');
   });

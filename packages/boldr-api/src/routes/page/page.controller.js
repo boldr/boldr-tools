@@ -13,11 +13,7 @@ export async function listPages(req, res, next) {
 
 export async function getPageByUrl(req, res, next) {
   try {
-    const page = await Page
-      .query()
-      .where({ url: req.params.url })
-
-      .first();
+    const page = await Page.query().where({ url: req.params.url }).first();
 
     return res.status(200).json(page);
   } catch (error) {

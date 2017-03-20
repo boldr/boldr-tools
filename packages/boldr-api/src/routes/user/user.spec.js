@@ -31,61 +31,55 @@ describe('User API Endpoint', async () => {
     });
   });
   test('+++ GET /users -- List', () => {
-    return agent
-        .get('/api/v1/users')
-        .expect((res) => {
-          expect(res.status).toBe(200);
-          expect(Array.isArray(res.body.results)).toBe(true);
-        });
+    return agent.get('/api/v1/users').expect(res => {
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body.results)).toBe(true);
+    });
   });
 
   test('+++ GET /users/:id -- ID', () => {
-    return agent
-        .get('/api/v1/users/1b062e26-df71-48ce-b363-4ae9b966e7a0')
-        .expect((res) => {
-          expect(res.status).toBe(200);
-          expect(typeof res.body).toBe('object');
-        });
+    return agent.get('/api/v1/users/1b062e26-df71-48ce-b363-4ae9b966e7a0').expect(res => {
+      expect(res.status).toBe(200);
+      expect(typeof res.body).toBe('object');
+    });
   });
   test('+++ GET /users/:username/profile -- Profile', () => {
-    return agent
-        .get('/api/v1/users/Joey/profile')
-        .expect((res) => {
-          expect(res.status).toBe(200);
-          expect(typeof res.body).toBe('object');
-        });
+    return agent.get('/api/v1/users/Joey/profile').expect(res => {
+      expect(res.status).toBe(200);
+      expect(typeof res.body).toBe('object');
+    });
   });
   test('+++ UPDATE /users/:id', () => {
     return agent
-        .put('/api/v1/users/1b062e26-df71-48ce-b363-4ae9b966e7a0')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          bio: `this is my bio ${Math.random()}`,
-        })
-        .expect((res) => {
-          expect(res.status).toBe(202);
-          expect(typeof res.body).toBe('object');
-        });
+      .put('/api/v1/users/1b062e26-df71-48ce-b363-4ae9b966e7a0')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        bio: `this is my bio ${Math.random()}`,
+      })
+      .expect(res => {
+        expect(res.status).toBe(202);
+        expect(typeof res.body).toBe('object');
+      });
   });
   test('+++ UPDATE /users/admin/:id', () => {
     return agent
-        .put('/api/v1/users/admin/1b062e26-df71-48ce-b363-4ae9b966e7a0')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          bio: `this is my bio ${Math.random()}`,
-        })
-        .expect((res) => {
-          expect(res.status).toBe(202);
-          expect(typeof res.body).toBe('object');
-        });
+      .put('/api/v1/users/admin/1b062e26-df71-48ce-b363-4ae9b966e7a0')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        bio: `this is my bio ${Math.random()}`,
+      })
+      .expect(res => {
+        expect(res.status).toBe(202);
+        expect(typeof res.body).toBe('object');
+      });
   });
   test('+++ DELETE /users/:id', () => {
     return agent
-        .del('/api/v1/users/d42c3ebf-4ae6-4578-ba65-0c8f48b7f41f')
-        .set('Authorization', `Bearer ${token}`)
-        .expect((res) => {
-          expect(res.status).toBe(204);
-        });
+      .del('/api/v1/users/d42c3ebf-4ae6-4578-ba65-0c8f48b7f41f')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(res => {
+        expect(res.status).toBe(204);
+      });
   });
   test('+++ POST /users', () => {
     return agent
@@ -104,7 +98,7 @@ describe('User API Endpoint', async () => {
         profile_image: 'https://boldr.io/images/unknown-avatar.png',
         birthday: '01/01/1988',
       })
-      .expect((res) => {
+      .expect(res => {
         expect(res.status).toBe(201);
       });
   });

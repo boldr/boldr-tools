@@ -6,15 +6,4 @@ import signToken from './authentication/signToken';
 import { generateHash, randomString, SALT } from './hashing';
 import mailer from './mailer';
 
-export {
-   logger,
-   db,
-   redisClient,
-   disconnect,
-   isAuthenticated,
-   signToken,
-   generateHash,
-   randomString,
-   SALT,
-   mailer,
-};
+export { logger, db, redisClient, disconnect, isAuthenticated, signToken, generateHash, randomString, SALT, mailer };

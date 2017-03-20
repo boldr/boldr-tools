@@ -15,36 +15,30 @@ describe('Menu API Endpoint', async () => {
     token = body.token;
   });
   test('+++ GET /menus', () => {
-    return agent
-        .get('/api/v1/menus')
-        .set('Accept', 'application/json')
-        .expect((res) => {
-          expect(res.status).toBe(200);
-        });
+    return agent.get('/api/v1/menus').set('Accept', 'application/json').expect(res => {
+      expect(res.status).toBe(200);
+    });
   });
   test('+++ GET /menus/:id', () => {
-    return agent
-        .get('/api/v1/menus/1')
-        .set('Accept', 'application/json')
-        .expect((res) => {
-          expect(res.status).toBe(200);
-          expect(res.body.name).toBe('Main');
-        });
+    return agent.get('/api/v1/menus/1').set('Accept', 'application/json').expect(res => {
+      expect(res.status).toBe(200);
+      expect(res.body.name).toBe('Main');
+    });
   });
   test('+++ POST /menus', () => {
     return agent
-        .post('/api/v1/menus')
-        .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          name: faker.random.word(),
-          order: 1,
-          restricted: false,
-        })
-        .expect((res) => {
-          expect(res.status).toBe(201);
-          expect(typeof res.body).toBe('object');
-        });
+      .post('/api/v1/menus')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: faker.random.word(),
+        order: 1,
+        restricted: false,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(typeof res.body).toBe('object');
+      });
   });
   // test('+++ PUT /menus/:id', () => {
   //   return agent

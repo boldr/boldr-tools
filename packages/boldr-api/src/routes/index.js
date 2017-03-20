@@ -17,10 +17,9 @@ import templateRoutes from './template/template.routes';
 import tokenRoutes from './token/token.routes';
 import userRoutes from './user/user.routes';
 
-
 const API_PREFIX = config.get('apiPrefix');
 
-export default (app) => {
+export default app => {
   app.get(`${API_PREFIX}/health-check`, (req, res) => {
     res.status(200);
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -86,7 +85,7 @@ export default (app) => {
  * to access this endpoint.
  */
 
- /**
+/**
   * @apiDefine user User access for certain restricted routes.
   * You must pass an authorization header with a token to access this endpoint.
   */

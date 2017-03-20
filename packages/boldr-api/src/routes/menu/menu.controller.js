@@ -19,10 +19,7 @@ export async function listMenu(req, res, next) {
 
 export async function showMenu(req, res, next) {
   try {
-    const menu = await Menu
-      .query()
-      .eager('[details]')
-      .findById(req.params.id);
+    const menu = await Menu.query().eager('[details]').findById(req.params.id);
 
     return responseHandler(res, 200, menu);
   } catch (error) {
@@ -38,9 +35,7 @@ export async function createMenu(req, res, next) {
       attributes: req.body.attributes,
       restricted: req.body.restricted,
     };
-    const newMenu = await Menu
-      .query()
-      .insert(payload);
+    const newMenu = await Menu.query().insert(payload);
     return responseHandler(res, 201, newMenu);
   } catch (err) {
     return next(new InternalServer(err));
@@ -49,8 +44,7 @@ export async function createMenu(req, res, next) {
 
 export async function updateMainMenu(req, res, next) {
   try {
-    const updatedNav = await Menu.query()
-      .patchAndFetchById(req.params.id, req.body);
+    const updatedNav = await Menu.query().patchAndFetchById(req.params.id, req.body);
 
     return res.status(202).json(updatedNav);
   } catch (error) {

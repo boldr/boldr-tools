@@ -20,22 +20,40 @@ export default app => {
   app.use(compression());
   // enable CORS - Cross Origin Resource Sharing
   // allow for sending credentials (auth token) in the headers.
-  app.use(cors({
-    origin: true,
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  );
   // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: true,
-    limit: '20mb' }));
+  app.use(
+    bodyParser.urlencoded({
+      extended: true,
+      limit: '20mb',
+    }),
+  );
   // parse application/anything+json
-  app.use(bodyParser.json({ type: 'application/*+json',
-    limit: '20mb' }));
+  app.use(
+    bodyParser.json({
+      type: 'application/*+json',
+      limit: '20mb',
+    }),
+  );
   // parse application/json
-  app.use(bodyParser.json({ type: 'application/json',
-    limit: '20mb' }));
+  app.use(
+    bodyParser.json({
+      type: 'application/json',
+      limit: '20mb',
+    }),
+  );
   // parse text/plain
-  app.use(bodyParser.text({ type: 'text/plain',
-    limit: '20mb' }));
+  app.use(
+    bodyParser.text({
+      type: 'text/plain',
+      limit: '20mb',
+    }),
+  );
   // parse anything else
   app.use(bodyParser.raw({ limit: '20mb' }));
   app.use(

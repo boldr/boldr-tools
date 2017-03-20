@@ -1,11 +1,10 @@
-import uuid from 'uuid/v4';
+import uuid from 'uuid';
 import * as objection from 'objection';
-import { mailer, signToken } from '../../services/index';
+import { mailer, signToken, generateHash } from '../../services';
 import { welcomeEmail } from '../../services/mailer/templates';
 import { User, Activity, VerificationToken } from '../../models';
 import {
   responseHandler,
-  generateHash,
   UserNotVerifiedError,
   BadRequest,
   InternalServer,
@@ -13,7 +12,7 @@ import {
   Conflict,
 } from '../../core';
 
-const debug = require('debug')('boldr:auth-ctrl');
+const debug = require('debug')('boldrAPI:auth-ctrl');
 
 /**
  * register creates a new user in the database.
@@ -22,31 +21,31 @@ const debug = require('debug')('boldr:auth-ctrl');
  * @returns {*}
  */
 export async function registerUser(req, res, next) {
+  // Param validation
+  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('email', 'Email cannot be blank').notEmpty();
+  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.assert('first_name', 'First name cannot be blank').notEmpty();
+
+  req.sanitize('email').normalizeEmail({ remove_dots: false });
+  req.sanitize('first_name').trim();
+  req.sanitize('last_name').trim();
+
+  const checkExisting = await User.query().where('email', req.body.email);
+
+  if (checkExisting.length) {
+    return res.status(409).json('An account matching this email already exists.');
+  }
+
+  const errors = req.validationErrors();
+  if (errors) {
+    return res.status(400).json(errors);
+  }
+
   try {
-    // Param validation
-    req.assert('email', 'Email is not valid').isEmail();
-    req.assert('email', 'Email cannot be blank').notEmpty();
-    req.assert('password', 'Password cannot be blank').notEmpty();
-    req.assert('first_name', 'First name cannot be blank').notEmpty();
-
-    req.sanitize('email').normalizeEmail({ remove_dots: false });
-    req.sanitize('first_name').trim();
-    req.sanitize('last_name').trim();
-
-    const checkExisting = await User.query().where('email', req.body.email);
-
-    if (checkExisting.length) {
-      return res.status(409).json('An account matching this email already exists.');
-    }
-
-    const errors = req.validationErrors();
-    if (errors) {
-      return res.status(400).json(errors);
-    }
-
     // the data for the user being created.
     const payload = {
-      id: uuid(),
+      id: uuid.v4(),
       // no need to hash here, its taken care of on the model instance
       email: req.body.email,
       password: req.body.password,
@@ -64,25 +63,25 @@ export async function registerUser(req, res, next) {
         throwNotFound();
       }
       // generate user verification token to send in the email.
-      const verifToken = await uuid();
+      const verifToken = uuid.v4();
       // get the mail template
-      const mailBody = await welcomeEmail(verifToken);
+      const mailBody = welcomeEmail(verifToken);
       // subject
       const mailSubject = 'Boldr User Verification';
       // send the welcome email
       mailer(user, mailBody, mailSubject);
       // create a relationship between the user and the token
-      const verificationEmail = await user
-        .$relatedQuery('verificationToken')
-        .insert({ ip: req.ip,
-          token: verifToken,
-          user_id: user.id });
+      const verificationEmail = await user.$relatedQuery('verificationToken').insert({
+        ip: req.ip,
+        token: verifToken,
+        user_id: user.id,
+      });
       if (!verificationEmail) {
         return res.status(500).json('There was a problem with the mailer.');
       }
     });
     await Activity.query().insert({
-      id: uuid(),
+      id: uuid.v4(),
       user_id: payload.id,
       type: 'register',
       activity_user: payload.id,
@@ -101,17 +100,16 @@ export async function registerUser(req, res, next) {
  * @param next
  */
 export async function loginUser(req, res, next) {
+  const user = await User.query().where({ email: req.body.email }).eager('[roles]').first();
+
+  if (!user) {
+    return next(new Unauthorized('Unable to find a user matching the provided credentials.'));
+  }
+
+  if (!user.verified) {
+    return next(new UserNotVerifiedError());
+  }
   try {
-    console.log(req.body);
-    const user = await User.query().where({ email: req.body.email }).eager('[roles]').first();
-
-    if (!user) {
-      return next(new Unauthorized('Unable to find a user matching the provided credentials.'));
-    }
-
-    if (!user.verified) {
-      return next(new UserNotVerifiedError());
-    }
     const validAuth = await user.authenticate(req.body.password);
     if (!validAuth) return res.status(401).json('Unauthorized. Please try again.');
     // remove the password from the response.
@@ -121,8 +119,10 @@ export async function loginUser(req, res, next) {
     req.user = user;
     res.set('Authorization', `Bearer ${token}`);
     // req.role = user.role[0].id;
-    return res.json({ token,
-      user });
+    return res.json({
+      token,
+      user,
+    });
   } catch (error) {
     return next(new BadRequest(error));
   }

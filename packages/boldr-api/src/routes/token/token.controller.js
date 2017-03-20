@@ -15,10 +15,7 @@ import { VerificationToken, ResetToken } from '../../models';
  */
 export async function forgottenPassword(req, res, next) {
   try {
-    const user = await User
-    .query()
-    .where({ email: req.body.email })
-    .first();
+    const user = await User.query().where({ email: req.body.email }).first();
 
     const mailSubject = '[Boldr] Password Reset';
     const resetPasswordToken = uuid();
@@ -46,10 +43,7 @@ export async function forgottenPassword(req, res, next) {
  */
 export async function resetPassword(req, res, next) {
   try {
-    const userResetToken = await ResetToken
-    .query()
-    .where({ token: req.body.token })
-    .first();
+    const userResetToken = await ResetToken.query().where({ token: req.body.token }).first();
 
     if (!userResetToken) {
       return res.status(404).json({ error: 'Unable to locate an user with the provided token.' });

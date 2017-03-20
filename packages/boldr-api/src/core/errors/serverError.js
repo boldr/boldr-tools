@@ -8,8 +8,12 @@ import HttpError from './httpError';
  */
 class InternalServer extends HttpError {
   constructor(message, status = 500, isPublic = false) {
-    super(`The server encountered an unexpected condition which prevented it
-    from fulfilling the request.`, 500, isPublic);
+    super(
+      `The server encountered an unexpected condition which prevented it
+    from fulfilling the request.`,
+      500,
+      isPublic,
+    );
   }
 }
 

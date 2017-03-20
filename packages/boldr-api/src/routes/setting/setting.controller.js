@@ -34,9 +34,7 @@ export async function listSettings(req, res, next) {
  */
 export async function getSetting(req, res, next) {
   try {
-    const setting = await Setting
-      .query()
-      .findById(req.params.id);
+    const setting = await Setting.query().findById(req.params.id);
     if (!setting) return res.status(404).json({ error: 'Unable to find a setting matching the id' });
     return responseHandler(res, 200, setting);
   } catch (error) {
@@ -78,7 +76,5 @@ export async function addSetting(req, res, next) {
  * @returns {*}
  */
 export function updateSetting(req, res) {
-  return Setting.query()
-    .patchAndFetchById(req.params.id, req.body)
-    .then(setting => responseHandler(res, 202, setting));
+  return Setting.query().patchAndFetchById(req.params.id, req.body).then(setting => responseHandler(res, 202, setting));
 }

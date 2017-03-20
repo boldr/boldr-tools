@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../../app';
 
 const agent = request.agent(app);
-describe('Activities endpoint', async () => {
+describe('Activities endpoint', () => {
   let token;
   beforeAll(async () => {
     const loginData = {
@@ -10,14 +10,14 @@ describe('Activities endpoint', async () => {
       password: 'password',
     };
     const { body } = await agent.post('/api/v1/auth/login').set('Accept', 'application/json').send(loginData);
-    token = body.token;
+    token = body.token; // eslint-disable-line
   });
   test('GET /activities', async () => {
     const { status, body } = await agent
-        .get('/api/v1/activities')
-        .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${token}`)
-        expect(status).toBe(200);
-        expect(Array.isArray(body)).toBe(true);
+      .get('/api/v1/activities')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
+    expect(status).toBe(200);
+    expect(Array.isArray(body)).toBe(true);
   });
 });

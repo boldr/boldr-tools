@@ -6,7 +6,7 @@ import slugIt from '../../utils/slugIt';
 // Models
 import { Tag, Activity, Post, PostTag, Comment, PostComment } from '../../models';
 
-const debug = require('debug')('boldr:post-ctrl');
+const debug = require('debug')('boldrAPI:post-ctrl');
 
 /**
  * Create a post
@@ -229,8 +229,10 @@ export async function addCommentToPost(req, res, next) {
     });
     await newComment.$relatedQuery('commenter').relate({ id: req.user.id });
 
-    await PostComment.query().insert({ comment_id: newComment.id,
-      post_id: post.id });
+    await PostComment.query().insert({
+      comment_id: newComment.id,
+      post_id: post.id,
+    });
 
     return responseHandler(res, 201, newComment);
   } catch (error) {

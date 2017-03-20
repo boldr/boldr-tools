@@ -7,15 +7,15 @@ import redisClient from '../../services/redis';
 import Post from '../../models/post';
 import * as ctrl from './post.controller';
 
-
-const cache = require('express-redis-cache')({ client: redisClient });
+// const cache = require('express-redis-cache')({ client: redisClient });
 
 const controller = new BaseController(Post, 'id');
 
 const router = new Router();
 
-router.route('/')
-      /**
+router
+  .route('/')
+  /**
        * @api {get} /posts      List all posts
        * @apiName List All Posts
        * @apiGroup Post
@@ -42,8 +42,8 @@ router.route('/')
 
        * @apiError   {Object} 400 Some parameters may contain invalid values.
        */
-      .get(processQuery, controller.index.bind(controller))
-      /**
+  .get(processQuery, controller.index.bind(controller))
+  /**
        * @api {post} /posts         Create a new post
        * @apiName Create New Post
        * @apiGroup Post
@@ -68,10 +68,11 @@ router.route('/')
        * @apiError {Object} 409 There is already a post with this slug. Slugs (titles) must be unique.
        * @apiError {Object} 401 Unauthorized. You must be logged in to create a post.
        */
-      .post(isAuthenticated, checkRole('Admin'), ctrl.createPost);
+  .post(isAuthenticated, checkRole('Admin'), ctrl.createPost);
 
-router.route('/slug/:slug')
-      /**
+router
+  .route('/slug/:slug')
+  /**
        * @api {get} /posts/slug/:slug     Get post by slug
        * @apiName Get Slug
        * @apiGroup Post
@@ -97,10 +98,11 @@ router.route('/slug/:slug')
        * @apiSuccess {Object}   author           The post author's user object
        * @apiError {Object} 404 Unable to find a post matching the slug.
        */
-      .get(ctrl.getSlug);
+  .get(ctrl.getSlug);
 
-router.route('/:id')
-      /**
+router
+  .route('/:id')
+  /**
        * @api {get} /posts/:id      Get post by id
        * @apiName GetId
        * @apiGroup Post
@@ -108,8 +110,8 @@ router.route('/:id')
 
        * @apiError {Object} 404 Unable to find a post matching the id.
        */
-      .get(ctrl.getId)
-      /**
+  .get(ctrl.getId)
+  /**
        * @api {post} /posts/:id Add a tag to the post
        * @apiName AddTag
        * @apiGroup Post
@@ -117,8 +119,8 @@ router.route('/:id')
 
        * @apiError {Object} 404 Unable to find a post matching the id.
        */
-      .post(isAuthenticated, checkRole('Admin'), ctrl.addTag)
-      /**
+  .post(isAuthenticated, checkRole('Admin'), ctrl.addTag)
+  /**
        * @api {put} /posts/:id          Update post by id
        * @apiName UpdatePost
        * @apiGroup Post
@@ -126,8 +128,8 @@ router.route('/:id')
 
        * @apiError {Object} 404 Unable to find a post matching the id.
        */
-      .put(isAuthenticated, checkRole('Admin'), ctrl.update)
-      /**
+  .put(isAuthenticated, checkRole('Admin'), ctrl.update)
+  /**
        * @api {delete} /posts/:id       Delete post by id
        * @apiName DestroyPost
        * @apiGroup Post
@@ -135,7 +137,7 @@ router.route('/:id')
 
        * @apiError {Object} 404 Unable to find a post matching the id.
        */
-      .delete(isAuthenticated, checkRole('Admin'), ctrl.destroy);
+  .delete(isAuthenticated, checkRole('Admin'), ctrl.destroy);
 
 /**
 * @api {post} /posts/:id/comments     Comment on post

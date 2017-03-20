@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import { checkRole } from '../../middleware/rbac';
 import { isAuthenticated } from '../../services/authentication';
 import * as ctrl from './setting.controller';
 
-const router = express.Router();
+const router = new Router();
 /**
  * @api {get} /settings       Get all settings objects
  * @apiName listSettings

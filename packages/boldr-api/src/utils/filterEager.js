@@ -10,7 +10,7 @@ function filterEagerData(queryParams, relation, columnName) {
   };
   // construct the keys that are in where condition in query parameters
   const keys = Object.keys(opMap).map(op => `${relation}.${columnName}:${op}`);
-/* istanbul ignore next */
+  /* istanbul ignore next */
   const values = keys
     .map(key => {
       const value = queryParams.where[key];
@@ -25,11 +25,14 @@ function filterEagerData(queryParams, relation, columnName) {
       return null;
     })
     .filter(key => key !== null);
-/* istanbul ignore next */
+  /* istanbul ignore next */
   return function filterEagerValues(builder) {
-    return values.reduce((memo, value) => {
-      return memo.where(columnName, value.op, value.value);
-    }, builder);
+    return values.reduce(
+      (memo, value) => {
+        return memo.where(columnName, value.op, value.value);
+      },
+      builder,
+    );
   };
 }
 

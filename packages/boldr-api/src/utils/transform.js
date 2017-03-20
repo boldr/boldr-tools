@@ -36,10 +36,12 @@ export function responseHandler(err, res, status, data) {
   if (err) {
     /* istanbul ignore next */
     const errStatus = getErrorStatus(err);
-    return res
-      .status(err.statusCode || errStatus || 500)
-      .send(pickBy({ err: `${err.message}`,
-        hint: `${err.hint || ''}` }));
+    return res.status(err.statusCode || errStatus || 500).send(
+      pickBy({
+        err: `${err.message}`,
+        hint: `${err.hint || ''}`,
+      }),
+    );
   }
   /* istanbul ignore next */
   return res.status(status || 200).send(data);

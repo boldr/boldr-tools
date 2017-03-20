@@ -4,7 +4,7 @@ const knex = require('knex');
 const task = require('./task');
 
 // The list of available commands, e.g. node scripts/db.js migrate:undo
-const commands = ['version', 'migrate', 'migrate:undo', 'migration', 'seed'];
+const commands = ['version', 'migrate', 'migrate:undo', 'migration', 'seed', 'reset'];
 const command = process.argv[2];
 
 const config = {
@@ -49,6 +49,10 @@ module.exports = task('db', async () => {
         db = knex(config);
         await db.seed.run(config);
         break;
+      case 'reset':
+        db = knex(config);
+        await dropDatabase(db);
+        break;
       default:
         db = knex(config);
         await db.migrate.latest(config);
@@ -59,3 +63,32 @@ module.exports = task('db', async () => {
     }
   }
 });
+
+
+async function dropDatabase(db) {
+  await db.schema.dropTableIfExists('post_attachment');
+  await db.schema.dropTableIfExists('post_tag');
+  await db.schema.dropTableIfExists('post_comment');
+  await db.schema.dropTableIfExists('user_role');
+  await db.schema.dropTableIfExists('template_page');
+  await db.schema.dropTableIfExists('menu_menu_detail');
+  await db.schema.dropTableIfExists('setting');
+  await db.schema.dropTableIfExists('activity');
+  await db.schema.dropTableIfExists('menu');
+  await db.schema.dropTableIfExists('menu_detail');
+  await db.schema.dropTableIfExists('gallery');
+  await db.schema.dropTableIfExists('template');
+  await db.schema.dropTableIfExists('page');
+  await db.schema.dropTableIfExists('tag');
+  await db.schema.dropTableIfExists('verification_token');
+  await db.schema.dropTableIfExists('reset_token');
+  await db.schema.dropTableIfExists('post');
+  await db.schema.dropTableIfExists('comment');
+  await db.schema.dropTableIfExists('attachment');
+  await db.schema.dropTableIfExists('user');
+  await db.schema.dropTableIfExists('role');
+  await db.schema.dropTableIfExists('migrations_lock');
+  await db.schema.dropTableIfExists('migrations');
+  await db.migrate.latest(config);
+  await db.seed.run(config);
+}

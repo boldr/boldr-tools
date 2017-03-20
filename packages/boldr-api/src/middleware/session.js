@@ -1,6 +1,6 @@
 /**
  * Session Middleware
- * server/middleware/session
+ * src/middleware/session
  */
 
 import session from 'express-session';

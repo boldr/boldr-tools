@@ -11,9 +11,7 @@ import {
 it('BadRequest', () => {
   const badReq = new BadRequest();
   expect(typeof badReq).toBe('object');
-  expect(badReq.message).toBe(
-    'The request could not be understood by the server due to malformed syntax.'
-  );
+  expect(badReq.message).toBe('The request could not be understood by the server due to malformed syntax.');
 });
 
 it('Unauthorized', () => {
@@ -45,6 +43,6 @@ it('UserNotVerifiedError', () => {
   const verifErr = new UserNotVerifiedError();
   expect(typeof verifErr).toBe('object');
   expect(verifErr.message).toBe(
-    'This account has not been confirmed. Please check your email for a verification link.'
+    'This account has not been confirmed. Please check your email for a verification link.',
   );
 });

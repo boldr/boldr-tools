@@ -14,7 +14,7 @@ const server = http.createServer(app);
 Model.knex(db);
 
 server.listen(PORT, HOST);
-server.on('error', (err) => {
+server.on('error', err => {
   logger.error(`⚠️  ${err}`);
   throw err;
 });
@@ -31,7 +31,7 @@ process.on('SIGINT', () => {
   process.exit();
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   logger.error(`uncaughtException: ${error.message}`);
   logger.error(error.stack);
   process.exit(1);

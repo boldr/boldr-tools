@@ -1,5 +1,4 @@
 /* eslint-disable id-match */ /* eslint-disable no-unused-vars */
-import bcrypt from 'bcryptjs';
 import { Model } from 'objection';
 import BaseModel from './base';
 // Related Models
@@ -11,7 +10,10 @@ import VerificationToken from './verificationToken';
 import Post from './post';
 import UserRole from './join/userRole';
 
-const debug = require('debug')('boldr:user-model');
+const Promise = require('bluebird');
+const bcrypt = Promise.promisifyAll(require('bcrypt'));
+
+const debug = require('debug')('boldrAPI:user-model');
 
 /**
  * User model representing an account and identity of a person.
@@ -169,7 +171,7 @@ class User extends BaseModel {
    * @returns {*}
    */
   authenticate(plainText) {
-    return bcrypt.compareSync(plainText, this.password);
+    return bcrypt.compareAsync(plainText, this.password);
   }
   /**
    * Before updating make sure we hash the password if provided.
@@ -180,7 +182,7 @@ class User extends BaseModel {
     super.$beforeUpdate(queryContext);
 
     if (this.hasOwnProperty('password')) {
-      this.password = bcrypt.hashSync(this.password, 10);
+      this.password = bcrypt.hashAsync(this.password, 10);
     }
   }
   /**

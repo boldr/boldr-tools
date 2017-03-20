@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { isAuthenticated } from '../../services/authentication';
 import { checkRole } from '../../middleware/rbac';
 
@@ -9,7 +9,7 @@ import * as ctrl from './admin.controller';
  *
  */
 
-const router = express.Router();
+const router = new Router();
 
 /**
  * @api {get} /stats          List statistics
@@ -21,7 +21,6 @@ const router = express.Router();
  * @apiSuccess {Number}   users            The user count
  */
 
-router.route('/stats', isAuthenticated, checkRole('Admin'))
-  .get(ctrl.getAllStats);
+router.route('/stats', isAuthenticated, checkRole('Admin')).get(ctrl.getAllStats);
 
 export default router;

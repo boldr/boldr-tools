@@ -9,11 +9,11 @@ import sessionMiddleware from './session';
 
 const debug = require('debug')('boldrAPI:authMW');
 
-export default (app) => {
+export default app => {
   app.use(sessionMiddleware);
   app.use(async (req, res, next) => {
     req.isAuthenticated = () => {
-      const token = (req.headers.authorization && req.headers.authorization.split(' ')[1]);
+      const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
       try {
         return jwt.verify(token, config.get('token.secret'));
       } catch (err) {

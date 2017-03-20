@@ -1,8 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
 import { isAuthenticated } from '../../services/authentication';
 import * as ctrl from './template.controller';
 
-const router = express.Router();
+const router = new Router();
 
 /**
  * @api {get} /pages       List all pages

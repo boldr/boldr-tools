@@ -1,8 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
 import { isAuthenticated } from '../../services/authentication';
 import * as ctrl from './tag.controller';
 
-const router = express.Router();
+const router = new Router();
 /**
  * @api {get} /tags       List all tags
  * @apiName ListTags

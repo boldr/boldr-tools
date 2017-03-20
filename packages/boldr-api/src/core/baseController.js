@@ -53,11 +53,7 @@ class BaseController {
     let data = req.body;
     if (this.additionalProperties) {
       if (await isValidData(req, this.additionalProperties)) {
-        data = Object.assign(
-          {},
-          data,
-          getAdditionalProperties(req, this.additionalProperties),
-        );
+        data = Object.assign({}, data, getAdditionalProperties(req, this.additionalProperties));
       } else {
         return utilities.throwNotFound(res);
       }
@@ -96,10 +92,7 @@ class BaseController {
     if (this.filterEager) {
       this.filterEager.reduce(
         (memo, data) => {
-          return query.filterEager(
-            data.relation,
-            filterEagerData(req.query, data.table, data.property),
-          );
+          return query.filterEager(data.relation, filterEagerData(req.query, data.table, data.property));
         },
         query,
       );

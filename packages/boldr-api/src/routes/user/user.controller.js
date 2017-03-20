@@ -1,5 +1,5 @@
 import type { $Response, $Request, NextFunction } from 'express';
-import uuid from 'uuid/v4';
+import uuid from 'uuid';
 import * as objection from 'objection';
 import { mailer, signToken, generateHash } from '../../services/index';
 import { welcomeEmail } from '../../services/mailer/templates';
@@ -17,13 +17,9 @@ import User from '../../models/user';
 
 const debug = require('debug')('boldr:user-ctrl');
 
-
 export async function getUser(req, res, next) {
   try {
-    const user = await User.query()
-    .findById(req.params.id)
-    .eager('[roles]')
-    .omit(['password']);
+    const user = await User.query().findById(req.params.id).eager('[roles]').omit(['password']);
 
     return responseHandler(res, 200, user);
   } catch (error) {
@@ -35,7 +31,8 @@ export async function getUser(req, res, next) {
 
 export async function getUsername(req, res, next) {
   try {
-    const user = await User.query()
+    const user = await User
+    .query()
     .where({ username: req.params.username })
     .eager('[roles]')
     .omit(['password'])
@@ -59,9 +56,7 @@ export function updateUser(req, res, next) {
     return res.status(400).json(errors);
   }
 
-  return User.query()
-    .patchAndFetchById(req.params.id, req.body)
-    .then(user => res.status(202).json(user));
+  return User.query().patchAndFetchById(req.params.id, req.body).then(user => res.status(202).json(user));
 }
 
 export async function adminUpdateUser(req, res, next) {
@@ -69,10 +64,8 @@ export async function adminUpdateUser(req, res, next) {
     if (req.body.role) {
       /* istanbul ignore next */
       const u = await User.query().findById(req.params.id).eager('roles');
-      await u
-         .$relatedQuery('roles')
-         .unrelate();
-         /* istanbul ignore next */
+      await u.$relatedQuery('roles').unrelate();
+      /* istanbul ignore next */
       const newRole = await u.$relatedQuery('roles').relate({ id: req.body.role });
     }
     const payload = {
@@ -82,11 +75,8 @@ export async function adminUpdateUser(req, res, next) {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       avatar_url: req.body.avatar_url,
-
     };
-    User.query()
-      .patchAndFetchById(req.params.id, payload)
-      .then(user => res.status(202).json(user));
+    User.query().patchAndFetchById(req.params.id, payload).then(user => res.status(202).json(user));
   } catch (error) {
     /* istanbul ignore next */
     return next(error);
@@ -95,12 +85,9 @@ export async function adminUpdateUser(req, res, next) {
 
 export async function destroyUser(req, res, next) {
   try {
-    await User
-      .query()
-      .findById(req.params.id)
-      .then(user => {
-        return user.$relatedQuery('roles').delete();
-      });
+    await User.query().findById(req.params.id).then(user => {
+      return user.$relatedQuery('roles').delete();
+    });
     await User.query().deleteById(req.params.id);
 
     return res.status(204).json({ message: 'User deleted.' });
@@ -114,8 +101,8 @@ export async function adminCreateUser(req, res, next) {
   try {
     // the data for the user being created.
     const payload = {
-      id: uuid(),
-        // no need to hash here, its taken care of on the model instance
+      id: uuid.v4(),
+      // no need to hash here, its taken care of on the model instance
       email: req.body.email,
       password: req.body.password,
       first_name: req.body.first_name,
@@ -129,7 +116,7 @@ export async function adminCreateUser(req, res, next) {
       /* istanbul ignore next */
       return next(new Conflict());
     }
-    const newUser = await objection.transaction(User, async (User) => {
+    const newUser = await objection.transaction(User, async User => {
       const user = await User.query().insert(payload);
       await user.$relatedQuery('roles').relate({ id: 1 });
 
@@ -138,20 +125,19 @@ export async function adminCreateUser(req, res, next) {
         return next(new NotFound());
       }
       // generate user verification token to send in the email.
-      const verificationToken = await generateHash();
+      const verificationToken = generateHash();
       // get the mail template
-      const mailBody = await welcomeEmail(verificationToken);
+      const mailBody = welcomeEmail(verificationToken);
       // subject
       const mailSubject = 'Boldr User Verification';
       // send the welcome email
       mailer(user, mailBody, mailSubject);
       // create a relationship between the user and the token
-      const verificationEmail = await user.$relatedQuery('verificationToken')
-        .insert({
-          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-          token: verificationToken,
-          user_id: user.id,
-        });
+      const verificationEmail = await user.$relatedQuery('verificationToken').insert({
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        token: verificationToken,
+        user_id: user.id,
+      });
 
       if (!verificationEmail) {
         return next(new InternalServer());

@@ -52,7 +52,6 @@ function hasRole(user = null, role = null) {
   return user && role && user.hasRole(role);
 }
 
-
 export default () => {
   const rbac = new Router();
 

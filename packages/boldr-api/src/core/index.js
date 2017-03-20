@@ -1,4 +1,3 @@
-
 import responseHandler from './response';
 
 import {
@@ -11,8 +10,7 @@ import {
   InternalServer,
   NotImplemented,
   UserNotVerifiedError,
-}
-from './errors';
+} from './errors';
 
 export {
   responseHandler,

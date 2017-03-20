@@ -15,23 +15,17 @@ describe('Settings API Endpoint', async () => {
     token = body.token;
   });
   test('+++ GET /settings -- List', () => {
-    return agent
-      .get('/api/v1/settings')
-      .set('Accept', 'application/json')
-      .expect((res) => {
-        expect(res.status).toBe(200);
-        expect(Array.isArray(res.body)).toBe(true);
-      });
+    return agent.get('/api/v1/settings').set('Accept', 'application/json').expect(res => {
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
   });
 
   test('+++ GET /settings/:id -- Single setting', () => {
-    return agent
-      .get('/api/v1/settings/1')
-      .set('Accept', 'application/json')
-      .expect((res) => {
-        expect(res.status).toBe(200);
-        expect(typeof res.body).toBe('object');
-      });
+    return agent.get('/api/v1/settings/1').set('Accept', 'application/json').expect(res => {
+      expect(res.status).toBe(200);
+      expect(typeof res.body).toBe('object');
+    });
   });
   test('+++ POST /settings', () => {
     return agent
@@ -44,7 +38,7 @@ describe('Settings API Endpoint', async () => {
         label: 'Some',
         description: 'this is a test setting',
       })
-      .expect((res) => {
+      .expect(res => {
         expect(res.status).toBe(201);
         expect(typeof res.body).toBe('object');
       });
@@ -57,7 +51,7 @@ describe('Settings API Endpoint', async () => {
       .send({
         description: 'this is a test setting',
       })
-      .expect((res) => {
+      .expect(res => {
         expect(res.status).toBe(202);
         expect(typeof res.body).toBe('object');
       });

@@ -21,9 +21,7 @@ export async function getDetails(req, res, next) {
 
 export async function showDetail(req, res, next) {
   try {
-    const navigation = await MenuDetail
-      .query()
-      .findById(req.params.id);
+    const navigation = await MenuDetail.query().findById(req.params.id);
     return responseHandler(res, 200, navigation);
   } catch (error) {
     return next(error);

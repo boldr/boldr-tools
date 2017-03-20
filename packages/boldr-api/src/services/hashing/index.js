@@ -1,7 +1,3 @@
 import { generateHash, randomString, SALT } from './hashing';
 
-export {
-generateHash,
-randomString,
-SALT,
-};
+export { generateHash, randomString, SALT };

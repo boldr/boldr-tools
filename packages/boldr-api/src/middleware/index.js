@@ -4,10 +4,4 @@ import rbac from './rbac';
 import errorHandler from './errorHandler';
 import sessionMiddleware from './session';
 
-export {
-  expressMiddleware,
-  authMiddleware,
-  rbac,
-  errorHandler,
-  sessionMiddleware,
-};
+export { expressMiddleware, authMiddleware, rbac, errorHandler, sessionMiddleware };

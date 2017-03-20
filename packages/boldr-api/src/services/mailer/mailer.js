@@ -3,7 +3,6 @@ import config from '../../config';
 
 const debug = require('debug')('boldrAPI:mailer');
 
-
 const TRANSPORT_OPTS = {
   host: config.get('mail.host'),
   port: config.get('mail.port'),
@@ -23,7 +22,7 @@ export const transporter = createTransport(TRANSPORT_OPTS);
  * @param  {String}      mailSubject the subject line
  * @return {Promise}                  promise that the email is being sent
  */
-export default function mailer(user, mailBody, mailSubject) {
+export default async function mailer(user, mailBody, mailSubject) {
   const mailOptions = {
     to: user.email,
     from: config.get('mail.from'),
@@ -33,10 +32,10 @@ export default function mailer(user, mailBody, mailSubject) {
   if (!user.email || !mailSubject) {
     throw new Error('Incorrect mailing parameters');
   }
-  return transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return debug(error);
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
     debug(`Message sent: ${info.response}`);
-  });
+  } catch (error) {
+    return debug(error);
+  }
 }

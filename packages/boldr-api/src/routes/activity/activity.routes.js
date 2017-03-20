@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { isAuthenticated } from '../../services/authentication';
 import { checkRole } from '../../middleware/rbac';
 import * as ctrl from './activity.controller';
@@ -7,7 +7,7 @@ import * as ctrl from './activity.controller';
  * @apiDefine Activity
  */
 
-const router = express.Router();
+const router = new Router();
 
 /**
  * @api {get} /activities           List all activities

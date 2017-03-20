@@ -1,12 +1,7 @@
 import express from 'express';
 import routes from './routes/index';
 import redisClient from './services/redis';
-import {
-  expressMiddleware,
-  authMiddleware,
-  rbac,
-  errorHandler,
-} from './middleware';
+import { expressMiddleware, authMiddleware, rbac, errorHandler } from './middleware';
 
 // const cache = require('express-redis-cache')({ client: redisClient });
 const debug = require('debug')('boldrAPI:app');
