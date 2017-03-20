@@ -1,3 +1,6 @@
 {
-  "extends": ["boldr", "boldr/import", "boldr/flowtype"]
+  "extends": ["boldr", "boldr/import", "boldr/flowtype"],
+  "rules": {
+    "camelcase": 0
+    }
 }

@@ -1,5 +1,6 @@
 /* eslint-disable no-confusing-arrow */
 import winston from 'winston';
+import config from '../../config';
 
 const formatter = options => options.meta && options.meta.requestId ?
   `[RQID=${options.meta.requestId}] ${options.message}` :

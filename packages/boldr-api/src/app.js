@@ -1,35 +1,25 @@
-/**
- * @module boldr-api/app
- * ./src/app
- */
-import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import koaRouter from 'koa-router';
-import cors from 'kcors';
-import helmet from 'koa-helmet';
-import convert from 'koa-convert';
-import session from 'koa-session2';
-import _debug from 'debug';
+import express from 'express';
+import routes from './routes/index';
+import redisClient from './services/redis';
+import {
+  expressMiddleware,
+  authMiddleware,
+  rbac,
+  errorHandler,
+} from './middleware';
 
-import { logger, db } from './services';
-import { errorCatcher, responseTime, RedisStore } from './middleware';
+// const cache = require('express-redis-cache')({ client: redisClient });
+const debug = require('debug')('boldrAPI:app');
 
-const debug = _debug('boldrAPI:app');
+const app = express();
 
-const app = new Koa();
+expressMiddleware(app);
+authMiddleware(app);
+app.use(rbac());
 
-app
-  .use(responseTime)
-  .use(cors({
-    credentials: true,
-    methods: 'GET, HEAD, OPTIONS, PUT, POST, DELETE',
-    headers: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  }))
-  .use(helmet())
-  .use(bodyParser())
-  .use(session({
-    store: new RedisStore(),
-  }))
-  .use(errorCatcher);
+// attaches to router
+routes(app);
+
+errorHandler(app);
 
 export default app;

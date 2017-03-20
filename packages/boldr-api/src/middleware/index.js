@@ -1,9 +1,13 @@
-import errorCatcher from './errorCatcher';
-import responseTime from './responseTime';
-import RedisStore from './redisStore';
+import expressMiddleware from './express';
+import authMiddleware from './auth';
+import rbac from './rbac';
+import errorHandler from './errorHandler';
+import sessionMiddleware from './session';
 
 export {
-  errorCatcher,
-  responseTime,
-  RedisStore,
+  expressMiddleware,
+  authMiddleware,
+  rbac,
+  errorHandler,
+  sessionMiddleware,
 };

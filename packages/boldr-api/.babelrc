@@ -11,6 +11,8 @@
   "plugins": [
     "syntax-async-functions",
     "fast-async",
-    "transform-flow-strip-types"
+    "transform-flow-strip-types",
+    "transform-object-rest-spread",
+    "transform-class-properties"
   ]
 }
