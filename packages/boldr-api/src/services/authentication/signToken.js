@@ -1,11 +1,11 @@
+/* @flow */
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import config from '../../config';
 
-function signToken(user) {
+function signToken(user: Object) {
   const roleinfo = user.roles[0].name;
-  const timestamp = new Date().getTime();
-  const payload = {
+  const payload: AuthToken = {
     iss: 'boldr',
     sub: user.id,
     iat: moment().unix(),

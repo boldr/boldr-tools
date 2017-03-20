@@ -1,4 +1,8 @@
-import {
+const clientError = require('./clientError');
+const HttpError = require('./httpError');
+const serverError = require('./serverError');
+
+const {
   BadRequest,
   Unauthorized,
   Forbidden,
@@ -6,12 +10,10 @@ import {
   MethodNotAllowed,
   Conflict,
   UserNotVerifiedError,
-} from './clientError';
+} = clientError;
+const { InternalServer, NotImplemented } = serverError;
 
-import { InternalServer, NotImplemented } from './serverError';
-import HttpError from './httpError';
-
-export {
+module.exports = {
   BadRequest,
   Unauthorized,
   Forbidden,

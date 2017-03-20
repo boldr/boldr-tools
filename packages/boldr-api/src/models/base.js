@@ -1,5 +1,6 @@
 /* eslint-disable id-match */
 import { Model, ValidationError } from 'objection';
+import { snakeCase, camelCase, mapKeys } from 'lodash';
 
 /**
  * @class BaseModel
@@ -46,14 +47,28 @@ class BaseModel extends Model {
   }
 
   /**
+   * Converts camelCase to snake_case for database insertion. This way
+   * the data sends to the client camelCased.
+   * @method $formatDatabaseJson
+   * @param  {[type]}            json [description]
+   * @return [type]                   [description]
+   */
+  $formatDatabaseJson(json) {
+    json = super.$formatDatabaseJson(json);
+    return mapKeys(json, (value, key) => snakeCase(key));
+  }
+
+  /**
    * Ran after querying the database and transforming to the Model.
    *
    * @param {object} json
    * @returns {object}
    */
   $parseDatabaseJson(json) {
-    json = super.$parseDatabaseJson.call(this, json);
-
+    // Convert the data to camelCase before sending.
+    json = mapKeys(json, (value, key) => camelCase(key));
+    super.$parseDatabaseJson(json);
+    
     Object.keys(this.constructor.transforms).forEach(key => {
       if (json.hasOwnProperty(key)) {
         json[key] = this.constructor.transforms[key](json[key]);

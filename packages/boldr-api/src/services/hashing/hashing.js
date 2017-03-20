@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
+const Promise = require('bluebird');
 const bcrypt = Promise.promisifyAll(require('bcrypt'));
 
 export function generateHash() {

@@ -1,9 +1,15 @@
+/* @flow */
+// types
+import type { $Response, $Request, NextFunction } from 'express';
+import type { Model, Id } from 'objection';
+// externals
 import findQuery from 'objection-find';
 import Promise from 'bluebird';
+// locals
 import * as utilities from '../utils/transform';
 import filterEagerData from '../utils/filterEager';
 
-function getParameterFilters(req, filterProperties) {
+function getParameterFilters(req: $Request, filterProperties: Object) {
   let paramFilter;
   if (filterProperties) {
     paramFilter = {};
@@ -14,7 +20,7 @@ function getParameterFilters(req, filterProperties) {
   return paramFilter;
 }
 
-async function isValidData(req, additionalProperties) {
+async function isValidData(req: $Request, additionalProperties: Object) {
   const data = additionalProperties.filter(value => value.checkExistence);
   try {
     const props = await Promise.map(data, item => {
@@ -39,21 +45,22 @@ function getAdditionalProperties(req, data) {
 }
 
 class BaseController {
-  constructor(model, id, data) {
-    this.model = model;
-    this.id = id;
+  constructor(model: Model, id: Id, data: Object) {
+    (this: any).model = model;
+    (this: any).id = id;
     if (data) {
-      this.additionalProperties = data.additionalProperties;
-      this.userField = data.userField;
-      this.filterEager = data.filterEager;
+      (this: any).additionalProperties = data.additionalProperties;
+      (this: any).userField = data.userField;
+      (this: any).filterEager = data.filterEager;
     }
   }
 
-  async create(req, res) {
+  async create(req: $Request, res: $Response) {
     let data = req.body;
     if (this.additionalProperties) {
-      if (await isValidData(req, this.additionalProperties)) {
-        data = Object.assign({}, data, getAdditionalProperties(req, this.additionalProperties));
+      if (await isValidData(req, (this: any).additionalProperties)) {
+        // $FlowIssue
+        data = Object.assign({}, data, getAdditionalProperties(req, (this: any).additionalProperties));
       } else {
         return utilities.throwNotFound(res);
       }
@@ -61,36 +68,39 @@ class BaseController {
 
     if (this.userField) {
       if (req.user) {
+        // $FlowIssue
         data[this.userField] = req.user.id;
       }
     }
 
-    return this.model
+    return (this: any).model
       .query()
       .insert(data)
       .then(item => utilities.responseHandler(null, res, 201, item))
       .catch(err => utilities.responseHandler(err, res));
   }
 
-  update(req, res) {
-    return this.model
+  update(req: $Request, res: $Response) {
+    return (this: any).model
       .query()
-      .patchAndFetchById(req.params[this.id], req.body)
+      .patchAndFetchById(req.params[(this: any).id], req.body)
       .then(item => utilities.responseHandler(null, res, 200, item))
       .catch(err => utilities.responseHandler(err, res));
   }
 
-  index(req, res) {
-    const query = findQuery(this.model)
+  index(req: $Request, res: $Response) {
+    const query = findQuery((this: any).model)
       .build(req.query.where)
       .skipUndefined()
-      .where(getParameterFilters(req, this.additionalProperties))
+      .where(getParameterFilters(req, (this: any).additionalProperties))
       .eager(req.query.include)
+      // $FlowIssue
       .orderBy(req.query.sort.by, req.query.sort.order)
+      // $FlowIssue
       .page(req.query.page.number, req.query.page.size);
 
     if (this.filterEager) {
-      this.filterEager.reduce(
+      (this: any).filterEager.reduce(
         (memo, data) => {
           return query.filterEager(data.relation, filterEagerData(req.query, data.table, data.property));
         },
@@ -103,12 +113,12 @@ class BaseController {
       .catch(err => utilities.responseHandler(err, res));
   }
 
-  show(req, res) {
-    return this.model
+  show(req: $Request, res: $Response) {
+    return (this: any).model
       .query()
       .skipUndefined()
-      .findById(req.params[this.id])
-      .where(getParameterFilters(req, this.additionalProperties))
+      .findById(req.params[(this: any).id])
+      .where(getParameterFilters(req, (this: any).additionalProperties))
       .eager(req.query.eager)
       .then(item => {
         if (!item) return utilities.throwNotFound(res);
@@ -117,10 +127,10 @@ class BaseController {
       .catch(err => utilities.responseHandler(err, res));
   }
 
-  destroy(req, res) {
-    return this.model
+  destroy(req: $Request, res: $Response) {
+    return (this: any).model
       .query()
-      .deleteById(req.params[this.id])
+      .deleteById(req.params[(this: any).id])
       .then(() => utilities.responseHandler(null, res, 204))
       .catch(err => utilities.responseHandler(err, res));
   }

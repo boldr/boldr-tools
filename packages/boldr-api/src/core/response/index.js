@@ -1,3 +1,3 @@
-import responseHandler from './responseHandler';
+const responseHandler = require('./responseHandler');
 
-export default responseHandler;
+module.exports = responseHandler;

@@ -1,4 +1,4 @@
-import HttpError from './httpError';
+const HttpError = require('./httpError');
 
 /**
  * @class InternalServer
@@ -29,5 +29,7 @@ class NotImplemented extends HttpError {
   }
 }
 
-export { InternalServer };
-export { NotImplemented };
+module.exports = {
+  InternalServer,
+  NotImplemented,
+};

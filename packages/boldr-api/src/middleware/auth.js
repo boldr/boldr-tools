@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import config from '../config';
 import sessionMiddleware from './session';
+import rbac from './rbac';
 
 const debug = require('debug')('boldrAPI:authMW');
 
@@ -33,4 +34,5 @@ export default app => {
       next();
     }
   });
+  app.use(rbac());
 };

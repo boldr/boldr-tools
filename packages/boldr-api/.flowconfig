@@ -3,6 +3,7 @@
 
 [libs]
 flow-typed/npm
+internal/flow/
 
 [options]
 emoji=true

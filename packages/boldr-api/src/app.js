@@ -1,20 +1,20 @@
-import express from 'express';
+import Express from 'express';
 import routes from './routes/index';
 import redisClient from './services/redis';
-import { expressMiddleware, authMiddleware, rbac, errorHandler } from './middleware';
+import { expressMiddleware, authMiddleware, errorHandler } from './middleware';
 
-// const cache = require('express-redis-cache')({ client: redisClient });
 const debug = require('debug')('boldrAPI:app');
 
-const app = express();
+const app = new Express();
 
+// Base Express middleware
+// body-parser, method-override, busboy, cors
 expressMiddleware(app);
+// Session middleware, authentication check, rbac
 authMiddleware(app);
-app.use(rbac());
-
-// attaches to router
+// All routes for the app
 routes(app);
-
+// Catch and format errors
 errorHandler(app);
 
-export default app;
+module.exports = app;

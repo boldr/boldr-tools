@@ -1,4 +1,4 @@
-import HttpError from './httpError';
+const HttpError = require('./httpError');
 
 /**
  * @class BadRequest
@@ -106,4 +106,12 @@ class UserNotVerifiedError extends HttpError {
   }
 }
 
-export { BadRequest, Unauthorized, Forbidden, NotFound, MethodNotAllowed, Conflict, UserNotVerifiedError };
+module.exports = {
+  BadRequest,
+  Unauthorized,
+  Forbidden,
+  NotFound,
+  MethodNotAllowed,
+  Conflict,
+  UserNotVerifiedError,
+};
