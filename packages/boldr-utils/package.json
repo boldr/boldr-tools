@@ -1,6 +1,6 @@
 {
   "name": "boldr-utils",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Helpers designed for use with Boldr and fullstack react apps",
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
   "author": "Steven Truesdell <steven@strues.io>",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^1.1.3",
     "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {

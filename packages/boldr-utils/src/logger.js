@@ -1,30 +1,32 @@
-
 const logger = console;
-const write = (status, text, verbose) => {
-  let textToLog = '';
+
+const print = (level, text) => {
+  const verbose = process.env.BOLDR_DEBUG === 'true';
+
+  let msg = '';
   let logObject = false;
 
-  if (status === 'task') textToLog = '⚡  ';
-  else if (status === 'start') textToLog = '\n🚀  ';
-  else if (status === 'end') textToLog = '\n👌  ';
-  else if (status === 'info') textToLog = '🔹  ';
-  else if (status === 'warn') textToLog = '⚠️  ';
-  else if (status === 'error') textToLog = '\n❌  ';
-  else if (status === 'debug') textToLog = '🐝  ';
+  if (level === 'task') msg = '✅  ';
+  else if (level === 'start') msg = '\n🚀  ';
+  else if (level === 'end') msg = '\n👌  ';
+  else if (level === 'info') msg = '⚡  ';
+  else if (level === 'warn') msg = '⚠️  ';
+  else if (level === 'error') msg = '\n💩  ';
+  else if (level === 'debug') msg = '🐞  ';
 
-  textToLog += text;
+  msg += text;
 
   // Adds optional verbose output
   if (verbose) {
     if (typeof verbose === 'object') {
       logObject = true;
     } else {
-      textToLog += `\n${verbose}`;
+      msg += `\n${verbose}`;
     }
   }
 
-  logger.log(textToLog);
-  if (['start', 'end', 'error'].indexOf(status) > -1) {
+  logger.log(msg);
+  if (['start', 'end', 'error'].indexOf(level) > -1) {
     logger.log();
   }
   if (logObject) {
@@ -40,39 +42,39 @@ const log = (text) => {
 
 // Starting a process
 const start = (text) => {
-  write('start', text);
+  print('start', text);
 };
 
 // Ending a process
 const end = (text) => {
-  write('end', text);
+  print('end', text);
 };
 
 // Tasks within a process
 const task = (text) => {
-  write('task', text);
+  print('task', text);
 };
 
 // Info about a process task
 const info = (text) => {
-  write('info', text);
+  print('info', text);
 };
 
 // Verbose output
 // takes optional data
 const debug = (text, data) => {
-  write('debug', text, data);
+  print('debug', text, data);
 };
 
 // Warn output
 const warn = (text, data) => {
-  write('warn', text, data);
+  print('warn', text, data);
 };
 
 // Error output
 // takes an optional error
 const error = (text, err) => {
-  write('error', text, err);
+  print('error', text, err);
 };
 
 module.exports = {

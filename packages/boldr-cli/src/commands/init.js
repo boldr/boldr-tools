@@ -1,6 +1,4 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-statements */
-/* eslint-disable camelcase */
+/* eslint-disable max-lines, max-statements, camelcase */
 
 const path = require('path');
 const fs = require('fs-extra');

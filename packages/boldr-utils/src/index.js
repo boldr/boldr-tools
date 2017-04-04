@@ -11,6 +11,7 @@ import {
   validateArray,
 } from './arrays';
 
+const checkNodeVersion = require('./checkNodeVersion');
 const logger = require('./logger');
 
 module.exports = {
@@ -32,4 +33,5 @@ module.exports = {
   getIn,
   setIn,
   removeByKey,
+  checkNodeVersion,
 };
