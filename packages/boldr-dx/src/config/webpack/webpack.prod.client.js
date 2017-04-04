@@ -14,57 +14,65 @@ import paths from '../paths';
 module.exports = options => ({
   target: 'web',
   devtool: 'hidden-source-map',
-  profile: true,
-  bail: true,
   entry: {
-    main: [require.resolve('../polyfills'), `${paths.CLIENT_SRC_DIR}/index.js`],
+    main: [require.resolve('../polyfills'), `${paths.clientSrcDir}/index.js`],
   },
   output: {
-    path: paths.ASSETS_DIR,
+    path: paths.assetsDir,
     pathinfo: true,
     filename: '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js',
     publicPath: options.publicPath,
     libraryTarget: 'var',
   },
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    dirname: true,
-    __dirname: true,
-    __filename: true,
-    global: true,
-    crypto: 'empty',
-    process: true,
-    module: false,
-    clearImmediate: false,
-    setImmediate: false,
-  },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
-        exclude: [/node_modules/, paths.ASSETS_DIR],
+        exclude: [/node_modules/, paths.assetsDir],
         options: {
           babelrc: false,
           cacheDirectory: false,
           presets: [require.resolve('babel-preset-boldr/client')],
+          plugins: [require.resolve('babel-plugin-dynamic-import-webpack')],
         },
       },
       {
-        test: /(\.scss|\.css)$/,
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                autoprefixer: false,
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+          ],
+        }),
+      },
+      {
+        test: /\.scss$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             {
               loader: 'css-loader',
               options: {
-                modules: true,
+                modules: false,
                 minimize: true,
                 autoprefixer: false,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[hash:base64]',
               },
             },
@@ -101,10 +109,7 @@ module.exports = options => ({
     }),
     new BabiliWebpackPlugin(),
     new PurifyCSSPlugin({
-      paths: [
-        ...glob.sync(`${paths.SHARED_DIR}/**/*.js`),
-        ...glob.sync(`${paths.SHARED_DIR}/**/*.(scss|css)`),
-      ],
+      paths: [...glob.sync(`${paths.sharedDir}/**/*.js`), ...glob.sync(`${paths.sharedDir}/**/*.(scss|css)`)],
       styleExtensions: ['.css', '.scss'],
       moduleExtensions: [],
       purifyOptions: {
@@ -130,7 +135,7 @@ module.exports = options => ({
     }),
     new AssetsPlugin({
       filename: options.clientAssetsFile,
-      path: paths.ASSETS_DIR,
+      path: paths.assetsDir,
     }),
   ],
 });

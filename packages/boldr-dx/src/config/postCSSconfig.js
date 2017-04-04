@@ -1,6 +1,7 @@
 const path = require('path');
 const postcssImport = require('postcss-import');
 const postcssCssnext = require('postcss-cssnext');
+const reporter = require('postcss-reporter');
 
 function PostCSSConfig(variables = {}) {
   return [
@@ -13,6 +14,7 @@ function PostCSSConfig(variables = {}) {
         browsers: ['> 1%', 'last 2 versions'],
       },
     }),
+    reporter(),
   ];
 }
 module.exports = PostCSSConfig;

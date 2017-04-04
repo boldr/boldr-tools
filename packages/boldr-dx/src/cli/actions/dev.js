@@ -4,6 +4,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import fse from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
@@ -24,8 +25,8 @@ const checkPort = require('../../utils/checkPort');
 const compileConfigs = require('../../utils/compileConfigs');
 const webpackCompiler = require('../../utils/webpackCompiler');
 
-const boldrConfig = require(paths.USER_BOLDR_CONFIG_PATH);
-const pkg = require(paths.USER_PKGJSON_PATH);
+const boldrConfig = require(paths.userBoldrConfigPath);
+const pkg = require(paths.userPkgPath);
 
 module.exports = (config, flags) => {
   logger.start('Starting development build...');
@@ -38,7 +39,7 @@ module.exports = (config, flags) => {
   function handleDlls() {
     logger.start('Starting DLLs plugin');
 
-    const dllConfig = require(paths.DLL_CONFIG);
+    const dllConfig = require(paths.dllConfig);
 
     const devDLLDependencies = dllConfig.sort();
 
@@ -54,7 +55,7 @@ module.exports = (config, flags) => {
       ),
     );
 
-    const vendorDLLHashFilePath = path.resolve(paths.DLL_DIR, '__boldr_dlls__hash');
+    const vendorDLLHashFilePath = path.resolve(paths.dllDir, '__boldr_dlls__hash');
 
     function webpackConfigFactory() {
       return {
@@ -64,13 +65,13 @@ module.exports = (config, flags) => {
           ['__boldr_dlls__']: devDLLDependencies,
         },
         output: {
-          path: paths.DLL_DIR,
+          path: paths.dllDir,
           filename: '__boldr_dlls__.js',
           library: '__boldr_dlls__',
         },
         plugins: [
           new webpack.DllPlugin({
-            path: path.resolve(paths.DLL_DIR, '__boldr_dlls__.json'),
+            path: path.resolve(paths.dllDir, '__boldr_dlls__.json'),
             name: '__boldr_dlls__',
           }),
         ],
@@ -136,14 +137,16 @@ module.exports = (config, flags) => {
       logger.task('Starting up server');
       logger.task(`Client assets serving from ${clientCompiler.options.output.publicPath}`);
     });
+// Clean the build directory.
+    // fse.emptyDir(paths.assetsDir, err => {
+    //   if (err) return logger.error(err);
+    //   logger.info('Purged assets directory.');
+    // });
 
-    // Clean the build directory.
-    if (shell.test('-d', paths.ASSETS_DIR) && shell.rm(`${paths.ASSETS_DIR}/*.*`).code === 0) {
-      logger.task('Purged assets directory.');
-    }
-    if (shell.test('-d', paths.COMPILED_DIR) && shell.rm('-rf', `${paths.COMPILED_DIR}/*`).code === 0) {
-      logger.task('Cleaned compiled server files. Ready for development!');
-    }
+    // fse.emptyDir(paths.compiledDir, err => {
+    //   if (err) return logger.error(err);
+    //   logger.info('Cleaned compiled server files. Ready for development!');
+    // });
     const startClient = () => {
       const app = express();
       const wpDevMwOpts = {
@@ -205,7 +208,7 @@ module.exports = (config, flags) => {
       compileServer();
     });
 
-    const watcher = chokidar.watch([paths.SERVER_SRC_DIR]);
+    const watcher = chokidar.watch([paths.serverSrcDir]);
     watcher.on('ready', () => {
       watcher
         .on('add', compileServer)

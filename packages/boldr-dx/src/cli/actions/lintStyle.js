@@ -11,7 +11,7 @@ module.exports = () => {
     process.exit(1);
   };
 
-  const stylelintrc = glob.sync(`${paths.ROOT_DIR}/.stylelintrc*`);
+  const stylelintrc = glob.sync(`${paths.rootDir}/.stylelintrc*`);
   const configFile = stylelintrc.length
       ? stylelintrc[0]
       : path.join(__dirname, '../../config/.stylelintrc');
@@ -19,7 +19,7 @@ module.exports = () => {
   logger.info(`Using Stylelint file: ${configFile}`);
 
   stylelint.lint({
-    files: [`${paths.SHARED_DIR}/**/*.css`, `${paths.SHARED_DIR}/**/*.scss`],
+    files: [`${paths.sharedDir}/**/*.css`, `${paths.sharedDir}/**/*.scss`],
     formatter: 'string',
     configFile,
   })

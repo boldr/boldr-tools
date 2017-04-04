@@ -17,13 +17,13 @@ module.exports = (config) => {
   } = compileConfigs(config, 'production');
 
   // Empty assets
-  if (shell.rm('-rf', paths.ASSETS_DIR).code === 0) {
-    shell.mkdir(paths.ASSETS_DIR);
+  if (shell.rm('-rf', paths.assetsDir).code === 0) {
+    shell.mkdir(paths.assetsDir);
     logger.task('Purged assets directory.');
   }
   // Empty compiled
-  if (shell.rm('-rf', paths.COMPILED_DIR).code === 0) {
-    shell.mkdir(paths.COMPILED_DIR);
+  if (shell.rm('-rf', paths.compiledDir).code === 0) {
+    shell.mkdir(paths.compiledDir);
     logger.task('Purged compiled server directory.');
   }
 
@@ -40,11 +40,7 @@ module.exports = (config) => {
     if (stats.hasErrors()) process.exit(1);
     logger.info('Assets:');
     printAssets(stats, clientConfig);
-    if (config.hasServer) {
-      buildServer();
-    } else {
-      logger.end('Built client.');
-    }
+    buildServer();
   });
   clientCompiler.run(() => undefined);
 };

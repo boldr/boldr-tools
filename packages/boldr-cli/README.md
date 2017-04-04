@@ -5,7 +5,23 @@ The CLI for Boldr allows quick scaffolding of a new Boldr project.
 
 ## Commands
 
-### Init
+### New
+`boldr-cli new`  
+Creates a new Boldr project.  
+
+**Options**
+
+- `-c (--cms)`: Create a new CMS project.
+Get the code for a new BoldrCMS project.
+
+
+- `-a (--api)`: Create a new API project.  
+Get the code for a new BoldrAPI project.  
+
+- `-f (--full)`: Initialize the complete Boldr suite (API/CMS)   
+Sets up both the API and the CMS for Boldr.
+
+### Init (Not Ready)
 `boldr-cli init`  
 Creates a new Boldr project.  
 

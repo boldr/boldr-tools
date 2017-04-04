@@ -8,7 +8,6 @@ const paths = require('../config/paths');
 const devAction = require('./actions/dev');
 const lintScriptAction = require('./actions/lintScript');
 const testAction = require('./actions/test');
-const testNodeAction = require('./actions/testNode');
 const buildAction = require('./actions/build');
 const lintStyleAction = require('./actions/lintStyle');
 
@@ -17,7 +16,7 @@ const lintStyleAction = require('./actions/lintStyle');
 process.noDeprecation = true;
 
 // Kill the process if the user did not run the command from the root of their project.
-if (!shell.test('-f', paths.USER_PKGJSON_PATH)) {
+if (!shell.test('-f', paths.userPkgPath)) {
   logger.error('Sorry, but boldr-dx must be run from the root of your project.');
   process.exit(1);
 }
@@ -67,13 +66,7 @@ program
 
 program
   .command('test')
-  .description('Run test files against a browser en with Jest.')
+  .description('Run test files against a browser env with Jest.')
   .action(() => executeCmd(testAction));
-
-program
-  .command('test:node')
-  .description('Run test files against a Node env with Jest.')
-  .action(() => executeCmd(testNodeAction));
-
 
 program.parse(process.argv);

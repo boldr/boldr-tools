@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/boldr/getBoldr#readme",
   "dependencies": {
-    "boldr-utils": "^0.1.12",
+    "boldr-utils": "^0.1.13",
     "compression": "1.6.2",
     "debug": "^2.6.3",
     "dotenv": "^4.0.0",
@@ -47,10 +47,10 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "boldr-dx": "0.1.6",
+    "boldr-dx": "0.1.14",
     "enzyme": "2.7.1",
     "eslint": "^3.18.0",
-    "eslint-config-boldr": "^0.8.8",
+    "eslint-config-boldr": "^0.8.9",
     "identity-obj-proxy": "^3.0.0",
     "istanbul-api": "^1.1.1",
     "istanbul-lib-coverage": "^1.0.1",

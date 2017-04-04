@@ -1,6 +1,5 @@
 import path from 'path';
 import webpack from 'webpack';
-import shell from 'shelljs';
 import chalk from 'chalk';
 import { removeNil, mergeDeep, ifElse } from 'boldr-utils';
 import paths from '../paths';
@@ -16,87 +15,52 @@ module.exports = options => {
   const ifProd = ifElse(isProd);
   const ifNode = ifElse(isNode);
 
-  const cache = {
-    'client-production': {},
-    'client-development': {},
-    'server-production': {},
-    'server-development': {},
-  };
-
   return {
-    devtool: 'source-map',
-
+    cache: !isProd,
     resolve: {
+      modules: [paths.userNodeModules, paths.ourNodeModules, paths.srcDir],
+      mainFields: ifNode(
+        ['module', 'jsnext:main', 'main'],
+        ['web', 'browser', 'style', 'module', 'jsnext:main', 'main'],
+      ),
       extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
-      modules: [paths.USER_NODE_MODULES, paths.OUR_NODE_MODULES, paths.SRC_DIR],
-      mainFields: ifNode(['module', 'jsnext:main', 'main'], [
-        'web',
-        'browser',
-        'style',
-        'module',
-        'jsnext:main',
-        'main',
-      ]),
     },
     resolveLoader: {
-      modules: [paths.USER_NODE_MODULES, paths.OUR_NODE_MODULES, paths.SRC_DIR],
+      modules: [paths.userNodeModules, paths.ourNodeModules, paths.srcDir],
     },
-    cache: cache[`${options.type}-${options.environment}`],
-    // Capture timing information for each module.
-    // Analyse tool: http://webpack.github.io/analyse
-    profile: isProd,
-
-    // Report the first error as a hard error instead of tolerating it.
-    bail: isProd,
-    stats: {
-      colors: true,
-      reasons: options.isDebug,
-      hash: options.isVerbose,
-      version: options.isVerbose,
-      timings: true,
-      chunks: options.isVerbose,
-      chunkModules: options.isVerbose,
-      cached: options.isVerbose,
-      cachedAssets: options.isVerbose,
+    node: {
+      __dirname: true,
+      __filename: true,
+      fs: 'empty',
+      global: true,
+      crypto: 'empty',
+      process: true,
+      module: false,
+      clearImmediate: false,
+      setImmediate: false,
     },
     plugins: removeNil([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || options.environment),
-        PUBLIC_PATH: JSON.stringify(options.publicPath || ''),
-        PUBLIC_DIR: JSON.stringify(options.publicDir || ''),
-        ASSETS_MANIFEST: JSON.stringify(path.join(paths.ASSETS_DIR || '', options.clientAssetsFile || '')),
+        ASSETS_MANIFEST: JSON.stringify(path.join(paths.assetsDir || '', options.clientAssetsFile || '')),
       }),
       new webpack.optimize.OccurrenceOrderPlugin(true),
-      ifDev(
-        new webpack.LoaderOptionsPlugin({
-          minimize: false,
-          debug: true,
-          options: {
-            eslint: {
-              failOnError: false,
-            },
-            postcss: getPostCSSConfig({}),
-            context: paths.ROOT_DIR,
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new webpack.LoaderOptionsPlugin({
+        minimize: isProd,
+        debug: !isProd,
+        options: {
+          eslint: {
+            failOnError: false,
           },
-        }),
-      ),
-      ifProd(
-        new webpack.LoaderOptionsPlugin({
-          minimize: true,
-          debug: false,
-          options: {
-            eslint: {
-              failOnError: false,
-            },
-            postcss: getPostCSSConfig({}),
-            context: paths.ROOT_DIR,
-          },
-        }),
-      ),
+          postcss: getPostCSSConfig({}),
+          context: paths.rootDir,
+        },
+      }),
     ]),
 
     module: {
-      rules: removeNil([
+      rules: [
         {
           parser: {
             requireEnsure: false,
@@ -108,13 +72,13 @@ module.exports = options => {
           use: [
             {
               options: {
-                configFile: path.join(paths.ROOT_DIR, './.eslintrc'),
-                useEslintrc: false,
+                configFile: path.join(paths.rootDir, './.eslintrc'),
+                useEslintrc: true,
               },
               loader: 'eslint-loader',
             },
           ],
-          include: paths.SRC_DIR,
+          include: paths.srcDir,
         },
         {
           test: /\.html$/,
@@ -140,7 +104,7 @@ module.exports = options => {
             },
           },
         },
-      ]),
+      ],
     },
   };
 };

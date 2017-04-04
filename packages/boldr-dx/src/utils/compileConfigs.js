@@ -35,7 +35,7 @@ module.exports = (config, environment = 'development') => {
     isVerbose,
     isDebug,
     publicPath: `http://${serverHost}:${hmrPort}/assets/`,
-    publicDir: paths.PUBLIC_DIR,
+    publicDir: paths.publicDir,
     clientAssetsFile: 'assets.json',
   };
 
@@ -45,7 +45,7 @@ module.exports = (config, environment = 'development') => {
 
     clientOptions = merge(clientOptions, {
       publicPath: clientOptions.serveAssetsFrom,
-      publicDir: paths.PUBLIC_DIR,
+      publicDir: paths.publicDir,
     });
   }
   const serverOptions = merge(clientOptions, {

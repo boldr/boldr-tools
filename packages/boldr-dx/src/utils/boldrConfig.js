@@ -15,12 +15,16 @@ module.exports = optionalConfig => {
     serveAssetsFrom: '/assets/',
     serverPort: process.env.SERVER_PORT || 3000,
     serverHost: process.env.SERVER_HOST || 'localhost',
+    serverUrl: 'http://localhost:3000',
+    apiPrefix: process.env.API_PREFIX || '/api/v1',
+    apiHost: process.env.API_HOST || 'localhost',
+    apiPort: process.env.API_PORT || 2121,
     hmrPort: process.env.HMR_PORT || 3001,
     isVerbose: true,
     isDebug: false,
   };
 
-  const boldrConfigPath = optionalConfig ? path.join(paths.ROOT_DIR, optionalConfig) : paths.USER_BOLDR_CONFIG_PATH;
+  const boldrConfigPath = optionalConfig ? path.join(paths.rootDir, optionalConfig) : paths.userBoldrConfigPath;
 
   // Find user config
   if (shell.test('-f', boldrConfigPath)) {

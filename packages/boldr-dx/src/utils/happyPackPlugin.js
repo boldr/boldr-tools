@@ -10,7 +10,7 @@ module.exports = function happyPackPlugin(id, loaders) {
   });
   return new HappyPack({
     id,
-    tempDir: path.resolve(paths.ROOT_DIR, '.happypack'),
+    tempDir: path.resolve(paths.rootDir, '.happypack'),
     verbose: false,
     threadPool: compilerThreadPool,
     loaders,

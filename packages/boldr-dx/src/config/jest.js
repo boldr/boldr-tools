@@ -3,8 +3,8 @@ const pathExists = require('path-exists');
 
 const resolveFromUtils = file => path.resolve(__dirname, '..', 'utils', 'jest', file);
 const ROOT = process.cwd();
-const setupTestsFile = pathExists.sync(path.resolve(ROOT, './.boldr/browserSetup.js'))
-  ? '<rootDir>/.boldr/setupNode.js'
+const setupTestsFile = pathExists.sync(path.resolve(ROOT, './.boldr/jestSetup.js'))
+  ? path.resolve(ROOT, './.boldr/jestSetup.js')
   : undefined;
 
 const coverageDir = path.resolve(ROOT, 'coverage');
@@ -20,16 +20,16 @@ module.exports = (rootDir, aliases = {}) => ({
     aliases,
   ),
   transform: { '.*': resolveFromUtils('transform') },
-  setupFiles: [resolveFromUtils('setupBrowser')],
+  setupFiles: [resolveFromUtils('setupJest')],
   setupTestFrameworkScriptFile: setupTestsFile,
-  testPathIgnorePatterns: ['<rootDir>/(build|docs|node_modules|images)/'],
+  testPathIgnorePatterns: ['./(build|docs|node_modules|images)/'],
   testEnvironment: 'jsdom',
   testRegex: '\\.test.js$',
   collectCoverage: true,
-  coverageDirectory: `${coverageDir}/browser/coverage-final.json`,
+  coverageDirectory: `${coverageDir}`,
   coverageReporters: ['json'],
   coveragePathIgnorePatterns: [
-    '<rootDir>/(flow-typed|build|docs|boldrCMS|.happypack|bin|.idea|public|db|images|styles)/',
+    './(flow-typed|build|docs|boldrCMS|.happypack|bin|.idea|public|db|images|styles)/',
     '/node_modules/',
   ],
   rootDir,

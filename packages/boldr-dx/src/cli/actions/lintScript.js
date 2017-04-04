@@ -6,7 +6,7 @@ import { logger } from 'boldr-utils';
 const paths = require('../../config/paths');
 
 module.exports = (config, flags) => {
-  const eslintrc = glob.sync(`${paths.ROOT_DIR}/.*eslintrc*`);
+  const eslintrc = glob.sync(`${paths.rootDir}/.*eslintrc*`);
   const configFile = eslintrc.length
       ? eslintrc[0]
       : path.join(__dirname, '../../config/.eslintrc.base.json');

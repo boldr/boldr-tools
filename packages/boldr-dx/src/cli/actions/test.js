@@ -19,7 +19,7 @@ module.exports = (config, flags) => {
   const aliases = compileConfigs(config).clientConfig.resolve.alias;
 
   // Build Jest config
-  let jestConfig = jestConfigBuilder(paths.SRC_DIR, aliases);
+  let jestConfig = jestConfigBuilder(paths.srcDir, aliases);
   jestConfig = config.modifyJestConfig(cloneDeep(jestConfig));
 
   // Run Jest
