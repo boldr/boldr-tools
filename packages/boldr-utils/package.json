@@ -1,6 +1,6 @@
 {
   "name": "boldr-utils",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Helpers designed for use with Boldr and fullstack react apps",
   "repository": {
     "type": "git",
@@ -35,12 +35,12 @@
     "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.0",
-    "babel-eslint": "^7.2.0",
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.2",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-env": "^1.2.2",
-    "eslint": "^3.18.0",
+    "babel-preset-env": "^1.3.3",
+    "eslint": "^3.19.0",
     "eslint-config-boldr": "^0.8.9",
     "rimraf": "^2.6.1"
   }

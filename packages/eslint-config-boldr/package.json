@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.8.10",
+  "version": "0.8.11",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
@@ -52,7 +52,7 @@
     "npm-run-all": "^4.0.2"
   },
   "dependencies": {
-    "babel-eslint": "^7.2.1",
+    "babel-eslint": "^7.2.2",
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-flowtype": "^2.30.4",
     "eslint-plugin-import": "^2.2.0",

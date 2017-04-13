@@ -1,4 +1,3 @@
-import { loadRoute, errorLoading } from './routeHelpers';
 import { filterWithRules, mergeDeep, getIn, setIn, removeByKey } from './objects';
 import { ifElse, requiredParam, validateId } from './logic';
 import {
@@ -11,12 +10,9 @@ import {
   validateArray,
 } from './arrays';
 
-const checkNodeVersion = require('./checkNodeVersion');
 const logger = require('./logger');
 
 module.exports = {
-  loadRoute,
-  errorLoading,
   removeNil,
   logger,
   flatten,
@@ -33,5 +29,4 @@ module.exports = {
   getIn,
   setIn,
   removeByKey,
-  checkNodeVersion,
 };

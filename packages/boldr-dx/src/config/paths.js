@@ -5,12 +5,12 @@ const appRootDir = require('app-root-dir');
 
 const rootDir = appRootDir.get();
 
-function resolveApp(relativePath) {
-  return path.resolve(rootDir, relativePath);
+function resolveApp(...args) {
+  return path.resolve(rootDir, ...args);
 }
 
-function resolveOwn(relativePath) {
-  return path.resolve(__dirname, '../..', relativePath);
+function resolveOwn(...args) {
+  return path.resolve(__dirname, '../..', ...args);
 }
 
 const nodePaths = (process.env.NODE_PATH || '')
