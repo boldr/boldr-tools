@@ -2,11 +2,13 @@
     "presets":[["env",
       {
         "node": "current",
-        "debug": false
+        "debug": false,
+        "exclude": ["transform-async-to-generator", "transform-regenerator"],
       }
     ]],
     "plugins":[
       "transform-flow-strip-types",
+      "fast-async",
       "transform-object-rest-spread",
       "transform-export-extensions",
       "syntax-trailing-function-commas",
