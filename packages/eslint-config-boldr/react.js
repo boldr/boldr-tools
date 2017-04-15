@@ -32,7 +32,7 @@ module.exports = {
         ignoreTranspilerName: false,
       },
     ],
-    'react/jsx-indent': [2, 2],
+    'react/jsx-indent':0,
     'react/forbid-component-props': 0,
     // Forbid certain propTypes (any, array, object)
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md
@@ -47,7 +47,7 @@ module.exports = {
     'react/forbid-foreign-prop-types': 0,
     'react/forbid-elements': 0,
     'react/jsx-equals-spacing': [2, 'never'],
-    'react/jsx-first-prop-new-line': [2, 'multiline'],
+    'react/jsx-first-prop-new-line': 0,
     'react/no-children-prop': 0,
     'react/no-danger-with-children': 0,
     'react/require-default-props': 0,
@@ -55,30 +55,17 @@ module.exports = {
     'react/no-render-return-value': 2,
     'react/style-prop-object': 0,
     'react/jsx-filename-extension': 0,
-    'react/jsx-tag-spacing': [
-      2,
-      {
-        closingSlash: 'never',
-        beforeSelfClosing: 'always',
-        afterOpening: 'never',
-      },
-    ],
+    'react/jsx-tag-spacing': 0,
     // Enforce boolean attributes notation in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
     'react/jsx-boolean-value': [2, 'never'],
     'react/no-unescaped-entities': 2,
     // Validate closing bracket location in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md
-    'react/jsx-closing-bracket-location': [2, 'line-aligned'],
+    'react/jsx-closing-bracket-location': 0,
     // Enforce or disallow spaces inside of curly braces in JSX attributes
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md
-    'react/jsx-curly-spacing': [
-      1,
-      'always',
-      {
-        allowMultiline: true,
-      },
-    ],
+    'react/jsx-curly-spacing': 0,
     // Enforce event handler naming conventions in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-handler-names.md
     'react/jsx-handler-names': [
@@ -90,7 +77,7 @@ module.exports = {
     ],
     // Validate props indentation in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent-props.md
-    'react/jsx-indent-props': [2, 2],
+    'react/jsx-indent-props': 0,
     // Validate JSX has key prop when in array or iterator
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-key.md
     'react/jsx-key': 1,
@@ -190,10 +177,10 @@ module.exports = {
     'react/require-render-return': 2,
     // Prevent extra closing tags for components without children
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
-    'react/self-closing-comp': 2,
+    'react/self-closing-comp': 0,
     // Enforce spaces before the closing bracket of self-closing JSX elements
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-space-before-closing.md
-    'react/jsx-space-before-closing': [2, 'always'],
+    'react/jsx-space-before-closing': 0,
     // Enforce component methods order
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-comp.md
     'react/sort-comp': [
@@ -210,14 +197,7 @@ module.exports = {
 
     // Prevent missing parentheses around multilines JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
-    'react/jsx-wrap-multilines': [
-      2,
-      {
-        declaration: true,
-        assignment: true,
-        return: true,
-      },
-    ],
+    'react/jsx-wrap-multilines': 0,
     // @NOTE deprecated
     'react/wrap-multilines': 0,
     'react/no-comment-textnodes': 0

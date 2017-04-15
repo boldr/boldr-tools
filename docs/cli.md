@@ -2,7 +2,6 @@
 
 The CLI for Boldr allows quick scaffolding of a new Boldr project.
 
-
 ## Commands
 
 ### Init
@@ -11,12 +10,13 @@ Creates a new Boldr project.
 
 **Options**
 
-- `-d`: Directory to use.   
-Default is the current working directory. As of the first release, the directory is somewhat buggy so it's best to use the CWD.  
+You will be prompted to choose between 
+- `Boldr CMS`: Create a new CMS project.
+This code is the frontend React application and serverside rendering only.
 
 
-- `-p`: Package manager you'd like to use.  
-Yarn is the default. `boldr-cli init -p npm` uses npm.
+- `Boldr API`: Create a new API project.  
+The backend for Boldr. It includes the REST api, Postgres, Redis and Docker setups.  
 
-- `-r`: Git repository  
-Pass this to install the [Boldr-DX](https://github.com/boldr/getBoldr/packages/boldr-dx) build scripts to your own custom project.
+- `Boldr Fullstack`: Initialize the complete Boldr suite.
+Generates both the API and the frontend CMS.

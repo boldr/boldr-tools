@@ -4,11 +4,13 @@ module.exports = {
     node: true,
   },
   rules: {
-    'array-bracket-spacing': [2, 'never'],
+    // disabled for prettier
+    'array-bracket-spacing': 0,
+    // 'array-bracket-spacing': [2, 'never'],
     'arrow-parens': [2, 'as-needed'],
-    'block-spacing': 2,
-    'brace-style': [2, '1tbs'],
-    'camelcase': [2, { properties: 'always' }],
+    'block-spacing': 0,
+    'brace-style': 0,
+    camelcase: [2, { properties: 'always' }],
     // wHO CaRes?
     'capitalized-comments': 0,
     'comma-dangle': [
@@ -22,25 +24,21 @@ module.exports = {
       },
     ],
     // enforce spacing before and after comma
-    'comma-spacing': [
-      2,
-      {
-        before: false,
-        after: true,
-      },
-    ],
+    'comma-spacing': 0,
     // enforce one true comma style
-    'comma-style': [2, 'last'],
+    'comma-style': 0,
+    // 'comma-style': [2, 'last'],
     // disallow padding inside computed properties
-    'computed-property-spacing': [2, 'never'],
+    'computed-property-spacing': 0,
+    // 'computed-property-spacing': [2, 'never'],
     // Too many use-cases for reassigning "this" to different values
     'consistent-this': 0,
-    'eol-last': 2,
-    'func-call-spacing': [2, 'never'],
+    'eol-last': 0,
+    'func-call-spacing': 0,
     'func-names': 2,
     'func-name-matching': 2,
     'func-style': [2, 'declaration'],
-    'generator-star-spacing': [2, 'after'],
+    'generator-star-spacing': 0,
     'id-blacklist': 2,
     'init-declarations': 0,
     // when using short composable functions, using single-letter variables is fine
@@ -52,38 +50,9 @@ module.exports = {
     ],
     // this option sets a specific tab width for your code
     // https://github.com/eslint/eslint/blob/master/docs/rules/indent.md
-    indent: [
-      2,
-      2,
-      {
-        SwitchCase: 1,
-      },
-    ],
-    'key-spacing': [
-      2,
-      {
-        beforeColon: false,
-        afterColon: true,
-      },
-    ],
-    'keyword-spacing': [
-      2,
-      {
-        before: true,
-        after: true,
-        overrides: {
-          return: {
-            after: true,
-          },
-          throw: {
-            after: true,
-          },
-          case: {
-            after: true,
-          },
-        },
-      },
-    ],
+    indent: 0,
+    'key-spacing': 0,
+    'keyword-spacing': 0,
     // disallow mixed 'LF' and 'CRLF' as linebreaks
     'linebreak-style': [2, 'unix'],
     'line-comment-position': 0,
@@ -91,7 +60,7 @@ module.exports = {
     'lines-around-comment': 0,
     'lines-around-directive': 0,
     'max-depth': [2, 4],
-    'max-len': [2, 120, 2],
+    'max-len': [2, { code: 80, ignoreUrls: true }],
     'max-lines': [
       2,
       {
@@ -118,25 +87,19 @@ module.exports = {
     'no-inline-comments': 0,
     // disallow if as the only statement in an else block | doesn't play well with `if (__DEV__) {}`
     'no-lonely-if': 2,
-    'no-mixed-spaces-and-tabs': 2,
-     // it's handy, but harder to read
+    'no-mixed-spaces-and-tabs': 0,
+    // it's handy, but harder to read
     'no-multi-assign': 2,
     // disallow multiple empty lines and only one newline at the end
-    'no-multiple-empty-lines': [
-      1,
-      {
-        max: 2,
-        maxEOF: 1,
-      },
-    ],
+    'no-multiple-empty-lines': 0,
     'no-negated-condition': 2,
     'no-nested-ternary': 2,
     'no-new-object': 2,
     'no-plusplus': 0,
-    'no-spaced-func': 2,
+    'no-spaced-func': 0,
     'no-tabs': 2,
     'no-ternary': 0,
-    'no-trailing-spaces': [2, { skipBlankLines: true }],
+    'no-trailing-spaces': 0,
     'no-underscore-dangle': 0,
     // disallow the use of Boolean literals in conditional expressions
     // also, prefer `a || b` over `a ? a : b`
@@ -147,14 +110,14 @@ module.exports = {
         defaultAssignment: false,
       },
     ],
-    'no-whitespace-before-property': 2,
+    'no-whitespace-before-property': 0,
     'nonblock-statement-body-position': 0,
     'object-curly-newline': 0,
     // @NOTE: exists in rules/babel.js
     'object-curly-spacing': 0,
     'object-property-newline': 0,
     'object-shorthand': [2, 'properties'],
-    'one-var-declaration-per-line': 2,
+    'one-var-declaration-per-line': 0,
     'one-var': [
       2,
       {
@@ -166,9 +129,9 @@ module.exports = {
     // enforce operators to be placed before or after line breaks
     'operator-linebreak': 0,
     // enforce padding within blocks
-    'padded-blocks': [2, 'never'],
+    'padded-blocks': 0,
     'prefer-destructuring': 0,
-    'quotes': [
+    quotes: [
       2,
       'single',
       {
@@ -189,34 +152,21 @@ module.exports = {
     ],
     'require-jsdoc': 0,
     'template-tag-spacing': [2, 'never'],
-    'semi-spacing': [
-      2,
-      {
-        before: false,
-        after: true,
-      },
-    ],
+    'semi-spacing': 0,
     // @NOTE: exists in rules/babel.js
-    'semi': 0,
+    semi: 0,
     'sort-keys': 0,
     'sort-vars': 0,
-    'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'never'],
-    'space-in-parens': [2, 'never'],
-    'space-infix-ops': 2,
-    'space-unary-ops': [
-      2,
-      {
-        words: true,
-        nonwords: false,
-      },
-    ],
+    'space-before-blocks': 0,
+    'space-before-function-paren': 0,
+    'space-in-parens': 0,
+    'space-infix-ops': 0,
+    'space-unary-ops': 0,
     'spaced-comment': 0,
-    'unicode-bom': [2, 'never'],
     // require regex literals to be wrapped in parentheses
     'wrap-regex': 0,
     // specify whether double or single quotes should be used in JSX attributes
     // http://eslint.org/docs/rules/jsx-quotes
-    'jsx-quotes': [2, 'prefer-double'],
+    'jsx-quotes': 0,
   },
 };

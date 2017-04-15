@@ -17,7 +17,7 @@ module.exports = {
     // require return statements to either always or never specify values
     'consistent-return': 0,
     // specify curly brace conventions for all control statements
-    curly: [2, 'multi-line'],
+    curly: [2, 'all'],
     // require default case in switch statements
     'default-case': 2,
     // encourages use of dot notation whenever possible
@@ -87,7 +87,7 @@ module.exports = {
     // disallow creation of functions within loops
     'no-loop-func': 2,
     // disallow use of multiple spaces
-    'no-multi-spaces': 2,
+    'no-multi-spaces': 0,
     // disallow use of multiline strings
     'no-multi-str': 2,
     // disallow reassignments of native objects
@@ -154,7 +154,7 @@ module.exports = {
     'vars-on-top': 2,
     // require immediate function invocation to be wrapped in parentheses
     // http://eslint.org/docs/rules/wrap-iife.html
-    'wrap-iife': [2, 'outside'],
+    'wrap-iife': 0,
     // require or disallow Yoda conditions
     yoda: [
       2,
@@ -174,8 +174,6 @@ module.exports = {
         functions: 'always-multiline',
       },
     ],
-
-    'object-property-newline': 2,
     'object-curly-newline': 0,
 
     'no-useless-rename': 2,
@@ -188,7 +186,6 @@ module.exports = {
 
     'no-plusplus': 0,
     'no-negated-condition': 0,
-    'func-call-spacing': [2, 'never'],
     'max-params': 0,
     'line-comment-position': [
       2,
@@ -203,7 +200,6 @@ module.exports = {
 
     'prefer-promise-reject-errors': 0,
     'prefer-numeric-literals': 1,
-    'nonblock-statement-body-position': [2, 'beside'],
     'no-useless-return': 2,
 
     'prefer-destructuring': [
@@ -217,17 +213,14 @@ module.exports = {
       },
     ],
     'require-await': 2,
-    'rest-spread-spacing': [2, 'never'],
 
     'symbol-description': 1,
 
     strict: [2, 'never'],
 
-    'unicode-bom': [1, 'never'],
+    'unicode-bom': 0,
     'require-jsdoc': 0,
     'template-tag-spacing': 0,
-    // enforce the spacing around the * in generator functions
-    'generator-star-spacing': 1,
     // disallow modifying variables of class declarations
     'no-class-assign': 0,
 

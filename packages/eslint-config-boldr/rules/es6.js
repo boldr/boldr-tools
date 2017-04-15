@@ -10,21 +10,18 @@ module.exports = {
     'arrow-body-style': 0,
     // require space before/after arrow function's arrow
     // https://github.com/eslint/eslint/blob/master/docs/rules/arrow-spacing.md
-    'arrow-spacing': [
-      2,
-      {
-        before: true,
-        after: true,
-      },
-    ],
+    // disabled for prettier
+    // 'arrow-spacing': [
+    //   2,
+    //   {
+    //     before: true,
+    //     after: true,
+    //   },
+    // ],
+    'arrow-spacing': 0,
     // disallow arrow functions where they could be confused with comparisons
     // http://eslint.org/docs/rules/no-confusing-arrow
-    'no-confusing-arrow': [
-      2,
-      {
-        allowParens: true,
-      },
-    ],
+    'no-confusing-arrow': 0,
     // require parens in arrow function arguments
     'arrow-parens': 0,
     // enforces use of function declarations or expressions
@@ -36,18 +33,12 @@ module.exports = {
         allowUnboundThis: true,
       },
     ],
-    'rest-spread-spacing': [2, 'never'],
+    'rest-spread-spacing': 0,
     // import sorting
     // http://eslint.org/docs/rules/sort-imports
     'sort-imports': 0,
-    'template-curly-spacing': [2, 'never'],
-    'yield-star-spacing': [
-      2,
-      {
-        before: false,
-        after: true,
-      },
-    ],
+    'template-curly-spacing': 0,
+    'yield-star-spacing': 0,
     // verify super() callings in constructors
     'constructor-super': 2,
     'new-cap': 0,
@@ -100,7 +91,7 @@ module.exports = {
       },
     ],
     'babel/no-invalid-this': 2,
-    'babel/object-curly-spacing': [2, 'always'],
+    'babel/object-curly-spacing': 0,
     'babel/semi': [2, 'always'],
     // deprecated
     'babel/no-await-in-loop': 0,

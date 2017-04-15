@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.0
+- All rules adjusted to provide maximum compatibility with prettier.
+
 ## 0.8.7
 - Adds `jsx-a11y`
 - Separate files into composable pieces.

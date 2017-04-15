@@ -13,26 +13,35 @@ module.exports = {
     'jsx-a11y/accessible-emoji': 2,
     // Enforce that anchors have content and that the content is
     // accessible to screen readers. Accessible means that it is not hidden using the aria-hidden prop
-    'jsx-a11y/anchor-has-content': [2, {
-      components: [''],
-    }],
+    'jsx-a11y/anchor-has-content': [
+      2,
+      {
+        components: [''],
+      },
+    ],
     'jsx-a11y/aria-activedescendant-has-tabindex': 2,
     'jsx-a11y/aria-props': 2,
     'jsx-a11y/aria-proptypes': 2,
     'jsx-a11y/aria-role': 2,
     'jsx-a11y/aria-unsupported-elements': 2,
     'jsx-a11y/click-events-have-key-events': 2,
-    'jsx-a11y/heading-has-content': [2, {
-      components: [''],
-    }],
+    'jsx-a11y/heading-has-content': [
+      2,
+      {
+        components: [''],
+      },
+    ],
     'jsx-a11y/href-no-hash': 2,
     'jsx-a11y/html-has-lang': 2,
     'jsx-a11y/iframe-has-title': 2,
     'jsx-a11y/img-has-alt': 2,
     'jsx-a11y/img-redundant-alt': 0,
-    'jsx-a11y/label-has-for': [2, {
-      components: ['label'],
-    }],
+    'jsx-a11y/label-has-for': [
+      2,
+      {
+        components: ['label'],
+      },
+    ],
     'jsx-a11y/lang': 2,
     'jsx-a11y/mouse-events-have-key-events': 2,
     'jsx-a11y/no-access-key': 2,

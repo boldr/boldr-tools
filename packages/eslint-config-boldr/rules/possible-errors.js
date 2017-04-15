@@ -34,7 +34,7 @@ module.exports = {
     // This is annoying with ES6 arrows.
     'no-extra-parens': 0,
     // disallow unnecessary semicolons
-    'no-extra-semi': 2,
+    'no-extra-semi': 0,
     // disallow overwriting functions written as function declarations
     'no-func-assign': 0,
     // disallow function or variable declarations in nested blocks
