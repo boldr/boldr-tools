@@ -1,24 +1,31 @@
-
 import React from 'react';
 import styles from './styles.scss';
 
 function Tools() {
   return (
     <ul>
-      <li className={ styles.tool }>
+      <li className={styles.tool}>
         <a href="https://expressjs.com/">Express</a> - server-side rendering
       </li>
-      <li className={ styles.tool }>
-        <a href="https://facebook.github.io/react/">React</a> - component library
+      <li className={styles.tool}>
+        <a href="https://facebook.github.io/react/">React</a>
+        {' '}
+        - component library
       </li>
-      <li className={ styles.tool }>
-        <a href="https://github.com/reactjs/react-router">React Router</a> - server and browser routing
+      <li className={styles.tool}>
+        <a href="https://github.com/reactjs/react-router">React Router</a>
+        {' '}
+        - server and browser routing
       </li>
-      <li className={ styles.tool }>
-        <a href="https://github.com/css-modules/css-modules">Sass Modules</a> - r styles
+      <li className={styles.tool}>
+        <a href="https://github.com/css-modules/css-modules">Sass Modules</a>
+        {' '}
+        - r styles
       </li>
-      <li className={ styles.tool }>
-        <a href="https://github.com/airbnb/enzyme">Enzyme</a> - React component testing
+      <li className={styles.tool}>
+        <a href="https://github.com/airbnb/enzyme">Enzyme</a>
+        {' '}
+        - React component testing
       </li>
     </ul>
   );

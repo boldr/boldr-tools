@@ -1,6 +1,4 @@
 module.exports = [
-  'lodash',
-  'core-js',
   'react',
   'react-dom',
   'react-helmet',

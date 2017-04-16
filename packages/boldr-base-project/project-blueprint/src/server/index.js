@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const host = process.env.SERVER_HOST || 'localhost';
 const processPort = process.env.SERVER_PORT;
 
-const port = parseInt(processPort, 10) || 3000;
+const port = 3000;
 
 // Remove annoying Express header addition.
 app.disable('x-powered-by');
@@ -24,10 +24,10 @@ app.use((req, res, next) => {
 
 // Setup the public directory so that we can server static assets.
 app.use(Express.static(path.join(process.cwd(), 'public')));
-// app.use('/assets', Express.static(path.join(process.cwd(), BOLDR.PUBLIC_DIR, 'assets')));
-
+// app.use('/assets', Express.static(path.join(process.cwd(), BOLDR.PUBLIC_DIR, 
+// 'assets')));
 app.get('*', ssrMiddleware);
 
-server.listen(port, host, () => {
-  console.log(`🚀  server started on port: ${port}`); // eslint-disable-line no-console
+server.listen(3000, () => {
+  console.log(`🚀  server started on port: ${port}`); // eslint-disable-line
 });

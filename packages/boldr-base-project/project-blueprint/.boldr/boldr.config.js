@@ -8,9 +8,9 @@ const vendor = [
 ];
 module.exports = {
   serveAssetsFrom: '/assets/',
-  serverPort: process.env.SERVER_PORT || 3000,
-  serverHost: process.env.SERVER_HOST || 'localhost',
-  hmrPort: process.env.HMR_PORT || 3001,
+  serverPort: 3000,
+  serverHost: 'localhost',
+  hmrPort: 3001,
   isVerbose: true,
   isDebug: false,
   vendorFiles: vendor,

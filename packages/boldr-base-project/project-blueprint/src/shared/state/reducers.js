@@ -1,14 +1,9 @@
 import { combineReducers } from 'redux';
 import boldrReducer from './modules/boldr';
-import routerReducer from './modules/router';
-
-export function ssrReducer(previousState = {}, action) {
-  return previousState;
-}
+import { routerReducer as routing } from 'react-router-redux';
 
 const rootReducer = combineReducers({
-  ssr: ssrReducer,
-  router: routerReducer,
+  routing,
   boldr: boldrReducer,
 });
 
