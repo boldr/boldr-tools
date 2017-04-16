@@ -3,9 +3,8 @@ import path from 'path';
 import url from 'url';
 import shell from 'shelljs';
 import merge from 'lodash/merge';
-import { logger } from 'boldr-utils';
-
-const paths = require('../config/paths');
+import logger from 'boldr-utils/es/logger';
+import paths from './paths';
 
 module.exports = optionalConfig => {
   let config;
@@ -24,7 +23,9 @@ module.exports = optionalConfig => {
     isDebug: false,
   };
 
-  const boldrConfigPath = optionalConfig ? path.join(paths.rootDir, optionalConfig) : paths.userBoldrConfigPath;
+  const boldrConfigPath = optionalConfig
+  ? path.join(paths.rootDir, optionalConfig)
+  : paths.boldrConfigPath;
 
   // Find user config
   if (shell.test('-f', boldrConfigPath)) {
@@ -35,7 +36,7 @@ module.exports = optionalConfig => {
       config = require(boldrConfigPath);
     } catch (error) {
       logger.error('Error loading your boldr.config.js:', error);
-      process.exit();
+      process.exit(1);
     }
   }
 

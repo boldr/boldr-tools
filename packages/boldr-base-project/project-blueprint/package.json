@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boldr/getBoldr/packages/boldr-base-project.git"
+    "url": "git+https://github.com/boldr/boldr-tools/packages/boldr-base-project.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/boldr/getBoldr/issues"
+    "url": "https://github.com/boldr/boldr-tools/issues"
   },
-  "homepage": "https://github.com/boldr/getBoldr#readme",
+  "homepage": "https://github.com/boldr/boldr-tools#readme",
   "dependencies": {
     "boldr-utils": "^0.1.13",
     "compression": "1.6.2",

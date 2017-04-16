@@ -1,20 +1,17 @@
 import shell from 'shelljs';
-import { logger } from 'boldr-utils';
+import logger from 'boldr-utils/es/logger';
 
-const printAssets = require('../../utils/printAssets');
-const compileConfigs = require('../../utils/compileConfigs');
-const webpackCompiler = require('../../utils/webpackCompiler');
-const paths = require('../../config/paths');
+import printAssets from '../services/printAssets';
+import compileConfigs from '../services/compileConfigs';
+import webpackCompiler from '../services/webpackCompiler';
+import paths from '../config/paths';
 
-module.exports = (config) => {
+module.exports = config => {
   logger.start('Starting production build...');
 
   let serverCompiler;
 
-  const {
-    clientConfig,
-    serverConfig,
-  } = compileConfigs(config, 'production');
+  const {clientConfig, serverConfig} = compileConfigs(config, 'production');
 
   // Empty assets
   if (shell.rm('-rf', paths.assetsDir).code === 0) {
@@ -29,15 +26,19 @@ module.exports = (config) => {
 
   // Compiles server code using the prod.server config
   const buildServer = () => {
-    serverCompiler = webpackCompiler(serverConfig, (stats) => {
-      if (stats.hasErrors()) process.exit(1);
+    serverCompiler = webpackCompiler(serverConfig, stats => {
+      if (stats.hasErrors()) {
+        process.exit(1);
+      }
       logger.end('Built server.');
     });
     serverCompiler.run(() => undefined);
   };
 
-  const clientCompiler = webpackCompiler(clientConfig, (stats) => {
-    if (stats.hasErrors()) process.exit(1);
+  const clientCompiler = webpackCompiler(clientConfig, stats => {
+    if (stats.hasErrors()) {
+      process.exit(1);
+    }
     logger.info('Assets:');
     printAssets(stats, clientConfig);
     buildServer();

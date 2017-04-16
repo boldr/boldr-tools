@@ -1,58 +1,71 @@
-const path = require('path');
-const fs = require('fs');
-const url = require('url');
-const appRootDir = require('app-root-dir');
+import path from 'path';
+import fs from 'fs-extra';
 
-const rootDir = appRootDir.get();
+/**
+ * Path of the current working directory, with symlinks taken
+ * into account.
+ * @type {String}
+ */
+const rootDir = fs.realpathSync(process.cwd());
 
-function resolveApp(...args) {
+/**
+ * Get the path from the user's project root
+ * @param  {String} args the path we are trying to reach
+ * @return {any}      whatever it is we're looking for
+ */
+function resolveProject(...args) {
   return path.resolve(rootDir, ...args);
 }
 
+/**
+ * Get the path from the root of the boldr-dx directory
+ * @param  {String} args the path we are trying to reach
+ * @return {any}      whatever it is we're looking for
+ */
 function resolveBoldr(...args) {
   return path.resolve(__dirname, '../..', ...args);
 }
 
-const safeReaddirSync = dirPath => {
-  try {
-    return fs.readdirSync(dirPath);
-  } catch (e) {
-    return [];
-  }
-};
-
+/**
+ * Enables resolving paths via NODE_PATH. Shout out to create-react-app
+ * https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/config/paths.js#L24
+ * @type {String}
+ */
 const nodePaths = (process.env.NODE_PATH || '')
   .split(process.platform === 'win32' ? ';' : ':')
   .filter(Boolean)
   .filter(folder => !path.isAbsolute(folder))
-  .map(resolveApp);
+  .map(resolveProject);
 
-const srcDir = resolveApp('src');
-const ourNodeModules = resolveBoldr('node_modules');
-const boldrDir = resolveApp('.boldr');
-
-const externalModules = modulesPath => safeReaddirSync(modulesPath).filter(m => m !== '.bin');
-const appNodeModules = externalModules(resolveApp('node_modules')).filter(m => m !== 'boldr-dx');
-const boldrNodeModules = externalModules(resolveBoldr('node_modules'));
-
+// Currently we are here:
+// <USER_PROJECT_ROOT>/node_modules/boldr-dx/dist/config
 module.exports = {
   rootDir,
-  srcDir,
-  ourNodeModules,
-  boldrDir,
   nodePaths,
-  appNodeModules,
-  boldrNodeModules,
-  publicDir: path.join(rootDir, 'public'),
-  dllConfig: path.join(boldrDir, 'dll.config.js'),
-  compiledDir: path.join(rootDir, 'compiled'),
-  assetsDir: path.join(rootDir, 'public', 'assets'),
-  dllDir: path.join(rootDir, 'public', 'assets', 'dlls'),
-  serverSrcDir: path.join(srcDir, 'server'),
-  clientSrcDir: path.join(srcDir, 'client'),
-  sharedDir: path.join(srcDir, 'shared'),
-  userBoldrConfigPath: path.join(boldrDir, 'boldr.config.js'),
-  userNodeModules: resolveApp('node_modules'),
-  userPkgPath: resolveApp('package.json'),
-  userbabelRc: resolveApp('.babelrc'),
+  // __dirname, ./../..
+  ownPath: resolveBoldr('.'),
+  // __dirname, ./../../node_modules
+  boldrNodeModules: resolveBoldr('node_modules'),
+  // <USER_PROJECT_ROOT>/node_modules
+  userNodeModules: resolveProject('node_modules'),
+  // <USER_PROJECT_ROOT>/.happypack
+  happyPackDir: resolveProject('.happypack'),
+  // <USER_PROJECT_ROOT>/package.json
+  userPkgPath: resolveProject('package.json'),
+  userbabelRc: resolveProject('.babelrc'),
+  userEslintRc: resolveProject('.eslintrc'),
+  userStylelintRc: resolveProject('.stylelintrc'),
+  boldrDir: resolveProject('.boldr'),
+  boldrConfigPath: resolveProject('.boldr/boldr.config.js'),
+
+  srcDir: resolveProject('src'),
+  serverSrcDir: resolveProject('src/server'),
+  clientSrcDir: resolveProject('src/client'),
+  sharedDir: resolveProject('src/shared'),
+
+  publicDir: resolveProject('public'),
+  dllConfig: resolveProject('.boldr/dll.config.js'),
+  compiledDir: resolveProject('compiled'),
+  assetsDir: resolveProject('public/assets'),
+  dllDir: resolveProject('public/assets/dlls'),
 };

@@ -7,10 +7,10 @@
   "author": "Steven Truesdell <steven@strues.io>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boldr/getBoldr.git"
+    "url": "git+https://github.com/boldr/boldr-tools.git"
   },
-  "bugs": "https://github.com/boldr/getBoldr/issues",
-  "homepage": "https://github.com/boldr/getBoldr#readme",
+  "bugs": "https://github.com/boldr/boldr-tools/issues",
+  "homepage": "https://github.com/boldr/boldr-tools#readme",
   "jsnext:main": "es/boldr-cli.js",
   "files": [
     "dist",

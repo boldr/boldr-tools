@@ -4,7 +4,7 @@
   "description": "Helpers designed for use with Boldr and fullstack react apps",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boldr/getBoldr.git"
+    "url": "git+https://github.com/boldr/boldr-tools.git"
   },
   "scripts": {
     "build": "npm run build:commonjs && npm run build:es",

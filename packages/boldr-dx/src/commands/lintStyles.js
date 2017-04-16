@@ -1,9 +1,9 @@
 import path from 'path';
 import glob from 'glob';
 import stylelint from 'stylelint';
-import { logger } from 'boldr-utils';
+import logger from 'boldr-utils/es/logger';
 
-const paths = require('../../config/paths');
+import paths from '../config/paths';
 
 module.exports = () => {
   const handleError = (error) => {
@@ -11,10 +11,10 @@ module.exports = () => {
     process.exit(1);
   };
 
-  const stylelintrc = glob.sync(`${paths.rootDir}/.stylelintrc*`);
+  const stylelintrc = glob.sync(`${paths.rootDir}/.*stylelintrc*`);
   const configFile = stylelintrc.length
       ? stylelintrc[0]
-      : path.join(__dirname, '../../config/.stylelintrc');
+      : path.join(__dirname, '../config/stylelintrc.base');
 
   logger.info(`Using Stylelint file: ${configFile}`);
 

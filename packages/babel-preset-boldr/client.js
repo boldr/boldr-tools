@@ -7,7 +7,6 @@ module.exports = {
     [require.resolve('babel-preset-env'), {
       modules: false,
       debug: false,
-      exclude: ['transform-async-to-generator', 'transform-regenerator'],
     }],
     require.resolve('babel-preset-react'),
   ],
@@ -28,7 +27,23 @@ module.exports = {
     }],
     require.resolve('babel-plugin-syntax-trailing-function-commas'),
     require.resolve('babel-plugin-transform-unicode-property-regex'),
-    [require.resolve('fast-async'), { spec: true }],
+    [
+        require.resolve('babel-plugin-transform-runtime'),
+        {
+          helpers: false,
+          polyfill: false,
+          regenerator: true,
+          // Resolve the Babel runtime relative to the config.
+          moduleName: path.dirname(require.resolve('babel-runtime/package')),
+        },
+      ],
+      [
+        require.resolve('babel-plugin-transform-regenerator'),
+        {
+          // Async functions are converted to generators by babel-preset-env
+          async: false,
+        },
+      ],
 
 
   ],

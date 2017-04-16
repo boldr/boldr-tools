@@ -3,23 +3,23 @@ import cloneDeep from 'lodash/cloneDeep';
 import merge from 'webpack-merge';
 import shell from 'shelljs';
 import webpack from 'webpack';
-import { logger } from 'boldr-utils';
+import logger from 'boldr-utils/es/logger';
 
-const baseConfig = require('../config/webpack/webpack.base');
-const clientDevConfig = require('../config/webpack/webpack.dev.client');
-const serverDevConfig = require('../config/webpack/webpack.dev.server');
-const clientProdConfig = require('../config/webpack/webpack.prod.client');
-const serverProdConfig = require('../config/webpack/webpack.prod.server');
-const paths = require('../config/paths');
+import baseConfig from '../webpack/webpack.base';
+import clientDevConfig from '../webpack/webpack.dev.client';
+import serverDevConfig from '../webpack/webpack.dev.server';
+import clientProdConfig from '../webpack/webpack.prod.client';
+import serverProdConfig from '../webpack/webpack.prod.server';
+import paths from '../config/paths';
 
 module.exports = (config, environment = 'development') => {
   const {
-   serverPort,
-   serverHost,
-   hmrPort,
-   isDebug,
-   isVerbose,
-   serveAssetsFrom,
+    serverPort,
+    serverHost,
+    hmrPort,
+    isDebug,
+    isVerbose,
+    serveAssetsFrom,
   } = config;
 
   let clientConfig = clientDevConfig;
@@ -53,13 +53,25 @@ module.exports = (config, environment = 'development') => {
   });
 
   // Merge options with static webpack configs
-  clientConfig = merge.smart(baseConfig(clientOptions), clientConfig(clientOptions));
-  serverConfig = merge.smart(baseConfig(serverOptions), serverConfig(serverOptions));
+  clientConfig = merge.smart(
+    baseConfig(clientOptions),
+    clientConfig(clientOptions),
+  );
+  serverConfig = merge.smart(
+    baseConfig(serverOptions),
+    serverConfig(serverOptions),
+  );
 
   // Modify via user's config
   try {
-    clientConfig = config.editWebpackCfg(cloneDeep(clientConfig), clientOptions);
-    serverConfig = config.editWebpackCfg(cloneDeep(serverConfig), serverOptions);
+    clientConfig = config.editWebpackCfg(
+      cloneDeep(clientConfig),
+      clientOptions,
+    );
+    serverConfig = config.editWebpackCfg(
+      cloneDeep(serverConfig),
+      serverOptions,
+    );
   } catch (error) {
     logger.error('Error in your boldr.config.js editWebpackCfg():', error);
     process.exit(1);
@@ -74,7 +86,8 @@ module.exports = (config, environment = 'development') => {
   // A "main" entry is required in the server config.
   if (!serverConfig.entry.main) {
     logger.error(
-      'A main entry is required in the server configuration. Found: ', serverConfig.entry,
+      'A main entry is required in the server configuration. Found: ',
+      serverConfig.entry,
     );
     process.exit(1);
   }

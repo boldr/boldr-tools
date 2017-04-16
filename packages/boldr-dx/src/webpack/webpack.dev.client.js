@@ -1,27 +1,28 @@
 /* eslint-disable global-require */
 import path from 'path';
-import { statSync } from 'fs';
+import {statSync} from 'fs';
 import webpack from 'webpack';
-import appRootDir from 'app-root-dir';
 import AssetsPlugin from 'assets-webpack-plugin';
-
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import ManifestPlugin from 'webpack-manifest-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
-import happyPackPlugin from '../../utils/happyPackPlugin';
-import paths from '../paths';
+
+import paths from '../config/paths';
+import happyPackPlugin from './plugins/happyPackPlugin';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const HMR_PORT = process.env.HMR_PORT || 3001;
 const SERVER_HOST = process.env.SERVER_HOST || 'localhost';
-const rootDir = appRootDir.get();
+const debug = require('debug')('boldr:webpack:client');
 
 module.exports = options => {
+  debug('webpack.client -- options: ', options);
   const main = [
-    `webpack-hot-middleware/client?reload=true&?overlay=true&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`, // eslint-disable-line
+    'react-hot-loader/patch',
+    `webpack-hot-middleware/client?reload=true&&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`, // eslint-disable-line
     `${paths.clientSrcDir}/index.js`,
   ];
-  const boldrCfgPath = require(paths.userBoldrConfigPath);
+  const boldrCfgPath = require(paths.boldrConfigPath);
 
   return {
     target: 'web',
@@ -31,11 +32,15 @@ module.exports = options => {
     },
     output: {
       path: paths.assetsDir,
-      filename: '[name].js',
+      filename: 'main.js',
       pathinfo: true,
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: options.publicPath,
-      libraryTarget: 'var',
+    },
+    node: {
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty',
     },
     plugins: [
       happyPackPlugin('happyjs', [
@@ -44,6 +49,8 @@ module.exports = options => {
           options: {
             babelrc: false,
             compact: true,
+            sourceMaps: true,
+            comments: false,
             cacheDirectory: true,
             presets: [require.resolve('babel-preset-boldr/client')],
             plugins: [require.resolve('babel-plugin-dynamic-import-webpack')],
@@ -67,10 +74,7 @@ module.exports = options => {
           loader: 'postcss-loader',
         },
         {
-          loader: 'sass-loader',
-          options: {
-            sourceMap: true,
-          },
+          loader: 'fast-sass-loader',
         },
       ]),
       happyPackPlugin('happycss', [
@@ -91,17 +95,14 @@ module.exports = options => {
         },
       ]),
       new WebpackMd5Hash(),
-      new webpack.EnvironmentPlugin({
-        NODE_ENV: JSON.stringify(nodeEnv),
-      }),
-      // Prevent webpack errors during development in order to keep our process alive.
+      // Prevent webpack errors during development in order to
+      // keep our process alive.
       new webpack.NoEmitOnErrorsPlugin(),
       new CircularDependencyPlugin({
         exclude: /a\.js|node_modules/,
         // show a warning when there is a circular dependency
         failOnError: false,
       }),
-
       // Prints more readable module names in the browser console on HMR updates
       new webpack.NamedModulesPlugin(),
       // Generates a JSON file containing a map of all the output files
@@ -120,7 +121,12 @@ module.exports = options => {
           options: {
             id: 'happyjs',
           },
-          exclude: [/node_modules/, /happypack/, paths.assetsDir],
+          exclude: [
+            /node_modules/,
+            paths.happyPackDir,
+            paths.assetsDir,
+            paths.compiledDir,
+          ],
           include: [paths.srcDir],
         },
         {

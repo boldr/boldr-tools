@@ -3,9 +3,9 @@ import cloneDeep from 'lodash/cloneDeep';
 import jest from 'jest';
 import shell from 'shelljs';
 
-const jestConfigBuilder = require('../../config/jest');
-const paths = require('../../config/paths');
-const compileConfigs = require('../../utils/compileConfigs');
+import jestConfigBuilder from '../config/jest';
+import paths from '../config/paths';
+import compileConfigs from '../services/compileConfigs';
 
 
 module.exports = (config, flags) => {

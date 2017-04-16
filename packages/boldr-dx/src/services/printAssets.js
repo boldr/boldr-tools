@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { logger } from 'boldr-utils';
+import logger from 'boldr-utils/es/logger';
 import filesize from 'filesize';
 import gzipSize from 'gzip-size';
 import stripAnsi from 'strip-ansi';
@@ -44,7 +44,7 @@ module.exports = (stats, clientConfig) => {
 
   assets.forEach((asset) => {
     const sizeLabel = addLabelPadding(asset.sizeLabel, longestSizeLabelLength);
-    const gzSizeLabel = addLabelPadding(asset.gzSizeLabel, longestGzSizeLabelLength);
-    logger.log(`    ${sizeLabel}    ${gzSizeLabel}    ${asset.folder + path.sep + asset.name}`);
+    const gzSizeLabel = addLabelPadding(asset.gzSizeLabel, longestGzSizeLabelLength); // eslint-disable-line
+    logger.log(`    ${sizeLabel}    ${gzSizeLabel}    ${asset.folder + path.sep + asset.name}`); // eslint-disable-line
   });
 };

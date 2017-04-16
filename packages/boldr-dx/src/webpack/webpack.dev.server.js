@@ -1,12 +1,15 @@
 import path from 'path';
-import { statSync } from 'fs';
+import {statSync} from 'fs';
 import webpack from 'webpack';
-import nodeExternals from 'webpack-node-externals';
-import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
-import paths from '../paths';
+import nodeExternals from 'webpack-node-externals';
+import {removeNil, mergeDeep, ifElse} from 'boldr-utils';
+import paths from '../config/paths';
+
+const debug = require('debug')('boldr:webpack:server');
 
 module.exports = options => {
+  debug('webpack.server -- options: ', options);
   return {
     target: 'node',
     externals: [
@@ -20,7 +23,6 @@ module.exports = options => {
         ],
       }),
     ],
-
     entry: {
       main: [`${paths.serverSrcDir}/index.js`],
     },
@@ -32,13 +34,18 @@ module.exports = options => {
       publicPath: options.publicPath,
       libraryTarget: 'commonjs2',
     },
-
     module: {
       rules: [
         {
           test: /\.(js|jsx)$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, paths.compiledDir],
+          exclude: [
+            /node_modules/,
+            paths.compiledDir,
+            paths.assetsDir,
+            paths.happyPackDir,
+          ],
+          include: [paths.srcDir],
           options: {
             babelrc: false,
             cacheDirectory: false,
@@ -51,23 +58,12 @@ module.exports = options => {
           use: [
             {
               loader: 'css-loader/locals',
-              options: {
-                modules: false,
-                minimize: true,
-                autoprefixer: false,
-                importLoaders: 1,
-                localIdentName: '[hash:base64]',
-              },
             },
             {
               loader: 'postcss-loader',
             },
             {
-              loader: 'sass-loader',
-              options: {
-                outputStyle: 'expanded',
-                sourceMap: true,
-              },
+              loader: 'fast-sass-loader',
             },
           ],
         },
@@ -75,7 +71,11 @@ module.exports = options => {
     },
 
     plugins: [
-      new webpack.optimize.OccurrenceOrderPlugin(true),
+      new WebpackMd5Hash(),
+      new webpack.NoEmitOnErrorsPlugin(),
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
       new webpack.BannerPlugin({
         banner: 'require("source-map-support").install();',
         raw: true,

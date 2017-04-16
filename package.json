@@ -5,9 +5,9 @@
   "main": "index.js",
   "author": "Steven Truesdell <steven@strues.io>",
   "license": "MIT",
-  "repository": "git+https://github.com/strues/getBoldr",
-  "bugs": "https://github.com/strues/getBoldr/issues",
-  "homepage": "https://github.com/strues/getBoldr#readme",
+  "repository": "git+https://github.com/boldr/boldr-tools",
+  "bugs": "https://github.com/boldr/boldr-tools/issues",
+  "homepage": "https://github.com/boldr/boldr-tools#readme",
   "directories": {
     "doc": "docs"
   },
