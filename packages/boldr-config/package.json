@@ -11,7 +11,8 @@
     "build": "babel src --out-dir lib",
     "eslint": "eslint --fix .",
     "format": "prettier --single-quote=true --jsx-bracket-same-line=false --trailing-comma=all --write \"src/**/*.js\"",
-    "cover": "istanbul cover _mocha -- ./test/**/*.spec.js"
+    "cover": "istanbul cover _mocha -- ./test/**/*.spec.js",
+    "test": "echo \"No tests\" && exit 0"
   },
   "keywords": [
     "config",

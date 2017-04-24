@@ -1,4 +1,4 @@
-import validateArray from './validateArray';
+import validateArray from '../../src/arrays/validateArray';
 
 test('validateArray determines if an array is an array', () => {
   const array1 = ['a', 'b', 'c'];

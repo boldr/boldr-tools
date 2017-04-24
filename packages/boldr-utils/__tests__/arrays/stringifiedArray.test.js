@@ -1,4 +1,4 @@
-import stringifiedArray from './stringifiedArray';
+import stringifiedArray from '../../src/arrays/stringifiedArray';
 
 test('stringifiedArray converts an array to strings', () => {
   const nums = [1, 2, 3, 4];
