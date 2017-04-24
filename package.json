@@ -38,6 +38,7 @@
     "precoverage": "rimraf ./coverage",
     "release": "node ./scripts/release",
     "test": "jest",
+    "test:ci": "node_modules/.bin/lerna exec yarn test",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "lerna run lint"

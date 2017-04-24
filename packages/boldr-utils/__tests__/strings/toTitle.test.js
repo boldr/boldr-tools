@@ -1,4 +1,4 @@
-import toTitle from './toTitle';
+import toTitle from '../../src/strings/toTitle';
 
 test('toTitle converts to titlecase', () => {
   const fakeTitle = 'hello';

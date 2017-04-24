@@ -11,5 +11,8 @@
   "bugs": {
     "url": "https://github.com/boldr/boldr-tools/issues"
   },
-  "homepage": "https://github.com/boldr/boldr-tools#readme"
+  "homepage": "https://github.com/boldr/boldr-tools#readme",
+  "scripts": {
+      "test": "echo \"No tests\" && exit 0"
+    }
 }

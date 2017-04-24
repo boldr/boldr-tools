@@ -30,7 +30,9 @@
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "clean": "rimraf dist && rimraf es",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+    "format": "prettier --single-quote=true --jsx-bracket-same-line=false --trailing-comma=all --write \"src/**/*.js\"",
+      "test": "echo \"No tests\" && exit 0"
   },
   "dependencies": {
     "app-root-dir": "^1.0.2",
@@ -120,6 +122,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
+    "prettier": "^1.2.2",
     "rimraf": "^2.6.1"
   }
 }

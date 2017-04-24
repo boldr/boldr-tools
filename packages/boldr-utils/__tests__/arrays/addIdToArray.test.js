@@ -1,4 +1,4 @@
-import addIdToArray from './addIdToArray';
+import addIdToArray from '../../src/arrays/addIdToArray';
 
 test('addIdToArray adds an id to the array of ids', () => {
   const ids = ['ab123', 'def324'];

@@ -1,4 +1,4 @@
-import uniqueArray from './uniqueArray';
+import uniqueArray from '../../src/arrays/uniqueArray';
 
 test('uniqueArray combines two arrays without duplication', () => {
   const array1 = ['a', 'b', 'c'];
