@@ -1,0 +1,8 @@
+debug: true
+pipeline:
+  build:
+    image: node:7
+    commands:
+      - yarn global add node-gyp
+      - yarn install --pure-lockfile
+      - yarn bootstrap

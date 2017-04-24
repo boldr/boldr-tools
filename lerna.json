@@ -1,8 +1,13 @@
 {
   "lerna": "2.0.0-rc.3",
+  "command": {
+    "bootstrap": {
+      "npmClient": "yarn",
+      "concurrency": 1
+    }
+  },
   "packages": [
     "packages/*"
   ],
-  "version": "independent",
-  "npmClient": "yarn"
+  "version": "independent"
 }
