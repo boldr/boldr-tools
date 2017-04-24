@@ -5,4 +5,4 @@ pipeline:
       - yarn global add node-gyp
       - yarn install --pure-lockfile
       - yarn bootstrap
-      - yarn test:ci
+      - yarn test

@@ -11,23 +11,6 @@
   "directories": {
     "doc": "docs"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "<rootDir>/packages/boldr-base-*",
-      "<rootDir>/packages/boldr-dx/cli/actions/test.js",
-      "<rootDir>/e2e_tests"
-    ],
-    "collectCoverageFrom": [
-      "**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules",
-      "<rootDir>/packages/*/node_modules",
-      "<rootDir>/packages/boldr-base-*",
-      "<rootDir>/coverage",
-      "<rootDir>/packages/boldr-dx/src/utils/jest"
-    ]
-  },
   "scripts": {
     "authors": "node ./scripts/authors",
     "bootstrap": "node_modules/.bin/lerna bootstrap",
@@ -38,7 +21,7 @@
     "precoverage": "rimraf ./coverage",
     "release": "node ./scripts/release",
     "test": "jest",
-    "test:ci": "node_modules/.bin/lerna exec yarn test",
+    "test:ci": "node_modules/.bin/lerna run test",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "lerna run lint"
@@ -67,6 +50,32 @@
     "rimraf": "^2.6.1",
     "semver": "5.3.0",
     "shelljs": "0.7.7"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "examples/.*",
+      "packages/.*/es",
+      "packages/.*/dist",
+      "packages/boldr-base-project/.*"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/flow-typed/"
+    ],
+    "collectCoverageFrom": [
+      "**/packages/boldr-utils/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "**/node_modules/",
+      "**/packages/*/node_modules/",
+      "**/packages/boldr-base-project/**",
+      "**/coverage/",
+      "**/packages/boldr-dx/src/utils/jest"
+    ],
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.test.js"
+    ]
   },
   "config": {
     "commitizen": {
