@@ -18,7 +18,7 @@
   "scripts": {
     "find-new-rules": "eslint-find-rules --unused ./index.js",
     "lint": "eslint .",
-    "test": "npm-run-all --parallel lint find-new-rules"
+    "test": "yarn lint && yarn find-new-rules"
   },
   "repository": {
     "type": "git",
