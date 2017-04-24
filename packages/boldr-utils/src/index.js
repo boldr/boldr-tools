@@ -1,5 +1,12 @@
-import { filterWithRules, mergeDeep, getIn, setIn, removeByKey } from './objects';
-import { ifElse, requiredParam, validateId } from './logic';
+import {
+  filterWithRules,
+  mergeDeep,
+  getIn,
+  setIn,
+  removeByKey,
+  getField,
+} from './objects';
+import { ifElse, requiredParam, validateId, sort, uniq } from './logic';
 import {
   removeNil,
   flatten,
@@ -9,6 +16,7 @@ import {
   stringifiedArray,
   validateArray,
 } from './arrays';
+import reduceKey from './state/reduceKey';
 
 const logger = require('./logger');
 
@@ -29,4 +37,8 @@ module.exports = {
   getIn,
   setIn,
   removeByKey,
+  sort,
+  uniq,
+  reduceKey,
+  getField,
 };

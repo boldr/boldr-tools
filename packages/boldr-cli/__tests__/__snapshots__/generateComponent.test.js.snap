@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateComponent should add semi colons 1`] = `
+Array [
+  ".TestComponent {}
+",
+  "export { default } from './TestComponent';
+",
+  "import React from 'react';
+import ReactDOM from 'react-dom';
+import TestComponent from './TestComponent';
+
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<TestComponent />, div);
+});
+",
+  "/* @flow */
+import React, { Component } from 'react';
+import './TestComponent.scss';
+
+type Props = {
+
+};
+class TestComponent extends Component {
+  state = {};
+  props: Props;
+  render() {
+    return (
+      <div className=\\"TestComponent\\"></div>
+    );
+  }
+}
+
+export default TestComponent;
+",
+]
+`;
+
+exports[`generateComponent should change css extension 1`] = `
+".T {}
+"
+`;
+
+exports[`generateComponent should generate a component with default config 1`] = `"TestComponent"`;
+
+exports[`generateComponent should generate a component with default config 2`] = `
+Array [
+  ".TestComponent {}
+",
+  "export { default } from './TestComponent'
+",
+  "import React from 'react'
+import ReactDOM from 'react-dom'
+import TestComponent from './TestComponent'
+
+it('renders without crashing', () => {
+  const div = document.createElement('div')
+  ReactDOM.render(<TestComponent />, div)
+})
+",
+  "/* @flow */
+import React, { Component } from 'react'
+import './TestComponent.scss'
+
+type Props = {
+
+};
+class TestComponent extends Component {
+  state = {}
+  props: Props;
+  render() {
+    return (
+      <div className=\\"TestComponent\\"></div>
+    )
+  }
+}
+
+export default TestComponent
+",
+]
+`;
+
+exports[`generateComponent should generate stateless components 1`] = `
+"/* @flow */
+import React from 'react'
+import './TestComponent.scss'
+
+type Props = {
+
+};
+const TestComponent = (props: Props) => (
+  <div className=\\"TestComponent\\"></div>
+)
+
+export default TestComponent
+"
+`;

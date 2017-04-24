@@ -1,16 +1,20 @@
 const path = require('path');
+
 const env = process.env.BABEL_ENV || process.env.NODE_ENV;
 
 module.exports = {
-  compact: false,
+  compact: true,
   presets: [
     [require.resolve('babel-preset-env'), {
       modules: false,
+      useBuiltIns: true,
       debug: false,
     }],
     require.resolve('babel-preset-react'),
   ],
   plugins: [
+    require.resolve('babel-plugin-syntax-flow'),
+    require.resolve('babel-plugin-syntax-trailing-function-commas'),
     require.resolve('babel-plugin-syntax-dynamic-import'),
     // class { handleClick = () => { } }
     [require.resolve('babel-plugin-transform-class-properties'), {
@@ -25,12 +29,11 @@ module.exports = {
     [require.resolve('babel-plugin-transform-react-jsx'), {
       useBuiltIns: true,
     }],
-    require.resolve('babel-plugin-syntax-trailing-function-commas'),
     require.resolve('babel-plugin-transform-unicode-property-regex'),
     [
         require.resolve('babel-plugin-transform-runtime'),
         {
-          helpers: false,
+          helpers: true,
           polyfill: false,
           regenerator: true,
           // Resolve the Babel runtime relative to the config.
@@ -53,6 +56,7 @@ if (env === 'production') {
   const prodPlugins = [
     require.resolve('babel-plugin-transform-react-constant-elements'),
     require.resolve('babel-plugin-transform-react-inline-elements'),
+    require.resolve('babel-plugin-transform-flow-strip-types'),
   ];
 
   module.exports.plugins.push(...prodPlugins);

@@ -5,6 +5,7 @@ import spawn from 'cross-spawn';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import shell from 'shelljs';
+import logger from 'boldr-utils/es/logger';
 import spinner from '../util/spinner';
 
 const simpleGit = require('simple-git')();
@@ -37,51 +38,57 @@ export default class FullSetup {
     this.initApi();
   }
   initProjectDir() {
-    console.log(chalk.cyan('🚀  Initializing a new Boldr project.'));
+    logger.start('Initializing a new Boldr project.');
     shell.mkdir(projectDir);
     shell.cd(projectDir);
   }
   initCms() {
     spinner.start();
-    console.log(chalk.cyan('🚀  Setting up your Boldr CMS project.'));
-    console.log(chalk.cyan('⚡  Getting Boldr CMS project files...'));
+    logger.task('Setting up your Boldr CMS project.');
+    logger.task('Getting Boldr CMS project files...');
     simpleGit.clone(cmsRepoUrl, cmsDir, {}, this.installCms(this.options));
     spinner.succeed(chalk.green(' Got the files'));
   }
   installCms() {
     shell.cd(cmsDir);
-    console.log(chalk.cyan('⚡  Installing...'));
+    logger.task('Installing...');
     spinner.start();
     let result;
-    if (this.options.packageManager === 'yarn') result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
-    else result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    if (this.options.packageManager === 'yarn') {
+      result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
+    } else {
+       result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    }
 
     if (result.status !== 0) {
-      console.log(chalk.red('💩  Installation failed...'));
+      logger.error('Installation failed...');
       process.exit(1);
     }
     spinner.succeed(chalk.green('CMS Installation complete.'));
-    console.log(chalk.cyan('👌 '));
   }
   initApi() {
     spinner.start();
-    console.log(chalk.cyan('🚀  Setting up your Boldr API project.'));
-    console.log(chalk.cyan('⚡  Getting Boldr API project files...'));
+    logger.task('Setting up your Boldr API project.');
+    logger.task('Getting Boldr API project files...');
     simpleGit.clone(apiRepoUrl, apiDir, {}, this.installApi(this.options));
     spinner.succeed(chalk.green(' Got the files'));
   }
   installApi() {
     shell.cd(apiDir);
-    console.log(chalk.cyan('⚡  Installing...'));
+    logger.task('Installing...');
     spinner.start();
     let result;
-    if (this.options.packageManager === 'yarn') result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
-    else result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    if (this.options.packageManager === 'yarn') {
+      result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
+    } else {
+     result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    }
+
     if (result.status !== 0) {
-      console.log(chalk.red('💩  Installation failed...'));
+      logger.error('💩  Installation failed...');
       process.exit(1);
     }
-    spinner.succeed(chalk.green('API Installation complete.'));
-    console.log(chalk.cyan('👌 '));
+    spinner.succeed();
+    logger.end(chalk.green('API Installation complete.'));
   }
 }

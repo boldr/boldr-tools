@@ -5,6 +5,7 @@ import spawn from 'cross-spawn';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import shell from 'shelljs';
+import logger from 'boldr-utils/es/logger';
 import spinner from '../util/spinner';
 
 const simpleGit = require('simple-git')();
@@ -37,25 +38,28 @@ export default class CmsSetup {
   initStructure() {
     const { pkgMgr } = this.options;
     spinner.start();
-    console.log(chalk.cyan('🚀  Initializing a new Boldr CMS project.'));
+    logger.start('Initializing a new Boldr CMS project.');
     shell.mkdir(cmsDir);
     spinner.succeed(chalk.green(` Created ${cmsDir}`));
     shell.cd(cmsDir);
-    console.log(chalk.cyan('⚡  Getting Boldr CMS project files...'));
+    clogger.task('Getting Boldr CMS project files...');
     simpleGit.clone(cmsRepoUrl, cmsDir, {}, this.initFiles(this.options));
     spinner.succeed(chalk.green(' Got the files'));
   }
   initFiles() {
-    console.log(chalk.cyan('⚡  Installing...'));
+    logger.task('Installing...');
     let result;
-    if (this.options.packageManager === 'yarn') result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
-    else result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    if (this.options.packageManager === 'yarn') {
+      result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
+    } else {
+       result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    }
 
     if (result.status !== 0) {
-      console.log(chalk.red('💩  Installation failed...'));
+      logger.error('Installation failed...');
       process.exit(1);
     }
-    console.log(chalk.green('👌  Installation complete.'));
+    logger.end(chalk.green('Installation complete.'));
     process.exit(0);
   }
 }

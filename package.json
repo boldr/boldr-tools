@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "0.0.0",
-  "description": "<p align=\"center\"><img src=\"/docs/assets/logo-small.png\"></p>",
+  "description": "<p align=\"center\"><img src=\"/docs/assets/boldr-text-logo.png\"></p>",
   "main": "index.js",
   "author": "Steven Truesdell <steven@strues.io>",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "bootstrap": "node_modules/.bin/lerna bootstrap",
     "clean": "node ./scripts/clean",
     "changelog": "node ./scripts/changelog",
-    "format": "prettier-eslint --write \"src/**/*.js\"",
+    "format": "prettier --single-quote=true --jsx-bracket-same-line=false --trailing-comma=all --write \"packages/**/src/**/*.js\"",
     "postinstall": "lerna bootstrap",
     "precoverage": "rimraf ./coverage",
     "release": "node ./scripts/release",
@@ -44,23 +44,24 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-eslint": "^7.2.2",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
-    "cz-conventional-kawaii": "^0.1.4",
+    "cz-conventional-changelog-emoji": "^0.1.0",
     "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
-    "eslint-config-boldr": "^0.9.1",
-    "flow-bin": "^0.44.0",
+    "eslint-config-boldr": "^0.9.2",
+    "flow-bin": "0.44.2",
     "jest": "19.0.2",
-    "lerna": "2.0.0-rc.2",
+    "lerna": "2.0.0-rc.3",
     "minimist": "^1.2.0",
     "node-fetch": "^1.6.3",
-    "prettier-eslint-cli": "^3.3.0",
+    "prettier": "^1.2.2",
+    "prettier-eslint-cli": "^3.4.2",
     "ps-tree": "1.1.0",
     "rimraf": "^2.6.1",
     "semver": "5.3.0",
@@ -68,7 +69,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-kawaii"
+      "path": "./node_modules/cz-conventional-changelog-emoji"
     }
   }
 }

@@ -5,11 +5,11 @@ import shell from 'shelljs';
 import webpack from 'webpack';
 import logger from 'boldr-utils/es/logger';
 
-import baseConfig from '../webpack/webpack.base';
-import clientDevConfig from '../webpack/webpack.dev.client';
-import serverDevConfig from '../webpack/webpack.dev.server';
-import clientProdConfig from '../webpack/webpack.prod.client';
-import serverProdConfig from '../webpack/webpack.prod.server';
+import baseConfig from '../webpack/webpack.base.config';
+import clientDevConfig from '../webpack/webpack.client.dev.config';
+import serverDevConfig from '../webpack/webpack.server.dev.config';
+import clientProdConfig from '../webpack/webpack.client.prod.config';
+import serverProdConfig from '../webpack/webpack.server.prod.config';
 import paths from '../config/paths';
 
 module.exports = (config, environment = 'development') => {

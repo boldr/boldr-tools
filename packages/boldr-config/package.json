@@ -1,0 +1,48 @@
+{
+  "name": "boldr-config",
+  "version": "0.1.4",
+  "description": "A config loader for Boldr",
+  "main": "index.js",
+  "directories": {
+    "test": "test",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "eslint": "eslint --fix .",
+    "format": "prettier --single-quote=true --jsx-bracket-same-line=false --trailing-comma=all --write \"src/**/*.js\"",
+    "cover": "istanbul cover _mocha -- ./test/**/*.spec.js"
+  },
+  "keywords": [
+    "config",
+    "configuration",
+    "boldr"
+  ],
+  "license": "MIT",
+  "author": "Steven Truesdell <steven@strues.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boldr/boldr-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/boldr/boldr-tools/issues"
+  },
+  "homepage": "https://github.com/boldr/boldr-tools#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "cli-table2": "^0.2.0",
+    "json5": "^0.5.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
+    "babel-preset-env": "^1.4.0",
+    "eslint": "^3.19.0",
+    "eslint-config-boldr": "^0.9.1",
+    "prettier": "^1.2.2"
+  },
+  "optionalDependencies": {
+    "js-yaml": "^3.8.3"
+  }
+}

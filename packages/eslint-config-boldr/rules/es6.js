@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es6: true,
+    es6: true // eslint-disable-line
   },
   rules: {
     // enforces no braces where they can be omitted
@@ -99,6 +99,6 @@ module.exports = {
     'babel/arrow-parens': 0,
     'babel/func-params-comma-dangle': 0,
     'babel/generator-star-spacing': 0,
-    'babel/object-shorthand': 0,
-  },
+    'babel/object-shorthand': 0 // eslint-disable-line
+  } // eslint-disable-line
 };

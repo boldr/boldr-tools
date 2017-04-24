@@ -4,6 +4,17 @@ module.exports = {
     node: true,
   },
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        trailingComma: 'all',
+        singleQuote: true,
+        jsxBracketSameLine: false,
+        printWidth: 80,
+        useTabs: false,
+        bracketSpacing: true,
+      },
+    ],
     // disabled for prettier
     'array-bracket-spacing': 0,
     // 'array-bracket-spacing': [2, 'never'],
@@ -41,7 +52,8 @@ module.exports = {
     'generator-star-spacing': 0,
     'id-blacklist': 2,
     'init-declarations': 0,
-    // when using short composable functions, using single-letter variables is fine
+    // when using short composable functions, using single-letter
+    // variables is fine
     'id-length': 0,
     'id-match': [
       2,
@@ -85,7 +97,8 @@ module.exports = {
     'no-continue': 2,
     // disallow comments inline after code
     'no-inline-comments': 0,
-    // disallow if as the only statement in an else block | doesn't play well with `if (__DEV__) {}`
+    // disallow if as the only statement in an else block |
+    // doesn't play well with `if (__DEV__) {}`
     'no-lonely-if': 2,
     'no-mixed-spaces-and-tabs': 0,
     // it's handy, but harder to read

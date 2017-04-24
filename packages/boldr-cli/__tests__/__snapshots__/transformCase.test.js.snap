@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformCase should default to pascal case 1`] = `"TestThis"`;
+
+exports[`transformCase should throw on undefined transformation function 1`] = `
+"Invalid transform, allowed transform functions are:
+
+    camelCase, constantCase, headerCase, paramCase, pascalCase, snakeCase]"
+`;
+
+exports[`transformCase should use the correct transform function 1`] = `"testThis"`;
+
+exports[`transformCase should use the correct transform function 2`] = `"TEST_THIS"`;
+
+exports[`transformCase should use the correct transform function 3`] = `"Test-This"`;
+
+exports[`transformCase should use the correct transform function 4`] = `"test-this"`;
+
+exports[`transformCase should use the correct transform function 5`] = `"TestThis"`;
+
+exports[`transformCase should use the correct transform function 6`] = `"test_this"`;

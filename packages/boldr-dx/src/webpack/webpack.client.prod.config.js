@@ -1,18 +1,20 @@
 import path from 'path';
 import glob from 'glob';
-import webpack from 'webpack';
+import UglifyJsPlugin from 'webpack/lib/optimize/UglifyJsPlugin';
+import CommonsChunkPlugin from 'webpack/lib/optimize/CommonsChunkPlugin';
+import HashedModuleIdsPlugin from 'webpack/lib/HashedModuleIdsPlugin';
+import AggressiveMergingPlugin
+  from 'webpack/lib/optimize/AggressiveMergingPlugin'; // eslint-disable-line
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
-import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import ManifestPlugin from 'webpack-manifest-plugin';
-import BabiliWebpackPlugin from 'babili-webpack-plugin';
-import PurifyCSSPlugin from 'purifycss-webpack';
-import WebpackMd5Hash from 'webpack-md5-hash';
-
 import paths from '../config/paths';
 
 const debug = require('debug')('boldr:webpack:client');
+
+const boldrConfig = require(paths.boldrConfigPath);
 
 module.exports = options => {
   debug('webpack.client -- options: ', options);
@@ -20,13 +22,11 @@ module.exports = options => {
     target: 'web',
     devtool: 'hidden-source-map',
     entry: {
-      main: [
-        require.resolve('../config/polyfills'),
-        `${paths.clientSrcDir}/index.js`,
-      ],
+      main: [require.resolve('../config/polyfills'), paths.clientEntryPath],
+      vendor: boldrConfig.vendorFiles,
     },
     output: {
-      path: paths.assetsDir,
+      path: paths.clientOutputPath,
       pathinfo: false,
       filename: '[name]-[chunkhash].js',
       chunkFilename: '[name]-[chunkhash].js',
@@ -49,12 +49,20 @@ module.exports = options => {
         {
           test: /\.(js|jsx)$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, paths.assetsDir],
+          exclude: [/node_modules/, paths.assetsDir, paths.happyPackDir],
           options: {
             babelrc: false,
             cacheDirectory: false,
             presets: [require.resolve('babel-preset-boldr/client')],
-            plugins: [require.resolve('babel-plugin-dynamic-import-webpack')],
+            plugins: [
+              [
+                require.resolve('../utils/reactLoadableBabel.js'),
+                {
+                  server: true,
+                  webpack: true,
+                },
+              ],
+            ],
           },
         },
         {
@@ -108,37 +116,32 @@ module.exports = options => {
     },
 
     plugins: [
-      new WebpackMd5Hash(),
       new ExtractTextPlugin({
         filename: '[name]-[chunkhash].css',
         allChunks: true,
       }),
-      new webpack.optimize.CommonsChunkPlugin({
+      new CommonsChunkPlugin({
         name: 'vendor',
         minChunks: module => /node_modules/.test(module.resource),
       }),
-      new BabiliWebpackPlugin(),
-      new PurifyCSSPlugin({
-        paths: [
-          ...glob.sync(`${paths.sharedDir}/**/*.js`),
-          ...glob.sync(`${paths.sharedDir}/**/*.(scss|css)`),
-        ],
-        styleExtensions: ['.css', '.scss'],
-        moduleExtensions: [],
-        purifyOptions: {
-          minify: true,
-          info: true,
-          rejected: true,
+      new UglifyJsPlugin({
+        compress: {
+          screw_ie8: true, // eslint-disable-line
+          warnings: false,
         },
+        output: {
+          comments: false,
+        },
+        sourceMap: true,
       }),
       new BundleAnalyzerPlugin({
         openAnalyzer: false,
         analyzerMode: 'static',
         logLevel: 'error',
       }),
-      new webpack.HashedModuleIdsPlugin(),
+      new HashedModuleIdsPlugin(),
 
-      new webpack.optimize.AggressiveMergingPlugin(),
+      new AggressiveMergingPlugin(),
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
       }),
@@ -148,7 +151,7 @@ module.exports = options => {
       }),
       new AssetsPlugin({
         filename: options.clientAssetsFile,
-        path: paths.assetsDir,
+        path: paths.clientOutputPath,
       }),
     ],
   };

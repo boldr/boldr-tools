@@ -6,17 +6,20 @@ module.exports = {
   presets: [
     [
       require.resolve('babel-preset-env'), {
-        useBuiltIns: false,
-        debug: false,
+      modules: false,
+      useBuiltIns: true,
+      debug: false,
         targets: {
           node: 'current',
         },
-        include: ['transform-es2015-destructuring'],
       },
     ],
     require.resolve('babel-preset-react'),
   ],
   plugins: [
+    require.resolve('babel-plugin-syntax-flow'),
+    require.resolve('babel-plugin-syntax-trailing-function-commas'),
+    require.resolve('babel-plugin-syntax-dynamic-import'),
     // class { handleClick = () => { } }
     [require.resolve('babel-plugin-transform-class-properties'), {
       spec: true,
@@ -26,29 +29,24 @@ module.exports = {
       useBuiltIns: true,
     }),
     require.resolve('babel-plugin-transform-decorators-legacy'),
-
-    require.resolve('babel-plugin-syntax-dynamic-import'),
     [
     require.resolve('babel-plugin-transform-runtime'),
     {
-      helpers: false,
+      helpers: true,
       polyfill: false,
       regenerator: true,
       // Resolve the Babel runtime relative to the config.
       moduleName: path.dirname(require.resolve('babel-runtime/package')),
     },
   ],
-    [require.resolve('babel-plugin-transform-regenerator'), { spec: true }],
+    [require.resolve('babel-plugin-transform-regenerator'), { async: false }],
+    require.resolve('babel-plugin-dynamic-import-node'),
   ],
 };
-
-if (env === 'development' || env === 'test') {
-  const devPlugins = [
-    // Adds component stack to warning messages
-    require.resolve('babel-plugin-transform-react-jsx-source'),
-    // Adds __self attribute to JSX which React will use for some warnings
-    require.resolve('babel-plugin-transform-react-jsx-self'),
+if (env === 'production') {
+  const prodPlugins = [
+    require.resolve('babel-plugin-transform-flow-strip-types'),
   ];
 
-  module.exports.plugins.push(...devPlugins);
+  module.exports.plugins.push(...prodPlugins);
 }

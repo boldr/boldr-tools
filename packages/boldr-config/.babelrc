@@ -1,0 +1,4 @@
+{
+  "presets": [["env", {"version": "current"}]],
+  "plugins": "syntax-trailing-function-commas"
+}

@@ -1,4 +1,4 @@
-<p align="center"><img src="/docs/assets/logo-small.png"></p>
+<p align="center"><img src="/docs/assets/boldr-text-logo.png" width="200"></p>
 
 # Get Boldr
 > Monorepo for tools and utilities associated with [BoldrCMS](https://github.com/strues/boldr). Pre-configured Webpack toolkit for universal applications. [Eslint rules](/packages/eslint-config-boldr) for high quality beautiful code. [Babel preset](/packages/babel-preset-boldr) for all your transpiling needs. Command line interface to generate Boldr.

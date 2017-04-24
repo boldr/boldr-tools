@@ -1,8 +1,9 @@
 import path from 'path';
-import { statSync } from 'fs';
-import webpack from 'webpack';
+import NoEmitOnErrorsPlugin from 'webpack/lib/NoEmitOnErrorsPlugin';
+import LimitChunkCountPlugin from 'webpack/lib/optimize/LimitChunkCountPlugin';
+import BannerPlugin from 'webpack/lib/BannerPlugin';
 import nodeExternals from 'webpack-node-externals';
-import WebpackMd5Hash from 'webpack-md5-hash';
+import {removeNil, mergeDeep, ifElse} from 'boldr-utils';
 import paths from '../config/paths';
 
 const debug = require('debug')('boldr:webpack:server');
@@ -22,19 +23,17 @@ module.exports = options => {
         ],
       }),
     ],
-
     entry: {
       main: [`${paths.serverSrcDir}/index.js`],
     },
     output: {
-      path: paths.compiledDir,
+      path: paths.serverOutputPath,
       filename: '[name].js',
-      pathinfo: false,
+      pathinfo: true,
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: options.publicPath,
       libraryTarget: 'commonjs2',
     },
-
     module: {
       rules: [
         {
@@ -42,7 +41,7 @@ module.exports = options => {
           loader: 'babel-loader',
           exclude: [
             /node_modules/,
-            paths.compiledDir,
+            paths.serverOutputPath,
             paths.assetsDir,
             paths.happyPackDir,
           ],
@@ -51,7 +50,12 @@ module.exports = options => {
             babelrc: false,
             cacheDirectory: false,
             presets: [require.resolve('babel-preset-boldr/server')],
-            plugins: [require.resolve('babel-plugin-dynamic-import-node')],
+            plugins: [
+              [require.resolve('../utils/reactLoadableBabel.js'), {
+                server: true,
+                webpack: true,
+              }],
+            ],
           },
         },
         {
@@ -72,8 +76,11 @@ module.exports = options => {
     },
 
     plugins: [
-      new webpack.optimize.OccurrenceOrderPlugin(true),
-      new webpack.BannerPlugin({
+      new NoEmitOnErrorsPlugin(),
+      new LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
+      new BannerPlugin({
         banner: 'require("source-map-support").install();',
         raw: true,
         entryOnly: true,

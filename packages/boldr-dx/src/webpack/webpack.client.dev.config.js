@@ -1,11 +1,12 @@
 /* eslint-disable global-require */
 import path from 'path';
 import {statSync} from 'fs';
-import webpack from 'webpack';
+import NoEmitOnErrorsPlugin from 'webpack/lib/NoEmitOnErrorsPlugin';
+import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
+import HotModuleReplacementPlugin from 'webpack/lib/HotModuleReplacementPlugin';
 import AssetsPlugin from 'assets-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import ManifestPlugin from 'webpack-manifest-plugin';
-import WebpackMd5Hash from 'webpack-md5-hash';
 
 import paths from '../config/paths';
 import happyPackPlugin from './plugins/happyPackPlugin';
@@ -20,7 +21,7 @@ module.exports = options => {
   const main = [
     'react-hot-loader/patch',
     `webpack-hot-middleware/client?reload=true&&path=http://${options.serverHost}:${options.hmrPort}/__webpack_hmr`, // eslint-disable-line
-    `${paths.clientSrcDir}/index.js`,
+    paths.clientEntryPath,
   ];
   const boldrCfgPath = require(paths.boldrConfigPath);
 
@@ -31,7 +32,7 @@ module.exports = options => {
       main,
     },
     output: {
-      path: paths.assetsDir,
+      path: paths.clientOutputPath,
       filename: 'main.js',
       pathinfo: true,
       chunkFilename: '[name]-[chunkhash].js',
@@ -53,7 +54,12 @@ module.exports = options => {
             comments: false,
             cacheDirectory: true,
             presets: [require.resolve('babel-preset-boldr/client')],
-            plugins: [require.resolve('babel-plugin-dynamic-import-webpack')],
+            plugins: [
+              [require.resolve('../utils/reactLoadableBabel.js'), {
+                server: true,
+                webpack: true,
+              }],
+              ],
           },
         },
       ]),
@@ -94,24 +100,23 @@ module.exports = options => {
           loader: 'postcss-loader',
         },
       ]),
-      new WebpackMd5Hash(),
       // Prevent webpack errors during development in order to
       // keep our process alive.
-      new webpack.NoEmitOnErrorsPlugin(),
+      new NoEmitOnErrorsPlugin(),
       new CircularDependencyPlugin({
         exclude: /a\.js|node_modules/,
         // show a warning when there is a circular dependency
         failOnError: false,
       }),
       // Prints more readable module names in the browser console on HMR updates
-      new webpack.NamedModulesPlugin(),
+      new NamedModulesPlugin(),
       // Generates a JSON file containing a map of all the output files
       new AssetsPlugin({
         filename: options.clientAssetsFile,
-        path: paths.assetsDir,
+        path: paths.clientOutputPath,
         prettyPrint: true,
       }),
-      new webpack.HotModuleReplacementPlugin(),
+      new HotModuleReplacementPlugin(),
     ],
     module: {
       rules: [
@@ -125,7 +130,8 @@ module.exports = options => {
             /node_modules/,
             paths.happyPackDir,
             paths.assetsDir,
-            paths.compiledDir,
+            paths.clientOutputPath,
+            paths.serverOutputPath,
           ],
           include: [paths.srcDir],
         },

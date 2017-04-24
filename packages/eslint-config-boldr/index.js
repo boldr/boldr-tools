@@ -16,5 +16,5 @@ module.exports = {
     './rules/possible-errors.js',
     './rules/node.js',
     './rules/es6.js',
-  ]
+  ],
 };

@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    node: true,
+    node: true // eslint-disable-line
   },
   rules: {
     // possible erros
@@ -45,7 +45,8 @@ module.exports = {
     'no-irregular-whitespace': 2,
     // disallow negation of the left operand of an in expression
     'no-negated-in-lhs': 2,
-    // disallow the use of object properties of the global object (Math and JSON) as functions
+    // disallow the use of object properties of the global object
+    // (Math and JSON) as functions
     'no-obj-calls': 2,
     'no-prototype-builtins': 0,
     // disallow multiple spaces in a regular expression literal
@@ -53,7 +54,8 @@ module.exports = {
     'no-sparse-arrays': 2,
     'no-template-curly-in-string': 2,
     'no-unexpected-multiline': 2,
-    // disallow unreachable statements after a return, throw, continue, or break statement
+    // disallow unreachable statements after a return,
+    // throw, continue, or break statement
     'no-unreachable': 2,
     'no-unsafe-negation': 2,
     'no-unsafe-finally': 2,
@@ -64,6 +66,6 @@ module.exports = {
     // ensure that the results of typeof are compared against a valid string
     'valid-typeof': 2,
     // too noisy
-    'no-use-before-define': 0
+    'no-use-before-define': 0 // eslint-disable-line
   },
 };

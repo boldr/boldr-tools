@@ -1,12 +1,13 @@
 import path from 'path';
 import fs from 'fs-extra';
+import appRootDir from 'app-root-dir';
 
 /**
  * Path of the current working directory, with symlinks taken
  * into account.
  * @type {String}
  */
-const rootDir = fs.realpathSync(process.cwd());
+const rootDir = appRootDir.get();
 
 /**
  * Get the path from the user's project root
@@ -42,6 +43,7 @@ const nodePaths = (process.env.NODE_PATH || '')
 module.exports = {
   rootDir,
   nodePaths,
+  webPath: '/assets/',
   // __dirname, ./../..
   ownPath: resolveBoldr('.'),
   // __dirname, ./../../node_modules
@@ -60,12 +62,15 @@ module.exports = {
 
   srcDir: resolveProject('src'),
   serverSrcDir: resolveProject('src/server'),
+  serverEntryPath: resolveProject('src/server/index.js'),
+  serverOutputPath: resolveProject('boldrCMS'),
   clientSrcDir: resolveProject('src/client'),
+  clientEntryPath: resolveProject('src/client/index.js'),
+  clientOutputPath: resolveProject('public/assets'),
   sharedDir: resolveProject('src/shared'),
 
   publicDir: resolveProject('public'),
-  dllConfig: resolveProject('.boldr/dll.config.js'),
-  compiledDir: resolveProject('compiled'),
+  compiledDir: resolveProject('boldrCMS'),
   assetsDir: resolveProject('public/assets'),
   dllDir: resolveProject('public/assets/dlls'),
 };

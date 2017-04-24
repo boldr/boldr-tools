@@ -17,7 +17,7 @@ import FullSetup from '../setup/Full';
 async function getProjectType() {
   const answers = await inquirer.prompt({
     type: 'list',
-    name: 'flavor',
+    name: 'type',
     message: 'Choose a project type to scaffold.',
     choices: [
       {
@@ -34,7 +34,7 @@ async function getProjectType() {
       },
     ],
   });
-  return answers.flavor;
+  return answers.type;
 }
 async function getPackageManager() {
   const answers = await inquirer.prompt({
@@ -55,8 +55,8 @@ async function getPackageManager() {
   return answers.packageManager;
 }
 
-function getInstaller(flavor, opts) {
-  switch (flavor) {
+function getInstaller(type, opts) {
+  switch (type) {
     case 'api':
       const apiSetup = new ApiSetup(opts);
       break;
@@ -73,19 +73,19 @@ function getInstaller(flavor, opts) {
 
 async function task(args, options) {
   const boldr = {};
-  boldr.flavor = args.flavor || (await getProjectType());
+  boldr.type = args.type || (await getProjectType());
   boldr.packageManager = args.packageManager || (await getPackageManager());
 
   const opts = { packageManager: boldr.packageManager };
-  const { flavor } = boldr;
-  getInstaller(flavor, opts);
+  const { type } = boldr;
+  getInstaller(type, opts);
   // await config.save(process.cwd());
-
-  console.log(chalk.green('👌  All set.'));
 }
 
 function register(program) {
-  program.command('init', 'initialize a new Boldr project.').action(handleErrors(task));
+  program
+    .command('init', 'initialize a new Boldr project.')
+    .action(handleErrors(task));
 }
 
 export default { register };

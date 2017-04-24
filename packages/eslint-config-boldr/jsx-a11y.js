@@ -12,7 +12,8 @@ module.exports = {
     // aria-label=
     'jsx-a11y/accessible-emoji': 2,
     // Enforce that anchors have content and that the content is
-    // accessible to screen readers. Accessible means that it is not hidden using the aria-hidden prop
+    // accessible to screen readers. Accessible means that it is not
+    // hidden using the aria-hidden prop
     'jsx-a11y/anchor-has-content': [
       2,
       {

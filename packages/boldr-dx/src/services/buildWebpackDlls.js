@@ -12,7 +12,7 @@ const pkg = require(paths.userPkgPath);
 function buildWebpackDlls() {
   logger.start('Building Webpack vendor DLLs');
 
-  const dllConfig = require(paths.dllConfig);
+  const dllConfig = boldrConfig.vendorFiles;
 
   const devDLLDependencies = dllConfig.sort();
 
@@ -33,7 +33,7 @@ function buildWebpackDlls() {
   );
 
   const vendorDLLHashFilePath = path.resolve(
-    paths.dllDir,
+    paths.clientOutputPath,
     '__boldr_dlls__hash',
   );
 

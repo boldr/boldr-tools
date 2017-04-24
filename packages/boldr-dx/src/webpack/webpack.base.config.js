@@ -1,13 +1,16 @@
 /* eslint-disable quote-props */
 import path from 'path';
 
-import webpack from 'webpack';
-import chalk from 'chalk';
+import EnvironmentPlugin from 'webpack/lib/EnvironmentPlugin';
+import DefinePlugin from 'webpack/lib/DefinePlugin';
+import OccurrenceOrderPlugin from 'webpack/lib/optimize/OccurrenceOrderPlugin';
+import IgnorePlugin from 'webpack/lib/IgnorePlugin';
+import LoaderOptionsPlugin from 'webpack/lib/LoaderOptionsPlugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import {removeNil, mergeDeep, ifElse} from 'boldr-utils';
+import WebpackMd5Hash from 'webpack-md5-hash';
 import paths from '../config/paths';
 import getPostCSSConfig from '../config/postCSSconfig';
-import {log, logError, logWarning, logSuccess} from '../utils/log';
 
 const debug = require('debug')('boldr:webpack:base');
 
@@ -26,7 +29,7 @@ module.exports = options => {
   return {
     cache: !isProd,
     resolve: {
-      modules: [paths.userNodeModules, paths.boldrNodeModules, paths.srcDir],
+      modules: [paths.userNodeModules,  paths.srcDir, paths.boldrNodeModules],
       mainFields: ifNode(
         ['module', 'jsnext:main', 'main'],
         ['web', 'browser', 'style', 'module', 'jsnext:main', 'main'],
@@ -41,31 +44,27 @@ module.exports = options => {
     profile: isProd,
     bail: isProd,
     plugins: removeNil([
-      new webpack.EnvironmentPlugin({
+      new WebpackMd5Hash(),
+      new EnvironmentPlugin({
         NODE_ENV: isProd ? 'production' : 'development',
         DEBUG: JSON.stringify(process.env.DEBUG || false),
       }),
-      new webpack.DefinePlugin({
+      new DefinePlugin({
         IS_DEV: JSON.stringify(isDev),
         IS_SERVER: JSON.stringify(isServer),
         IS_CLIENT: JSON.stringify(isClient),
         ASSETS_MANIFEST: JSON.stringify(
-          path.join(paths.assetsDir || '', options.clientAssetsFile || ''),
+          path.join(paths.clientOutputPath || '',
+          options.clientAssetsFile || ''),
         ),
       }),
       new CaseSensitivePathsPlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin(true),
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-      new webpack.LoaderOptionsPlugin({
+      new IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new LoaderOptionsPlugin({
         minimize: isProd,
         debug: !isProd,
         quiet: false,
         options: {
-          eslint: {
-            configFile: path.join(paths.rootDir, './.eslintrc'),
-            useEslintrc: true,
-            failOnError: false,
-          },
           postcss: getPostCSSConfig({}),
           context: paths.rootDir,
         },
@@ -74,17 +73,6 @@ module.exports = options => {
 
     module: {
       rules: [
-        {
-          parser: {
-            requireEnsure: false,
-          },
-        },
-        {
-          test: /\.(js|jsx)$/,
-          enforce: 'pre',
-          loader: 'eslint-loader',
-          include: paths.srcDir,
-        },
         {
           test: /\.html$/,
           loader: 'file-loader?name=[name].[ext]',

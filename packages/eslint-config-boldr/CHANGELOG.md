@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.2
+- Update dependencies. Add required, but missing plugin-prettier
+
 ## 0.9.0
 - All rules adjusted to provide maximum compatibility with prettier.
 

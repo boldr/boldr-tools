@@ -32,7 +32,7 @@ module.exports = {
         ignoreTranspilerName: false,
       },
     ],
-    'react/jsx-indent':0,
+    'react/jsx-indent': 0,
     'react/forbid-component-props': 0,
     // Forbid certain propTypes (any, array, object)
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md
@@ -154,7 +154,8 @@ module.exports = {
     // Require ES6 class declarations over React.createClass
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-es6-class.md
     'react/prefer-es6-class': [1, 'always'],
-    // Require stateless functions when not using lifecycle methods, setState or ref
+    // Require stateless functions when not using lifecycle methods,
+    // setState or ref
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-stateless-function.md
     'react/prefer-stateless-function': 0,
     // Prevent missing props validation in a React component definition
@@ -186,7 +187,13 @@ module.exports = {
     'react/sort-comp': [
       2,
       {
-        order: ['static-methods', 'lifecycle', 'everything-else', '/^render.+$/', 'render'],
+        order: [
+          'static-methods',
+          'lifecycle',
+          'everything-else',
+          '/^render.+$/',
+          'render',
+        ],
       },
     ],
     'react/no-deprecated': 2,
@@ -200,6 +207,6 @@ module.exports = {
     'react/jsx-wrap-multilines': 0,
     // @NOTE deprecated
     'react/wrap-multilines': 0,
-    'react/no-comment-textnodes': 0
+    'react/no-comment-textnodes': 0,
   },
 };

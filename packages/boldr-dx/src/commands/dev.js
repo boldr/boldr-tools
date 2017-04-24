@@ -6,7 +6,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
 import shell from 'shelljs';
-import chokidar from 'chokidar';
 import express from 'express';
 import devMiddleware from 'webpack-dev-middleware';
 import hotMiddleware from 'webpack-hot-middleware';
@@ -39,7 +38,7 @@ module.exports = (config, flags) => {
     let clientCompiler, serverCompiler;
     const {clientConfig, serverConfig} = compileConfigs(config);
 
-    const {serverHost, serverPort, hmrPort, hasServer} = config;
+    const {serverHost, serverPort, hmrPort} = config;
     // 3001
     const DEV_PORT = parseInt(hmrPort, 10);
     const afterClientCompile = once(() => {
@@ -85,10 +84,9 @@ module.exports = (config, flags) => {
         path.join(serverCompiler.options.output.path, `${entry}.js`),
       );
       const mainPath = path.join(serverCompiler.options.output.path, 'main.js');
-
       const nodemonOpts = {
         script: mainPath,
-        watch: serverPaths,
+        watch: paths.serverSrcDir,
         verbose: true,
         stdout: true,
         nodeArgs: flags,
@@ -114,16 +112,6 @@ module.exports = (config, flags) => {
       }
       afterClientCompile();
       compileServer();
-    });
-
-    const watcher = chokidar.watch([paths.serverSrcDir]);
-    watcher.on('ready', () => {
-      watcher
-        .on('add', compileServer)
-        .on('addDir', compileServer)
-        .on('change', compileServer)
-        .on('unlink', compileServer)
-        .on('unlinkDir', compileServer);
     });
 
     const startNodeServerOnce = once(() => {

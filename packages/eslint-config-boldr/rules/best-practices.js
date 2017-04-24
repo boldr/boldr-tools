@@ -61,7 +61,8 @@ module.exports = {
     'no-extra-label': 2,
     // disallow fallthrough of case statements
     'no-fallthrough': 1,
-    // disallow the use of leading or trailing decimal points in numeric literals
+    // disallow the use of leading or trailing decimal points in
+    // numeric literals
     'no-floating-decimal': 2,
     // disallow var and named functions in global scope
     // http://eslint.org/docs/rules/no-implicit-globals
@@ -70,7 +71,8 @@ module.exports = {
     'no-implicit-coercion': 0,
     // disallow use of eval()-like methods
     'no-implied-eval': 2,
-    // @NOTE: exists in rules/babel.js -- disallow this keywords outside of classes or class-like objects
+    // @NOTE: exists in rules/babel.js -- disallow this keywords outside of
+    // classes or class-like objects
     'no-invalid-this': 0,
     // disallow usage of __iterator__ property
     'no-iterator': 2,
@@ -97,7 +99,8 @@ module.exports = {
         exceptions: ['Map', 'Set'],
       },
     ],
-    // disallow use of new operator when not part of the assignment or comparison
+    // disallow use of new operator when not part of the assignment
+    // or comparison
     'no-new': 2,
     // disallow use of new operator for Function object
     'no-new-func': 2,
@@ -148,7 +151,8 @@ module.exports = {
     'no-with': 2,
     // require use of the second argument for parseInt()
     radix: 2,
-    // disallow the catch clause parameter name being the same as a variable in the outer scope
+    // disallow the catch clause parameter name being the same as a
+    // variable in the outer scope
     'no-catch-shadow': 0,
     // requires to declare all vars on top of their containing scope
     'vars-on-top': 2,
@@ -226,7 +230,8 @@ module.exports = {
 
     // disallow use of undefined when initializing variables
     'no-undef-init': 1,
-    // @NOTE: Super annoying with react. disallow use of undeclared variables unless mentioned in a /*global */ block
+    // @NOTE: Super annoying with react. disallow use of undeclared variables
+    // unless mentioned in a /*global */ block
     'no-undef': 0,
     // disallow use of undefined variable
     'no-undefined': 0,
@@ -245,9 +250,11 @@ module.exports = {
     'no-delete-var': 2,
     // specify the maximum depth callbacks can be nested
     'max-nested-callbacks': 0,
-    // @NOTE exists in rules/babel.js -- require a capital letter for constructors
+    // @NOTE exists in rules/babel.js -- require a capital letter for
+    //  constructors
     'new-cap': 0,
-    // disallow the omission of parentheses when invoking a constructor with no arguments
+    // disallow the omission of parentheses when invoking a constructor
+    // with no arguments
     'new-parens': 0,
     // allow/disallow an empty newline after var statement
     'newline-after-var': 0,

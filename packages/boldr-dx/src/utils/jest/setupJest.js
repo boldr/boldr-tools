@@ -1,15 +1,15 @@
+require('jest-enzyme');
+
 import { EventEmitter } from 'events';
 
-// Skip createElement warnings but fail tests on any other warning
-console.error = message => {
-  if (!/(React.createElement: type should not be null)/.test(message)) {
-    throw new Error(message);
-  }
-};
+const shallowToJson = require('enzyme-to-json');
+
 window.matchMedia = function matchMedia() {
   return false;
 };
 EventEmitter.defaultMaxListeners = Infinity;
+
+global.shallowToJson = shallowToJson;
 
 global.Array = Array;
 global.Date = Date;

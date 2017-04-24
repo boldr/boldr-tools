@@ -14,13 +14,13 @@ module.exports = config => {
   const {clientConfig, serverConfig} = compileConfigs(config, 'production');
 
   // Empty assets
-  if (shell.rm('-rf', paths.assetsDir).code === 0) {
-    shell.mkdir(paths.assetsDir);
+  if (shell.rm('-rf', paths.clientOutputPath).code === 0) {
+    shell.mkdir(paths.clientOutputPath);
     logger.task('Purged assets directory.');
   }
   // Empty compiled
-  if (shell.rm('-rf', paths.compiledDir).code === 0) {
-    shell.mkdir(paths.compiledDir);
+  if (shell.rm('-rf', paths.serverOutputPath).code === 0) {
+    shell.mkdir(paths.serverOutputPath);
     logger.task('Purged compiled server directory.');
   }
 
