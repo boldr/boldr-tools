@@ -1,6 +1,3 @@
-
 import toTitle from './toTitle';
 
-export {
-  toTitle,
-};
+export { toTitle };

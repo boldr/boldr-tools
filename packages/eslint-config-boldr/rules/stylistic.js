@@ -4,17 +4,6 @@ module.exports = {
     node: true,
   },
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        trailingComma: 'all',
-        singleQuote: true,
-        jsxBracketSameLine: false,
-        printWidth: 80,
-        useTabs: false,
-        bracketSpacing: true,
-      },
-    ],
     // disabled for prettier
     'array-bracket-spacing': 0,
     // 'array-bracket-spacing': [2, 'never'],

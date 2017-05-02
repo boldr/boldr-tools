@@ -14,9 +14,5 @@ export default function getIn(object, keyPath) {
     return object.getIn(stringifiedArray(keyPath));
   }
 
-  return reduce(
-    keyPath,
-    (memo, key) => memo[key],
-    object,
-  );
+  return reduce(keyPath, (memo, key) => memo[key], object);
 }

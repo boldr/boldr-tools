@@ -3,11 +3,6 @@ import requiredParam from './requiredParam';
 import validateId from './validateId';
 import sort from './sort';
 import uniq from './uniq';
+import isPromise from './isPromise';
 
-export {
-  ifElse,
-  requiredParam,
-  validateId,
-  sort,
-  uniq,
-};
+export { ifElse, requiredParam, validateId, sort, uniq, isPromise };

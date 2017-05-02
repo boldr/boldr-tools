@@ -6,13 +6,21 @@ const print = (level, text) => {
   let msg = '';
   let logObject = false;
 
-  if (level === 'task') msg = '✅  ';
-  else if (level === 'start') msg = '\n🚀  ';
-  else if (level === 'end') msg = '\n👌  ';
-  else if (level === 'info') msg = '⚡  ';
-  else if (level === 'warn') msg = '⚠️  ';
-  else if (level === 'error') msg = '\n💩  ';
-  else if (level === 'debug') msg = '🐞  ';
+  if (level === 'task') {
+    msg = '✅  ';
+  } else if (level === 'start') {
+    msg = '\n🚀  ';
+  } else if (level === 'end') {
+    msg = '\n👌  ';
+  } else if (level === 'info') {
+    msg = '⚡  ';
+  } else if (level === 'warn') {
+    msg = '⚠️  ';
+  } else if (level === 'error') {
+    msg = '\n💩  ';
+  } else if (level === 'debug') {
+    msg = '🐞  ';
+  }
 
   msg += text;
 
@@ -36,27 +44,27 @@ const print = (level, text) => {
   }
 };
 // Printing any statements
-const log = (text) => {
+const log = text => {
   logger.log(text);
 };
 
 // Starting a process
-const start = (text) => {
+const start = text => {
   print('start', text);
 };
 
 // Ending a process
-const end = (text) => {
+const end = text => {
   print('end', text);
 };
 
 // Tasks within a process
-const task = (text) => {
+const task = text => {
   print('task', text);
 };
 
 // Info about a process task
-const info = (text) => {
+const info = text => {
   print('info', text);
 };
 

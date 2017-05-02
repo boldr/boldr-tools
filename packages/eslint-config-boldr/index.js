@@ -9,7 +9,7 @@ module.exports = {
       generators: true,
     },
   },
-  plugins: ['babel', 'prettier'],
+  plugins: ['babel'],
   extends: [
     './rules/stylistic.js',
     './rules/best-practices.js',
