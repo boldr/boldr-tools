@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
   },
   parserOptions: {
-    ecmaVersion: 8,
+    ecmaVersion: 2017,
     sourceType: 'module',
     ecmaFeatures: {
       experimentalObjectRestSpread: true,
@@ -16,10 +16,10 @@ module.exports = {
     'flowtype/require-valid-file-annotation': 1,
     'flowtype/require-return-type': 0,
     'flowtype/space-after-type-colon': 0,
-    'flowtype/space-before-generic-bracket': [2, 'never'],
+    'flowtype/space-before-generic-bracket': 0,
     'flowtype/space-before-type-colon': 0,
     'flowtype/type-id-match': 0,
-    'flowtype/semi': [2, 'always'],
+    'flowtype/semi': 0,
     'flowtype/use-flow-type': 1,
     'flowtype/no-weak-types': 0,
     'flowtype/boolean-style': [2, 'boolean'],
