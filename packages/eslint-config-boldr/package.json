@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [

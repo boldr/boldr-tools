@@ -3,57 +3,71 @@ const path = require('path');
 const env = process.env.BABEL_ENV || process.env.NODE_ENV;
 
 module.exports = {
-  compact: true,
   presets: [
-    [require.resolve('babel-preset-env'), {
-      modules: false,
-      useBuiltIns: true,
-      debug: false,
-    }],
+    [
+      require('babel-preset-env'),
+      {
+        modules: false,
+        debug: false,
+        useBuiltIns: true,
+        targets: {
+          browsers: ['>1%', 'last 2 versions', 'Firefox ESR'],
+        },
+      },
+    ],
     require.resolve('babel-preset-react'),
   ],
   plugins: [
     require.resolve('babel-plugin-syntax-flow'),
-    require.resolve('babel-plugin-syntax-trailing-function-commas'),
     require.resolve('babel-plugin-syntax-dynamic-import'),
     // class { handleClick = () => { } }
-    [require.resolve('babel-plugin-transform-class-properties'), {
-      spec: true,
-    }],
+    [
+      require.resolve('babel-plugin-transform-class-properties'),
+      {
+        spec: true,
+      },
+    ],
     require.resolve('babel-plugin-transform-decorators-legacy'),
     // { ...param, completed: true }
-    require.resolve('babel-plugin-transform-object-rest-spread', {
-      useBuiltIns: true,
-    }),
-    // Transforms JSX - Added so object-rest-spread in JSX uses builtIn
-    [require.resolve('babel-plugin-transform-react-jsx'), {
-      useBuiltIns: true,
-    }],
-    require.resolve('babel-plugin-transform-unicode-property-regex'),
     [
-        require.resolve('babel-plugin-transform-runtime'),
-        {
-          helpers: true,
-          polyfill: false,
-          regenerator: true,
-          // Resolve the Babel runtime relative to the config.
-          moduleName: path.dirname(require.resolve('babel-runtime/package')),
-        },
-      ],
-      [
-        require.resolve('babel-plugin-transform-regenerator'),
-        {
-          // Async functions are converted to generators by babel-preset-env
-          async: false,
-        },
-      ],
-
-
+      require.resolve('babel-plugin-transform-object-rest-spread'),
+      {
+        useBuiltIns: true,
+      },
+    ],
+    [
+      require.resolve('babel-plugin-transform-regenerator'),
+      {
+        // Async functions are converted to generators by babel-preset-env
+        async: false,
+      },
+    ],
+    // Transforms JSX - Added so object-rest-spread in JSX uses builtIn
+    [
+      require.resolve('babel-plugin-transform-react-jsx'),
+      {
+        useBuiltIns: true,
+      },
+    ],
+    [
+      require.resolve('babel-plugin-transform-runtime'),
+      {
+        helpers: false,
+        polyfill: false,
+        regenerator: true,
+        useESModules: true,
+        moduleName: path.dirname(require.resolve('babel-runtime/package')),
+      },
+    ],
   ],
 };
 
 if (env === 'production') {
   const prodPlugins = [
+    [
+      require.resolve('babel-plugin-transform-react-remove-prop-types'),
+      { removeImport: true },
+    ],
     require.resolve('babel-plugin-transform-react-constant-elements'),
     require.resolve('babel-plugin-transform-react-inline-elements'),
     require.resolve('babel-plugin-transform-flow-strip-types'),
