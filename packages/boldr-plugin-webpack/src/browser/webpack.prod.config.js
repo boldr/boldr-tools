@@ -12,11 +12,11 @@ import autoprefixer from 'autoprefixer';
 import discardComments from 'postcss-discard-comments';
 import reporter from 'postcss-reporter';
 
-import defineVariables from '../../utils/defineVariables';
+import defineVariables from '../utils/defineVariables';
 import AssetsPlugin from '../plugins/AssetsPlugin';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 
-const PATHS = require('../pathUtils');
+const PATHS = require('../utils/paths');
 
 const prefetches = [];
 
@@ -198,7 +198,6 @@ module.exports = function createConfig(
           loader: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
-              'style-loader',
               {
                 loader: 'css-loader',
                 options: {

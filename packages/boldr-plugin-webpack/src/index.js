@@ -1,10 +1,21 @@
-/* eslint-disable prefer-const, global-require, babel/new-cap, require-await */
-process.env.NODE_ENV = 'development';
-import path from 'path';
+/* @flow */
+/* eslint-disable global-require, no-console, require-await */
 import fs from 'fs-extra';
 import webpack from 'webpack';
 import openBrowser from 'react-dev-utils/openBrowser';
 import WebpackDevServer from 'webpack-dev-server';
+import checkPort from './utils/checkPort';
+
+const configurations = {
+  client: {
+    development: require('./browser/webpack.dev.config'),
+    production: require('./browser/webpack.prod.config'),
+  },
+  server: {
+    development: require('./node/webpack.dev.config'),
+    production: require('./node/webpack.prod.config'),
+  },
+};
 
 function createRunOnceCompiler(webpackConfig: Object): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -22,8 +33,6 @@ function createRunOnceCompiler(webpackConfig: Object): Promise<any> {
   });
 }
 
-const debug = require('debug')('boldr:webpack:dev');
-
 const plugin: Plugin = (
   engine: Engine,
   runOnce: boolean = false,
@@ -31,16 +40,38 @@ const plugin: Plugin = (
 ): PluginController => {
   let clientLogger, serverLogger, serverCompiler, clientDevServer;
   const { env: envVariables, settings } = engine.getConfiguration();
-
   return {
-    async start() {
+    async build() {
       clientLogger = logger.createGroup('client');
       serverLogger = logger.createGroup('server');
-      const clientConfig = require('../webpack/browser/webpack.dev.config')(
+      const clientConfig = configurations.client[engine.getIdentifier()](
         engine,
         clientLogger,
       );
-      const serverConfig = require('../webpack/node/webpack.dev.config')(
+      const serverConfig = configurations.server[engine.getIdentifier()](
+        engine,
+        serverLogger,
+      );
+
+      fs.removeSync(settings.client.bundleDir);
+      fs.removeSync(settings.server.bundleDir);
+
+      const compilers = [
+        createRunOnceCompiler(clientConfig),
+        createRunOnceCompiler(serverConfig),
+      ];
+
+      return Promise.all(compilers);
+    },
+
+    async start() {
+      clientLogger = logger.createGroup('client');
+      serverLogger = logger.createGroup('server');
+      const clientConfig = configurations.client[engine.getIdentifier()](
+        engine,
+        clientLogger,
+      );
+      const serverConfig = configurations.server[engine.getIdentifier()](
         engine,
         serverLogger,
       );

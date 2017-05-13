@@ -12,15 +12,12 @@ class LoggerPlugin {
 
   apply(compiler: Object): void {
     compiler.plugin('invalid', () => {
-      this.logger.clear();
       this.logger.info(`Compiling "${this.logger.getIdentifier()}" bundle...`);
     });
 
     compiler.plugin('done', stats => {
       const bundleName = this.logger.getIdentifier();
       const formattedMessages = formatWebpackMessages(stats.toJson({}, true));
-
-      this.logger.clear();
 
       const { errors, warnings } = formattedMessages;
 

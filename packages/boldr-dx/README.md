@@ -15,14 +15,17 @@ Add Boldr-DX to your dependencies.
 
 2. `yarn add --dev boldr-dx`  
 
-Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.config.js](https://github.com/boldr/boldr-tools/blob/master/packages/boldr-base-project/.boldr/boldr.config.js). 
+Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.config.js](https://github.com/boldr/boldr-tools/blob/master/packages/boldr-base-project/.boldr/boldr.config.js).
 
 Add vendor libraries to the vendorFiles section of the config. These are included in the dev process as DLLs and are bundled separately in production. Only include client side dependencies, not node only, like Express.
 
-3. `mkdir .boldr && touch boldr.config.js` 
+3. `mkdir .boldr && touch boldr.js`   
+
+Install the Boldr Plugin for Webpack and add it to the plugins section of the config.
+4.  `yarn add --dev boldr-plugin-webpack`  
 
 Start the development process.
-4. `yarn run dev`
+5. `yarn run dev`
 
 ### Features
 

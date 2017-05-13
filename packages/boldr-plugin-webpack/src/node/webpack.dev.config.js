@@ -8,11 +8,11 @@ import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 
-import defineVariables from '../../utils/defineVariables';
+import defineVariables from '../utils/defineVariables';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 import ServerListenerPlugin from '../plugins/ServerListenerPlugin';
 
-const PATHS = require('../pathUtils');
+const PATHS = require('../utils/paths');
 
 const prefetches = [];
 

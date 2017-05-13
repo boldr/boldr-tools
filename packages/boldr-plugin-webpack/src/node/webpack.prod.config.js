@@ -2,10 +2,10 @@
 import path from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import defineVariables from '../../utils/defineVariables';
+import defineVariables from '../utils/defineVariables';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 
-const PATHS = require('../pathUtils');
+const PATHS = require('../utils/paths');
 
 const prefetches = [];
 
@@ -67,11 +67,7 @@ module.exports = function createConfig(
     target: 'node',
     context: process.cwd(),
 
-    entry: [
-      require.resolve('source-map-support/register'),
-
-      settings.server.index,
-    ],
+    entry: settings.server.index,
     bail: true,
     profile: settings.wpProfile,
     devtool: 'source-map',
@@ -148,7 +144,7 @@ module.exports = function createConfig(
         },
         // CSS
         {
-          test: /\.(css|scss)$/,
+          test: /\.css$/,
           exclude: EXCLUDES,
           use: [
             {
@@ -159,6 +155,25 @@ module.exports = function createConfig(
                 // or the style will flick when page first loaded
                 context: settings.projectSrcDir,
                 localIdentName: '[hash:base64:5]',
+              },
+            },
+            'postcss-loader',
+            'sass-loader',
+          ],
+        },
+        {
+          test: /\.scss$/,
+          exclude: EXCLUDES,
+          use: [
+            {
+              loader: 'css-loader/locals',
+              options: {
+                modules: false,
+                // "context" and "localIdentName" need to be the same with client config,
+                // or the style will flick when page first loaded
+                context: settings.projectSrcDir,
+                localIdentName: '[hash:base64:5]',
+                importLoaders: 2,
               },
             },
             'postcss-loader',

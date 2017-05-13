@@ -6,7 +6,7 @@ class Engine {
   cwd: string;
   configFileName: string;
   logger: Logger;
-  plugins: Array<PluginController | BuildPluginController>;
+  plugins: Array<PluginController>;
 
   constructor(
     cwd: string,
@@ -32,9 +32,9 @@ class Engine {
 
   async build(): Promise<any> {
     const config: Config = loadConfiguration(this);
-    const buildPlugin = require('./commands/build');
-    config.plugins.push(buildPlugin);
-    const pluginControllers: BuildPluginController[] = await Promise.all(
+
+    // run build phase on plugins (do not instantiate them)
+    const pluginControllers: PluginController[] = await Promise.all(
       config.plugins.map(plugin => plugin(this, true, this.logger)),
     );
 
@@ -45,9 +45,8 @@ class Engine {
 
   async start(): Promise<any> {
     const config: Config = loadConfiguration(this);
-    const devPlugin = require('./commands/dev');
+
     // instantiate plugins
-    config.plugins.push(devPlugin);
     this.plugins = await Promise.all(
       config.plugins.map(plugin => plugin(this, false, this.logger)),
     );

@@ -1,4 +1,4 @@
-import { logger } from 'boldr-utils';
+import logger from 'boldr-utils/es/logger';
 import detect from 'detect-port';
 
 // Determines whethere the given port is in use

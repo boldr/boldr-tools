@@ -1,0 +1,19 @@
+{
+  "presets": [
+    ["env", {
+      "debug": true,
+      "modules": "commonjs",
+      "spec": true,
+      "exclude": [
+        "transform-regenerator",
+        "transform-async-to-generator"
+      ]
+      }]
+  ],
+  "plugins": [
+    "fast-async",
+    "transform-flow-strip-types",
+    "transform-export-extensions",
+    "transform-object-rest-spread"
+  ]
+}

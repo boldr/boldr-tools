@@ -12,11 +12,11 @@ import reporter from 'postcss-reporter';
 import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 
-import defineVariables from '../../utils/defineVariables';
+import defineVariables from '../utils/defineVariables';
 import AssetsPlugin from '../plugins/AssetsPlugin';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 
-const PATHS = require('../pathUtils');
+const PATHS = require('../utils/paths');
 
 const prefetches = [];
 
