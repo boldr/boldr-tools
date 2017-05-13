@@ -5,6 +5,7 @@ import {
   setIn,
   removeByKey,
   getField,
+  filterEmpty,
 } from './objects';
 import {
   ifElse,
@@ -22,6 +23,7 @@ import {
   removeKeyFromNestedArray,
   stringifiedArray,
   validateArray,
+  merge,
 } from './arrays';
 import reduceKey from './state/reduceKey';
 
@@ -49,4 +51,6 @@ module.exports = {
   uniq,
   reduceKey,
   getField,
+  filterEmpty,
+  merge,
 };

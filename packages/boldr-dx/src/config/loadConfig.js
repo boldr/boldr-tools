@@ -16,9 +16,7 @@ const defaultConfig = {
   env: {
     NODE_ENV: getEnvParam('NODE_ENV'),
   },
-  plugins: [
-    require('../plugins/watchConfig'),
-  ],
+  plugins: [require('../plugins/watchConfig')],
   settings: {
     projectNodeModules: path.resolve(cwd, './node_modules'),
     assetsPath: path.resolve(cwd, './build/assets.json'),

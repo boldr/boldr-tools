@@ -1,5 +1,5 @@
 const reduce = require('lodash.reduce');
-import stringifiedArray from '../arrays/stringifiedArray';
+const stringifiedArray = require('../arrays/stringifiedArray');
 
 /**
  * If the object responds to getIn, that's called directly. Otherwise

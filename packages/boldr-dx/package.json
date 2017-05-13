@@ -13,23 +13,19 @@
   },
   "homepage": "https://github.com/boldr/boldr-tools#readme",
   "bin": {
-    "boldr-dx": "./dist/boldr-dx.js"
+    "boldr-dx": "./lib/boldr-dx.js"
   },
-  "main": "dist/boldr-dx.js",
-  "jsnext:main": "es/boldr-dx.js",
+  "main": "lib/boldr-dx.js",
   "files": [
-    "dist",
-    "es",
+    "lib",
     "src"
   ],
   "engines": {
-    "node": ">=6.1.0"
+    "node": ">=7.0.0"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:commonjs && npm run build:es",
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
-    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
-    "clean": "rimraf dist && rimraf es",
+    "build": "npm run clean && cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir lib",
+    "clean": "rimraf lib && rimraf es",
     "prepublish": "npm run clean && npm run build",
     "format": "prettier --single-quote=true --jsx-bracket-same-line=false --trailing-comma=all --write \"src/**/*.js\"",
     "test": "echo \"No tests\" && exit 0"
@@ -45,7 +41,7 @@
     "babel-preset-boldr": "^0.8.0",
     "babili-webpack-plugin": "^0.0.11",
     "bluebird": "^3.5.0",
-    "boldr-utils": "^0.2.2",
+    "boldr-utils": "^0.2.3",
     "cache-loader": "^1.0.3",
     "case-sensitive-paths-webpack-plugin": "^2.0.0",
     "chalk": "^1.1.3",

@@ -4,5 +4,14 @@ import getIn from './getIn';
 import setIn from './setIn';
 import removeByKey from './removeByKey';
 import getField from './getField';
+import filterEmpty from './filterEmpty';
 
-export { filterWithRules, mergeDeep, getIn, setIn, removeByKey, getField };
+export {
+  filterWithRules,
+  mergeDeep,
+  getIn,
+  setIn,
+  removeByKey,
+  getField,
+  filterEmpty,
+};

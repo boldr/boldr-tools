@@ -1,7 +1,25 @@
 {
-  "presets": ["env"],
-  "plugins": [
-    "add-module-exports",
-    "transform-object-rest-spread"
-  ]
+  "env": {
+    "commonjs": {
+      "presets": ["env"],
+      "plugins": [
+        "add-module-exports",
+        "transform-object-rest-spread"
+      ]
+    },
+    "es": {
+      "presets": [
+        ["env", {
+        "modules": false,
+        "loose": true,
+        "target": {
+          "node": 6
+        }
+        }
+        ]],
+      "plugins": [
+        "transform-object-rest-spread"
+      ]
+    }
+}
 }

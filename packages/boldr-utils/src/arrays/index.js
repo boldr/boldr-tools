@@ -5,6 +5,7 @@ import removeIdFromArray from './removeIdFromArray';
 import removeKeyFromNestedArray from './removeKeyFromNestedArray';
 import stringifiedArray from './stringifiedArray';
 import validateArray from './validateArray';
+import merge from './merge';
 
 export {
   removeNil,
@@ -14,4 +15,5 @@ export {
   removeKeyFromNestedArray,
   stringifiedArray,
   validateArray,
+  merge,
 };

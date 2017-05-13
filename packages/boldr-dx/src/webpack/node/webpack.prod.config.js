@@ -2,10 +2,6 @@
 import path from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import postCssImport from 'postcss-import';
-import postCssCssNext from 'postcss-cssnext';
-import postCssApply from 'postcss-apply';
-
 import defineVariables from '../../utils/defineVariables';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 

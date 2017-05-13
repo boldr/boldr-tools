@@ -13,4 +13,4 @@ const removeByKey = (myObj, deleteKey) => {
   );
 };
 
-export default removeByKey;
+module.exports = removeByKey;
