@@ -4,17 +4,21 @@ import React, { Children } from 'react';
 import serialize from 'serialize-javascript';
 import { ifElse, removeNil } from 'boldr-utils';
 import type { Head } from 'react-helmet';
-import ClientConfig from '../../../config/components/ClientConfig';
 import Html from '../../shared/components/Html';
+import assets from './assets';
 
-import getClientBundleEntryAssets from './getBundleAssets';
+// This is output by Webpack after the bundle is compiled. It contains
+// information about the files Webpack bundled. ASSETS_MANIFEST is
+// inlined as a path when processed by Webpack.
+const clientAssets = assets();
+console.log(clientAssets)
 
 function KeyedComponent({ children }) {
   return Children.only(children);
 }
 
-// Resolve the assets (js/css) for the client bundle's entry chunk.
-const clientEntryAssets = getClientBundleEntryAssets();
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
 
 /**
  * Takes a stylesheet file path and creates an html
@@ -43,58 +47,69 @@ function createScriptElement(jsFilePath: string) {
   return <script type="text/javascript" src={jsFilePath} />;
 }
 
-export type CreateHtmlProps = {
+type Props = {
   reactAppString: string,
   nonce: string,
   preloadedState: Object,
-  helmet: Head,
-  styles: Object,
+  styles: ?Object,
+  helmet: ?Head,
 };
 
-function CreateHtml(props: CreateHtmlProps) {
-  const { reactAppString, nonce, preloadedState, helmet, styles } = props;
+export default function CreateHtml(props: Props) {
+  const { reactAppString, nonce, preloadedState, styles, helmet } = props;
 
   // Creates an inline script definition that is protected by the nonce.
-  const inlineScript = (body: string) => (
+  const inlineScript = body => (
     <script
       nonce={nonce}
       type="text/javascript"
       dangerouslySetInnerHTML={{ __html: body }}
     />
-  );
+  ); // eslint-disable-line
 
   const headerElements = removeNil([
+    // if React Helmet component, render the helmet data
+    // else act as an empty array.
     ...ifElse(helmet)(() => helmet.title.toComponent(), []),
     ...ifElse(helmet)(() => helmet.base.toComponent(), []),
     ...ifElse(helmet)(() => helmet.meta.toComponent(), []),
     ...ifElse(helmet)(() => helmet.link.toComponent(), []),
-    ifElse(clientEntryAssets && clientEntryAssets.index.css)(() =>
-      createStyleElement(clientEntryAssets.index.css),
+    // This is somewhat wonky, but basically:
+    // if env === production && we have clientAssets && clientAssets has
+    // vendor css, create a style element with it.
+    ifElse(isProd && clientAssets && clientAssets.vendor.css)(() =>
+      createStyleElement(clientAssets.vendor.css),
+    ),
+    ifElse(isProd && clientAssets && clientAssets.app.css)(() =>
+      createStyleElement(clientAssets.app.css),
     ),
     ...ifElse(helmet)(() => helmet.style.toComponent(), []),
   ]);
 
   const bodyElements = removeNil([
-    // Binds the client configuration object to the window object so
-    // that we can safely expose some configuration values to the
-    // client bundle that gets executed in the browser.
-    <ClientConfig nonce={nonce} />,
-    inlineScript(`window.__PRELOADED_STATE__=${serialize(preloadedState)};`),
+    // Places the Redux store data on the window available at
+    // window.__PRELOADED_STATE__
+    inlineScript(
+      `window.__PRELOADED_STATE__=${serialize(props.preloadedState)};`,
+    ),
+    // Polyfill whatever the browser doesnt provide that is necessary
+    // for the application to run. Much lighter than using babel-polyfill
+    // and results in smaller bundles.
     createScriptElement(
       'https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Symbol',
     ),
-    ifElse(process.env.BUILD_FLAG_IS_DEV)(() =>
-      createScriptElement(`/assets/__dev_vendor_dll__.js?t=${Date.now()}`),
+    ifElse(isProd && clientAssets && clientAssets.common)(() =>
+      createScriptElement(clientAssets.common.js),
     ),
-    ifElse(!process.env.BUILD_FLAG_IS_DEV)(() =>
-      createScriptElement(clientEntryAssets.common.js),
+    ifElse(isProd && clientAssets && clientAssets.vendor.js)(() =>
+      createScriptElement(clientAssets.vendor.js),
     ),
-    ifElse(!process.env.BUILD_FLAG_IS_DEV)(() =>
-      createScriptElement(clientEntryAssets.vendor.js),
+    ifElse(isDev)(() =>
+      createScriptElement(`http://localhost:3001/assets/__vendor_dlls__.js?t=${Date.now()}`),
     ),
 
-    ifElse(clientEntryAssets && clientEntryAssets.index.js)(() =>
-      createScriptElement(clientEntryAssets.index.js),
+    ifElse(clientAssets && clientAssets.app.js)(() =>
+      createScriptElement(clientAssets.app.js),
     ),
     ...ifElse(helmet)(() => helmet.script.toComponent(), []),
   ]);
@@ -115,5 +130,3 @@ function CreateHtml(props: CreateHtmlProps) {
     />
   );
 }
-
-export default CreateHtml;
