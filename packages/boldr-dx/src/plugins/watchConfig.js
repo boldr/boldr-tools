@@ -41,7 +41,7 @@ const plugin: Plugin = (
 
         logGroup.clear();
 
-        // start chokidar and watch for .app.js changes
+        // start chokidar and watch for .boldr/boldr.js changes
         // everytime configuration changes, restart whole build
         watcher = chokidar.watch(
           `${path.resolve(engine.cwd, './.boldr/boldr.js')}`,

@@ -11,6 +11,13 @@ import WatchMissingNodeModulesPlugin
 import defineVariables from '../utils/defineVariables';
 import LoggerPlugin from '../plugins/LoggerPlugin';
 import ServerListenerPlugin from '../plugins/ServerListenerPlugin';
+import getExcludes from '../utils/getExcludes';
+import {
+  NODE_OPTS,
+  LOCAL_IDENT,
+  BUNDLE_EXTENSIONS,
+  NODE_MAIN,
+} from '../utils/constants';
 
 const PATHS = require('../utils/paths');
 
@@ -19,6 +26,7 @@ const prefetches = [];
 const prefetchPlugins = prefetches.map(
   specifier => new webpack.PrefetchPlugin(specifier),
 );
+const DEV_SERVER_PORT = parseInt(process.env.DEV_SERVER_PORT, 10) || 3001;
 
 module.exports = function createConfig(
   engine: Engine,
@@ -60,27 +68,18 @@ module.exports = function createConfig(
     whitelistedExternals = externalsWhitelist;
   }
 
-  const inlineVariables = {
+  const VARIABLES_TO_INLINE = {
     'process.env': defineVariables(envVariables, { IS_SERVER: true }),
   };
-  const EXCLUDES = [
-    /node_modules/,
-    settings.client.bundleDir,
-    settings.server.bundleDir,
-  ];
 
   return {
     target: 'node',
     context: process.cwd(),
-    entry: [settings.server.index],
+    entry: [settings.server.entry],
     devtool: 'eval',
     bail: false,
     profile: false,
-    node: {
-      console: true,
-      __filename: true,
-      __dirname: true,
-    },
+    node: NODE_OPTS,
     externals: [
       nodeExternals({
         whitelist: [
@@ -97,16 +96,16 @@ module.exports = function createConfig(
       path: settings.server.bundleDir,
       pathinfo: true,
       filename: 'server.js',
-      publicPath: settings.server.publicPath || '/',
+      publicPath: `http://localhost:${DEV_SERVER_PORT}${settings.webPath}`,
       libraryTarget: 'commonjs2',
     },
     resolve: {
       modules: ['node_modules', settings.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
-      extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
+      extensions: BUNDLE_EXTENSIONS,
       descriptionFiles: ['package.json'],
-      mainFields: ['module', 'jsnext:main', 'main'],
+      mainFields: NODE_MAIN,
     },
     // resolve loaders from this plugin directory
     resolveLoader: {
@@ -127,7 +126,7 @@ module.exports = function createConfig(
       // instances of the keys that are found.
       // If the value is a string it will be used as a code fragment.
       // If the value isn’t a string, it will be stringified
-      new webpack.DefinePlugin(inlineVariables),
+      new webpack.DefinePlugin(VARIABLES_TO_INLINE),
       // Errors during development will kill any of our NodeJS processes.
       // this prevents that from happening.
       new webpack.NoEmitOnErrorsPlugin(),
@@ -144,7 +143,7 @@ module.exports = function createConfig(
 
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
-        pluginInstantiator(engine.getConfiguration(), inlineVariables),
+        pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
 
       new ServerListenerPlugin(engine, logger),
@@ -156,8 +155,8 @@ module.exports = function createConfig(
         // js
         {
           test: /\.(js|jsx)$/,
-          include: settings.projectSrcDir,
-          exclude: EXCLUDES,
+          include: settings.srcDir,
+          exclude: getExcludes(settings),
           use: [
             {
               loader: 'cache-loader',
@@ -197,8 +196,8 @@ module.exports = function createConfig(
                 modules: settings.cssModules,
                 // "context" and "localIdentName" need to be the same with client config,
                 // or the style will flick when page first loaded
-                context: settings.projectSrcDir,
-                localIdentName: '[hash:base64:5]',
+                context: settings.srcDir,
+                localIdentName: LOCAL_IDENT,
               },
             },
             'postcss-loader',
@@ -207,9 +206,9 @@ module.exports = function createConfig(
         },
         // url
         {
-          test: /\.(woff2?|png|jpg|gif|jpeg|ttf|eot|mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
           loader: 'url-loader',
-          exclude: EXCLUDES,
+          exclude: getExcludes(settings),
           options: { limit: 10000 },
         },
         {
@@ -220,7 +219,7 @@ module.exports = function createConfig(
         {
           test: /\.(ico|eot|ttf|otf|mp4|mp3|ogg|pdf|html)$/, // eslint-disable-line
           loader: 'file-loader',
-          exclude: EXCLUDES,
+          exclude: getExcludes(settings),
           options: {
             name: '[name].[ext]',
             emitFile: false,

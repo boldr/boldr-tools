@@ -8,6 +8,7 @@ import pkg from '../package.json';
 import testAction from './commands/test';
 import Engine from './engine';
 import Logger from './services/logger';
+import { cwd } from './config/defaultConfig';
 
 // @TODO: Remove this once babel-loader updates
 // https://github.com/babel/babel-loader/pull/391
@@ -29,18 +30,14 @@ program
   .option('-C, --config <path>', 'config path')
   .description('Create a production build')
   .action(() => {
-    const engine: Engine = new Engine(
-      fs.realpathSync(process.cwd()),
-      undefined,
-      new Logger(),
-    );
-    env.build().then(
+    const engine: Engine = new Engine(cwd, undefined, new Logger());
+    engine.build().then(
       () => {
-        console.log(chalk.green('Successfully built'));
+        console.log('Successfully built');
         process.exit(0);
       },
       err => {
-        console.log(chalk.red('Build failed'));
+        console.log('Build failed');
         console.log(err);
         process.exit(1);
       },
@@ -54,11 +51,7 @@ program
   .action(() => {
     const args = program.args.filter(item => typeof item === 'object');
     const optionalConfig = args[0].config ? args[0].config : null;
-    const engine: Engine = new Engine(
-      fs.realpathSync(process.cwd()),
-      undefined,
-      new Logger(),
-    );
+    const engine: Engine = new Engine(cwd, undefined, new Logger());
     engine.start().catch(e => {
       console.log(e);
       process.exit(1);

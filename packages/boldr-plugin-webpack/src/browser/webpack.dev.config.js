@@ -3,6 +3,7 @@ import path from 'path';
 import webpack from 'webpack';
 import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
 import findCacheDir from 'find-cache-dir';
+import AssetsPlugin from 'assets-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import postCssImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
@@ -13,11 +14,18 @@ import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 
 import defineVariables from '../utils/defineVariables';
-import AssetsPlugin from '../plugins/AssetsPlugin';
 import LoggerPlugin from '../plugins/LoggerPlugin';
+import getExcludes from '../utils/getExcludes';
+import {
+  NODE_OPTS,
+  LOCAL_IDENT,
+  BUNDLE_EXTENSIONS,
+  BROWSER_MAIN,
+} from '../utils/constants';
 
 const PATHS = require('../utils/paths');
 
+const DEV_SERVER_PORT = parseInt(process.env.DEV_SERVER_PORT, 10) || 3001;
 const prefetches = [];
 
 const prefetchPlugins = prefetches.map(
@@ -54,47 +62,60 @@ module.exports = function createConfig(
     decorateLoaders = loadersDecorator;
   }
 
-  const inlineVariables = {
+  const VARIABLES_TO_INLINE = {
     'process.env': defineVariables(envVariables, { IS_CLIENT: true }),
   };
-  const EXCLUDES = [
-    /node_modules/,
-    settings.client.bundleDir,
-    settings.server.bundleDir,
-  ];
 
   return {
     context: process.cwd(),
     devtool: 'eval',
-    entry: [
-      `${require.resolve('react-dev-utils/webpackHotDevClient')}`,
-      settings.client.index,
-    ],
+    // was entry: [`${require.resolve('react-dev-utils/webpackHotDevClient')}`, settings.client.index]
+    entry: {
+      app: [
+        `${require.resolve('webpack-dev-server/client')}?http://localhost:${DEV_SERVER_PORT}`,
+        require.resolve('webpack/hot/dev-server'),
+        settings.client.entry,
+      ],
+    },
     output: {
       path: settings.client.bundleDir,
       pathinfo: true,
       filename: '[name].js',
-      publicPath: settings.client.publicPath || '/',
+      publicPath: `http://localhost:${DEV_SERVER_PORT}${settings.webPath}`,
     },
     resolve: {
       modules: ['node_modules', settings.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
-      extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
+      extensions: BUNDLE_EXTENSIONS,
       descriptionFiles: ['package.json'],
-      mainFields: ['web', 'browser', 'style', 'module', 'jsnext:main', 'main'],
+      mainFields: BROWSER_MAIN,
     },
     // resolve loaders from this plugin directory
     resolveLoader: {
       modules: [PATHS.boldrNodeModules, PATHS.projectNodeModules],
     },
-    node: {
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-    },
+    node: NODE_OPTS,
     bail: false,
     profile: false,
+    devServer: {
+      clientLogLevel: 'none',
+      disableHostCheck: true,
+      contentBase: envVariables.PUBLIC_DIR,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      historyApiFallback: true,
+      compress: true,
+      host: 'localhost',
+      port: DEV_SERVER_PORT,
+      hot: true,
+      publicPath: settings.webPath,
+      quiet: true,
+      watchOptions: {
+        ignored: /node_modules/,
+      },
+    },
     plugins: [
       ...prefetchPlugins,
 
@@ -103,13 +124,13 @@ module.exports = function createConfig(
         debug: true,
         context: '/',
       }),
-      new AssetsPlugin(engine),
-      new NamedModulesPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: module => /node_modules/.test(module.resource),
-      }),
 
+      new AssetsPlugin({
+        filename: 'assets.json',
+        path: settings.assetsDir,
+        prettyPrint: true,
+      }),
+      new NamedModulesPlugin(),
       // Each key passed into DefinePlugin AND/OR EnvironmentPlugin is an identifier.
       // @NOTE EnvironmentPlugin allows you to skip writing process.env for each
       // definition. It is the same thing as DefinePlugin.
@@ -118,7 +139,7 @@ module.exports = function createConfig(
       // instances of the keys that are found.
       // If the value is a string it will be used as a code fragment.
       // If the value isn’t a string, it will be stringified
-      new webpack.DefinePlugin(inlineVariables),
+      new webpack.DefinePlugin(VARIABLES_TO_INLINE),
 
       // case sensitive paths
       new CaseSensitivePathsPlugin(),
@@ -133,10 +154,9 @@ module.exports = function createConfig(
 
       // Logger plugin
       new LoggerPlugin(logger),
-
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
-        pluginInstantiator(engine.getConfiguration(), inlineVariables),
+        pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
     ],
     module: {
@@ -145,8 +165,8 @@ module.exports = function createConfig(
         // js
         {
           test: /\.(js|jsx)$/,
-          include: settings.projectSrcDir,
-          exclude: EXCLUDES,
+          include: settings.srcDir,
+          exclude: getExcludes(settings),
           use: [
             {
               loader: 'cache-loader',
@@ -179,7 +199,7 @@ module.exports = function createConfig(
         // css
         {
           test: /\.css$/,
-          exclude: [settings.client.bundleDir, settings.server.bundleDir],
+          exclude: getExcludes(settings),
           use: [
             { loader: 'style-loader' },
             {
@@ -190,8 +210,8 @@ module.exports = function createConfig(
                 importLoaders: true,
                 // "context" and "localIdentName" need to be the same with client config,
                 // or the style will flick when page first loaded
-                context: settings.projectSrcDir,
-                localIdentName: '[name]__[local]__[hash:base64:5]',
+                context: settings.srcDir,
+                localIdentName: LOCAL_IDENT,
               },
             },
             {
@@ -218,17 +238,17 @@ module.exports = function createConfig(
         // Sass
         {
           test: /\.scss$/,
-          exclude: [settings.client.bundleDir, settings.server.bundleDir],
+          exclude: getExcludes(settings),
           use: [
             'style-loader',
             {
               loader: 'css-loader',
               options: {
                 importLoaders: 2,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
+                localIdentName: LOCAL_IDENT,
                 sourceMap: true,
                 modules: false,
-                context: settings.projectSrcDir,
+                context: settings.srcDir,
               },
             },
             { loader: 'postcss-loader', options: { sourceMap: true } },
@@ -249,9 +269,9 @@ module.exports = function createConfig(
         },
         // url
         {
-          test: /\.(woff2?|png|jpg|gif|jpeg|ttf|eot|mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
           loader: 'url-loader',
-          exclude: EXCLUDES,
+          exclude: getExcludes(settings),
           options: { limit: 10000 },
         },
         {
@@ -262,7 +282,7 @@ module.exports = function createConfig(
         {
           test: /\.(ico|eot|ttf|otf|mp4|mp3|ogg|pdf|html)$/, // eslint-disable-line
           loader: 'file-loader',
-          exclude: EXCLUDES,
+          exclude: getExcludes(settings),
           options: {
             emitFile: false,
           },

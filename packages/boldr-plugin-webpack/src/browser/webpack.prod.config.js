@@ -4,6 +4,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import BabiliPlugin from 'babili-webpack-plugin';
+import AssetsPlugin from 'assets-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
@@ -13,8 +14,14 @@ import discardComments from 'postcss-discard-comments';
 import reporter from 'postcss-reporter';
 
 import defineVariables from '../utils/defineVariables';
-import AssetsPlugin from '../plugins/AssetsPlugin';
 import LoggerPlugin from '../plugins/LoggerPlugin';
+import getExcludes from '../utils/getExcludes';
+import {
+  NODE_OPTS,
+  LOCAL_IDENT,
+  BUNDLE_EXTENSIONS,
+  BROWSER_MAIN,
+} from '../utils/constants';
 
 const PATHS = require('../utils/paths');
 
@@ -54,26 +61,29 @@ module.exports = function createConfig(
     decorateLoaders = loadersDecorator;
   }
 
-  const inlineVariables = {
+  const VARIABLES_TO_INLINE = {
     'process.env': defineVariables(envVariables, { IS_CLIENT: true }),
   };
 
   return {
     context: process.cwd(),
-    entry: [settings.client.index],
+    entry: {
+      app: settings.client.entry,
+      vendor: settings.vendor,
+    },
     output: {
       path: settings.client.bundleDir,
-      pathinfo: true,
+      pathinfo: false,
       filename: '[name]-[chunkhash].js',
-      publicPath: settings.client.publicPath || '/',
+      publicPath: settings.webPath || '/assets/',
     },
     resolve: {
       modules: ['node_modules', settings.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
-      extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
+      extensions: BUNDLE_EXTENSIONS,
       descriptionFiles: ['package.json'],
-      mainFields: ['web', 'browser', 'style', 'module', 'jsnext:main', 'main'],
+      mainFields: BROWSER_MAIN,
     },
     // resolve loaders from this plugin directory
     resolveLoader: {
@@ -82,11 +92,7 @@ module.exports = function createConfig(
     bail: true,
     profile: settings.wpProfile,
     devtool: 'source-map',
-    node: {
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-    },
+    node: NODE_OPTS,
 
     plugins: [
       // loader options
@@ -96,25 +102,43 @@ module.exports = function createConfig(
         context: '/',
       }),
 
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: module => /node_modules/.test(module.resource),
-      }),
       new webpack.HashedModuleIdsPlugin(),
       new WebpackMd5Hash(),
       // define global variable
-      new webpack.DefinePlugin(inlineVariables),
+      new webpack.DefinePlugin(VARIABLES_TO_INLINE),
 
       new BabiliPlugin({}, { comments: false }),
 
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: module =>
+          module.context && module.context.includes('node_modules'),
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        minChunks: Infinity,
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        async: true,
+        children: true,
+        minChunks: 4,
+      }),
       new ExtractTextPlugin({
         filename: '[name]-[contenthash:8].css',
         allChunks: true,
         ignoreOrder: settings.cssModules,
       }),
 
-      new AssetsPlugin(engine),
-
+      new AssetsPlugin({
+        filename: 'assets.json',
+        path: settings.assetsDir,
+        prettyPrint: true,
+      }),
+      new ChunkManifestPlugin({
+        filename: settings.chunkManifestFileName,
+        manifestVariable: 'CHUNK_MANIFEST',
+      }),
+      new webpack.optimize.AggressiveMergingPlugin(),
       new BundleAnalyzerPlugin({
         openAnalyzer: false,
         analyzerMode: 'static',
@@ -125,7 +149,7 @@ module.exports = function createConfig(
 
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
-        pluginInstantiator(engine.getConfiguration(), inlineVariables),
+        pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
     ],
     module: {
@@ -134,7 +158,8 @@ module.exports = function createConfig(
         // js
         {
           test: /\.(js|jsx)$/,
-          include: settings.projectSrcDir,
+          include: settings.srcDir,
+          exclude: getExcludes(settings),
           use: [
             {
               loader: 'babel-loader',
@@ -166,7 +191,7 @@ module.exports = function createConfig(
                   importLoaders: 1,
                   // "context" and "localIdentName" need to be the same with client config,
                   // or the style will flick when page first loaded
-                  context: settings.projectSrcDir,
+                  context: settings.srcDir,
                   localIdentName: '[hash:base64:5]',
                 },
               },
@@ -203,7 +228,7 @@ module.exports = function createConfig(
                 options: {
                   importLoaders: 2,
                   localIdentName: '[hash:base64:5]',
-                  context: settings.projectSrcDir,
+                  context: settings.srcDir,
                   sourceMap: true,
                   modules: false,
                 },
@@ -227,7 +252,7 @@ module.exports = function createConfig(
         },
         // url
         {
-          test: /\.(woff2?|png|jpg|gif|jpeg|ttf|eot|mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
           loader: 'url-loader',
           options: { limit: 10000 },
         },

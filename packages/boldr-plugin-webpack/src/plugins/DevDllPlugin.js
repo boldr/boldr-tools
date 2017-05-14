@@ -4,15 +4,13 @@ import webpack from 'webpack';
 import md5 from 'md5';
 import Promise from 'bluebird';
 import logger from 'boldr-utils/es/logger';
-import paths from '../config/paths';
 
-const boldrConfig = require(paths.boldrConfigPath);
-const pkg = require(paths.userPkgPath);
-
-function buildWebpackDlls() {
+function DevDllPlugin(engine) {
   logger.start('Building Webpack vendor DLLs');
+  const eng = engine.getConfiguration();
+  const pkg = JSON.parse(fs.readFileSync(eng.settings.userPkgPath, 'utf8'));
 
-  const dllConfig = boldrConfig.vendorFiles;
+  const dllConfig = eng.settings.vendor;
 
   const devDLLDependencies = dllConfig.sort();
 
@@ -33,8 +31,8 @@ function buildWebpackDlls() {
   );
 
   const vendorDLLHashFilePath = path.resolve(
-    paths.clientOutputPath,
-    '__boldr_dlls__hash',
+    eng.settings.assetsDir,
+    '__vendor_dlls__hash',
   );
 
   function webpackInstance() {
@@ -42,17 +40,17 @@ function buildWebpackDlls() {
       // We only use this for development, so lets always include source maps.
       devtool: 'inline-source-map',
       entry: {
-        ['__boldr_dlls__']: devDLLDependencies,
+        ['__vendor_dlls__']: devDLLDependencies,
       },
       output: {
-        path: paths.dllDir,
-        filename: '__boldr_dlls__.js',
-        library: '__boldr_dlls__',
+        path: eng.settings.assetsDir,
+        filename: '__vendor_dlls__.js',
+        library: '__vendor_dlls__',
       },
       plugins: [
         new webpack.DllPlugin({
-          path: path.resolve(paths.dllDir, '__boldr_dlls__.json'),
-          name: '__boldr_dlls__',
+          path: path.resolve(eng.settings.assetsDir, '__vendor_dlls__.json'),
+          name: '__vendor_dlls__',
         }),
       ],
     };
@@ -62,8 +60,7 @@ function buildWebpackDlls() {
     return new Promise((resolve, reject) => {
       logger.end('Vendor DLL build complete.');
       logger.info(`The following dependencies have been
-        included:\n\t-${devDLLDependencies.join('\n\t-')}\n`,
-      );
+        included:\n\t-${devDLLDependencies.join('\n\t-')}\n`);
 
       const webpackConfig = webpackInstance();
       const vendorDLLCompiler = webpack(webpackConfig);
@@ -88,8 +85,7 @@ function buildWebpackDlls() {
     } else {
       // first check if the md5 hashes match
       const dependenciesHash = fs.readFileSync(vendorDLLHashFilePath, 'utf8');
-      const dependenciesChanged =
-        dependenciesHash !== currentDependenciesHash;
+      const dependenciesChanged = dependenciesHash !== currentDependenciesHash;
 
       if (dependenciesChanged) {
         logger.info('New vendor dependencies detected.');
@@ -103,4 +99,4 @@ function buildWebpackDlls() {
   });
 }
 
-export default buildWebpackDlls;
+export default DevDllPlugin;

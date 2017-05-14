@@ -1,6 +1,6 @@
 /* @flow */
-const path = require('path');
-const loadConfiguration = require('./config/loadConfig');
+import path from 'path';
+import loadConfiguration from './config/loadConfig';
 
 class Engine {
   cwd: string;
@@ -25,7 +25,7 @@ class Engine {
   getConfiguration(): Config {
     return loadConfiguration(this);
   }
-
+  // determine our environment id
   getIdentifier(): string {
     return this.getConfiguration().env.NODE_ENV;
   }
@@ -71,4 +71,4 @@ class Engine {
   }
 }
 
-module.exports = Engine;
+export default Engine;

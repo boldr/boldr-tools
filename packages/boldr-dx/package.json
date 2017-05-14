@@ -31,6 +31,7 @@
     "test": "echo \"No tests\" && exit 0"
   },
   "dependencies": {
+    "app-root-dir": "^1.0.2",
     "babel-jest": "^20.0.1",
     "babel-preset-boldr": "^0.8.0",
     "bluebird": "^3.5.0",

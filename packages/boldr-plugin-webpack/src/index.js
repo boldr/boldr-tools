@@ -1,21 +1,10 @@
 /* @flow */
-/* eslint-disable global-require, no-console, require-await */
+/* eslint-disable global-require, no-console, require-await, babel/new-cap */
+import { resolve as pathResolve } from 'path';
 import fs from 'fs-extra';
 import webpack from 'webpack';
-import openBrowser from 'react-dev-utils/openBrowser';
 import WebpackDevServer from 'webpack-dev-server';
-import checkPort from './utils/checkPort';
-
-const configurations = {
-  client: {
-    development: require('./browser/webpack.dev.config'),
-    production: require('./browser/webpack.prod.config'),
-  },
-  server: {
-    development: require('./node/webpack.dev.config'),
-    production: require('./node/webpack.prod.config'),
-  },
-};
+import DevDllPlugin from './plugins/DevDllPlugin';
 
 function createRunOnceCompiler(webpackConfig: Object): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -40,15 +29,21 @@ const plugin: Plugin = (
 ): PluginController => {
   let clientLogger, serverLogger, serverCompiler, clientDevServer;
   const { env: envVariables, settings } = engine.getConfiguration();
+
   return {
+    // build
+    // targets = node / web
+    // dev = false
     async build() {
       clientLogger = logger.createGroup('client');
       serverLogger = logger.createGroup('server');
-      const clientConfig = configurations.client[engine.getIdentifier()](
+
+      const clientConfig = require('./browser/webpack.prod.config')(
         engine,
         clientLogger,
       );
-      const serverConfig = configurations.server[engine.getIdentifier()](
+
+      const serverConfig = require('./node/webpack.prod.config')(
         engine,
         serverLogger,
       );
@@ -63,51 +58,44 @@ const plugin: Plugin = (
 
       return Promise.all(compilers);
     },
-
+    // start
+    // targets = node / web
+    // dev = true
     async start() {
       clientLogger = logger.createGroup('client');
       serverLogger = logger.createGroup('server');
-      const clientConfig = configurations.client[engine.getIdentifier()](
+      await DevDllPlugin(engine);
+      const clientConfig = require('./browser/webpack.dev.config')(
         engine,
         clientLogger,
       );
-      const serverConfig = configurations.server[engine.getIdentifier()](
+      const serverConfig = require('./node/webpack.dev.config')(
         engine,
         serverLogger,
       );
-
       return new Promise((resolve, reject) => {
         try {
+          clientConfig.plugins.push(
+            new webpack.DllReferencePlugin({
+              // $FlowFixMe
+              manifest: require(pathResolve(
+                settings.assetsDir,
+                '__vendor_dlls__.json',
+              )),
+            }),
+          );
           const clientCompiler = webpack(clientConfig);
 
-          clientDevServer = new WebpackDevServer(clientCompiler, {
-            clientLogLevel: 'none',
-            contentBase: envVariables.PUBLIC_DIR,
-            historyApiFallback: {
-              disableDotRule: true,
-            },
-            https: settings.client.protocol === 'https',
-            host: 'localhost',
-            hot: true,
-            proxy: {
-              '!(/__webpack_hmr|**/*.*)': `http://localhost:${envVariables.SERVER_PORT}`,
-            },
-            publicPath: '/',
-            quiet: true,
-            watchOptions: {
-              ignored: /node_modules/,
-            },
-          });
+          clientDevServer = new WebpackDevServer(
+            clientCompiler,
+            clientConfig.devServer,
+          );
 
-          clientDevServer.listen(envVariables.SERVER_PORT - 1, err => {
+          clientDevServer.listen(envVariables.DEV_SERVER_PORT, err => {
             if (err) {
               console.log(err);
               return reject(err);
             }
-
-            return openBrowser(
-              `${settings.client.protocol || 'http'}://localhost:${envVariables.SERVER_PORT - 1}/`,
-            );
           });
 
           serverCompiler = webpack({
