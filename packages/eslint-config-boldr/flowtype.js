@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     'flowtype/define-flow-type': 1,
     'flowtype/require-valid-file-annotation': 1,
+    'flowtype/no-types-missing-file-annotation': 2,
     'flowtype/require-return-type': 0,
     'flowtype/space-after-type-colon': 0,
     'flowtype/space-before-generic-bracket': 0,

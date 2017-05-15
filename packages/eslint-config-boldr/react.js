@@ -6,7 +6,7 @@ module.exports = {
   plugins: ['react'],
   parser: 'babel-eslint',
   parserOptions: {
-    ecmaVersion: 7,
+    ecmaVersion: 2017,
     impliedStrict: true,
     sourceType: 'module',
     ecmaFeatures: {
@@ -20,6 +20,7 @@ module.exports = {
     },
   },
   rules: {
+    'react/no-will-update-set-state': 2,
     // specify whether double or single quotes should be used in JSX attributes
     // http://eslint.org/docs/rules/jsx-quotes
     'jsx-quotes': 'off',
