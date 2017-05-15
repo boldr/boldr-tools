@@ -131,7 +131,7 @@ module.exports = class ServerListenerPlugin {
         const port = this.engine.getConfiguration().env.SERVER_PORT;
         const url = `http://localhost:${port}`;
 
-        this.logger.info(`\tServer is listening on ${url}`);
+        this.logger.info(`Server is listening on ${url}`);
       } catch (e) {
         this.logger.error('Error during server bundle start/restart');
         this.logger.log(e);

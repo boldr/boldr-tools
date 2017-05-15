@@ -1,5 +1,6 @@
 /* @flow */
 import chalk from 'chalk';
+import clearConsole from 'react-dev-utils/clearConsole';
 
 class LogGroup {
   logger: Logger;
@@ -47,6 +48,7 @@ class LogGroup {
   }
 
   remove(): void {
+    clearConsole();
     this.logger.removeGroup(this.name);
   }
 }

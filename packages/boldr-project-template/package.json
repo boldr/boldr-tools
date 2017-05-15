@@ -53,8 +53,8 @@
   "devDependencies": {
     "autoprefixer": "^7.0.1",
     "babel-eslint": "7.2.3",
-    "boldr-dx": "^0.3.0-beta.1",
-    "boldr-plugin-webpack": "^0.1.0",
+    "boldr-dx": "^0.3.0-beta.3",
+    "boldr-plugin-webpack": "^0.1.1",
     "eslint": "3.19.0",
     "eslint-config-boldr": "^0.9.5",
     "flow-bin": "0.46.0",
@@ -64,7 +64,7 @@
     "redbox-react": "^1.3.6"
   },
   "scripts": {
-    "build": "bNODE_ENV=production boldr-dx build",
+    "build": "NODE_ENV=production boldr-dx build",
     "lint": "node ./node_modules/.bin/eslint src",
     "flow": "node ./node_modules/.bin/flow check",
     "start": "NODE_ENV=production node server/server.js",

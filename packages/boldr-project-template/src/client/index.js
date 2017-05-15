@@ -10,7 +10,6 @@ import WebFontLoader from 'webfontloader';
 import App from '../shared/components/App';
 import configureStore from '../shared/state/store';
 
-
 WebFontLoader.load({
   google: { families: ['Rubik:300,400,700'] },
 });
@@ -23,11 +22,11 @@ const store = configureStore(preloadedState, history);
 
 function renderApp(BoldrApp) {
   render(
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </Provider>,
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
+    </Provider>,
     MOUNT_POINT,
   );
 }

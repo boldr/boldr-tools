@@ -1,5 +1,6 @@
 /* @flow */
 import path from 'path';
+import fs from 'fs';
 import loadConfiguration from './config/loadConfig';
 
 class Engine {
