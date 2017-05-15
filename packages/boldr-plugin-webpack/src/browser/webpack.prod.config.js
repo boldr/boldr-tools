@@ -14,7 +14,6 @@ import discardComments from 'postcss-discard-comments';
 import reporter from 'postcss-reporter';
 
 import defineVariables from '../utils/defineVariables';
-import LoggerPlugin from '../plugins/LoggerPlugin';
 import getExcludes from '../utils/getExcludes';
 import {
   NODE_OPTS,
@@ -40,7 +39,7 @@ module.exports = function createConfig(
     settings,
   }: ClientWebpackPluginConfiguration = engine.getConfiguration();
 
-  const clientSettings = settings.client;
+  const clientSettings = settings.bundle.client;
   // $FlowIssue : Not really an issue.
   let plugins: () => any[] = [];
   let decorateLoaders: (loaders: Array<any>) => any = loaders => loaders;
@@ -68,22 +67,26 @@ module.exports = function createConfig(
   return {
     context: process.cwd(),
     entry: {
-      app: settings.client.entry,
-      vendor: settings.vendor,
+      app: clientSettings.entry,
+      vendor: settings.bundle.vendor,
     },
     output: {
-      path: settings.client.bundleDir,
+      path: clientSettings.bundleDir,
       pathinfo: false,
       filename: '[name]-[chunkhash].js',
       publicPath: settings.webPath || '/assets/',
     },
     resolve: {
-      modules: ['node_modules', settings.projectNodeModules].concat(
+      modules: ['node_modules', PATHS.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
       extensions: BUNDLE_EXTENSIONS,
       descriptionFiles: ['package.json'],
       mainFields: BROWSER_MAIN,
+      alias: {
+        react: require.resolve('react/dist/react.min.js'),
+        'react-dom': require.resolve('react-dom/dist/react-dom.min.js'),
+      },
     },
     // resolve loaders from this plugin directory
     resolveLoader: {
@@ -131,7 +134,7 @@ module.exports = function createConfig(
 
       new AssetsPlugin({
         filename: 'assets.json',
-        path: settings.assetsDir,
+        path: clientSettings.bundleDir,
         prettyPrint: true,
       }),
       new ChunkManifestPlugin({
@@ -144,15 +147,13 @@ module.exports = function createConfig(
         analyzerMode: 'static',
         logLevel: 'error',
       }),
-
-      new LoggerPlugin(logger),
-
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
         pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
     ],
     module: {
+      strictExportPresence: true,
       rules: decorateLoaders([
         { parser: { requireEnsure: false } },
         // js
@@ -170,6 +171,15 @@ module.exports = function createConfig(
                 presets: [
                   settings.babelrc ||
                     require.resolve('babel-preset-boldr/browser'),
+                ],
+                plugins: [
+                  [
+                    require.resolve('../utils/loadableBabel.js'),
+                    {
+                      server: true,
+                      webpack: true,
+                    },
+                  ],
                 ],
               },
             },

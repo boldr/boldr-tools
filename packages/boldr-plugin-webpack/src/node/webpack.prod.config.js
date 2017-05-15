@@ -3,7 +3,7 @@ import path from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import defineVariables from '../utils/defineVariables';
-import LoggerPlugin from '../plugins/LoggerPlugin';
+
 import getExcludes from '../utils/getExcludes';
 import {
   NODE_OPTS,
@@ -29,7 +29,7 @@ module.exports = function createConfig(
     settings,
   }: ServerWebpackPluginConfiguration = engine.getConfiguration();
 
-  const serverSettings = settings.server;
+  const serverSettings = settings.bundle.server;
   // $FlowIssue : Not really an issue.
   let plugins: () => any[] = [];
   let decorateLoaders: (loaders: Array<any>) => any = loaders => loaders;
@@ -68,30 +68,34 @@ module.exports = function createConfig(
     target: 'node',
     context: process.cwd(),
 
-    entry: settings.server.entry,
+    entry: serverSettings.entry,
     bail: true,
     profile: settings.wpProfile,
     devtool: 'source-map',
     output: {
-      path: settings.server.bundleDir,
+      path: serverSettings.bundleDir,
       pathinfo: false,
       filename: 'server.js',
       publicPath: settings.webPath || '/assets/',
       libraryTarget: 'commonjs2',
     },
     resolve: {
-      modules: ['node_modules', settings.projectNodeModules].concat(
+      modules: ['node_modules', PATHS.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
       extensions: BUNDLE_EXTENSIONS,
       descriptionFiles: ['package.json'],
       mainFields: NODE_MAIN,
+      alias: {
+        react: require.resolve('react/dist/react.min.js'),
+        'react-dom': require.resolve('react-dom/dist/react-dom.min.js'),
+      },
     },
     // resolve loaders from this plugin directory
     resolveLoader: {
       modules: [PATHS.boldrNodeModules, PATHS.projectNodeModules],
     },
-    node: NODE_OPTS,
+    node: { console: true, __filename: true, __dirname: true, fs: true },
     externals: [
       nodeExternals({
         whitelist: [
@@ -109,14 +113,13 @@ module.exports = function createConfig(
 
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
 
-      new LoggerPlugin(logger),
-
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
         pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
     ],
     module: {
+      strictExportPresence: true,
       rules: decorateLoaders([
         { parser: { requireEnsure: false } },
         // js

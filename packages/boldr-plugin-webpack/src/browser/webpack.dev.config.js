@@ -2,9 +2,9 @@
 import path from 'path';
 import webpack from 'webpack';
 import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
-import findCacheDir from 'find-cache-dir';
 import AssetsPlugin from 'assets-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import postCssImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
 import discardComments from 'postcss-discard-comments';
@@ -14,7 +14,6 @@ import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 
 import defineVariables from '../utils/defineVariables';
-import LoggerPlugin from '../plugins/LoggerPlugin';
 import getExcludes from '../utils/getExcludes';
 import {
   NODE_OPTS,
@@ -41,7 +40,7 @@ module.exports = function createConfig(
     settings,
   }: ClientWebpackPluginConfiguration = engine.getConfiguration();
 
-  const clientSettings = settings.client;
+  const clientSettings = settings.bundle.client;
   // $FlowIssue : Not really an issue.
   let plugins: () => any[] = [];
   let decorateLoaders: (loaders: Array<any>) => any = loaders => loaders;
@@ -73,18 +72,23 @@ module.exports = function createConfig(
     entry: {
       app: [
         `${require.resolve('webpack-dev-server/client')}?http://localhost:${DEV_SERVER_PORT}`,
-        require.resolve('webpack/hot/dev-server'),
-        settings.client.entry,
+        require.resolve('webpack/hot/only-dev-server'),
+        clientSettings.entry,
       ],
     },
     output: {
-      path: settings.client.bundleDir,
+      path: clientSettings.bundleDir,
       pathinfo: true,
       filename: '[name].js',
       publicPath: `http://localhost:${DEV_SERVER_PORT}${settings.webPath}`,
     },
     resolve: {
-      modules: ['node_modules', settings.projectNodeModules].concat(
+      // This allows you to set a fallback for where Webpack should look for modules.
+      // We read `NODE_PATH` environment variable in `paths.js` and pass paths here.
+      // We placed these paths second because we want `node_modules` to "win"
+      // if there are any conflicts. This matches Node resolution mechanism.
+      // https://github.com/facebookincubator/create-react-app/issues/253
+      modules: ['node_modules', PATHS.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
       extensions: BUNDLE_EXTENSIONS,
@@ -127,7 +131,7 @@ module.exports = function createConfig(
 
       new AssetsPlugin({
         filename: 'assets.json',
-        path: settings.assetsDir,
+        path: clientSettings.bundleDir,
         prettyPrint: true,
       }),
       new NamedModulesPlugin(),
@@ -140,7 +144,11 @@ module.exports = function createConfig(
       // If the value is a string it will be used as a code fragment.
       // If the value isn’t a string, it will be stringified
       new webpack.DefinePlugin(VARIABLES_TO_INLINE),
-
+      new CircularDependencyPlugin({
+        exclude: /a\.js|node_modules/,
+        // show a warning when there is a circular dependency
+        failOnError: false,
+      }),
       // case sensitive paths
       new CaseSensitivePathsPlugin(),
       // Errors during development will kill any of our NodeJS processes.
@@ -151,15 +159,13 @@ module.exports = function createConfig(
 
       // watch missing node modules
       new WatchMissingNodeModulesPlugin(settings.projectNodeModules),
-
-      // Logger plugin
-      new LoggerPlugin(logger),
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
         pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
       ),
     ],
     module: {
+      strictExportPresence: true,
       rules: decorateLoaders([
         { parser: { requireEnsure: false } },
         // js
@@ -172,9 +178,10 @@ module.exports = function createConfig(
               loader: 'cache-loader',
               options: {
                 // provide a cache directory where cache items should be stored
-                cacheDirectory: findCacheDir({
-                  name: 'boldr-cache',
-                }),
+                cacheDirectory: path.resolve(
+                  PATHS.projectNodeModules,
+                  '.cache',
+                ),
               },
             },
             {
@@ -184,12 +191,19 @@ module.exports = function createConfig(
                 compact: true,
                 sourceMaps: true,
                 comments: false,
-                cacheDirectory: findCacheDir({
-                  name: 'boldr-cache',
-                }),
+                cacheDirectory: true,
                 presets: [
                   settings.babelrc ||
                     require.resolve('babel-preset-boldr/browser'),
+                ],
+                plugins: [
+                  [
+                    require.resolve('../utils/loadableBabel.js'),
+                    {
+                      server: true,
+                      webpack: true,
+                    },
+                  ],
                 ],
               },
             },

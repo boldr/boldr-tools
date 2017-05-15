@@ -1,15 +1,13 @@
 /* @flow */
 import path from 'path';
 import webpack from 'webpack';
-import findCacheDir from 'find-cache-dir';
 import nodeExternals from 'webpack-node-externals';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
-
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 
 import defineVariables from '../utils/defineVariables';
-import LoggerPlugin from '../plugins/LoggerPlugin';
 import ServerListenerPlugin from '../plugins/ServerListenerPlugin';
 import getExcludes from '../utils/getExcludes';
 import {
@@ -37,7 +35,7 @@ module.exports = function createConfig(
     settings,
   }: ServerWebpackPluginConfiguration = engine.getConfiguration();
 
-  const serverSettings = settings.server;
+  const serverSettings = settings.bundle.server;
   // $FlowIssue : Not really an issue.
   let plugins: () => any[] = [];
   let decorateLoaders: (loaders: Array<any>) => any = loaders => loaders;
@@ -75,11 +73,11 @@ module.exports = function createConfig(
   return {
     target: 'node',
     context: process.cwd(),
-    entry: [settings.server.entry],
+    entry: [serverSettings.entry],
     devtool: 'eval',
     bail: false,
     profile: false,
-    node: NODE_OPTS,
+    node: { console: true, __filename: true, __dirname: true, fs: true },
     externals: [
       nodeExternals({
         whitelist: [
@@ -87,20 +85,20 @@ module.exports = function createConfig(
           /\.(eot|woff|woff2|ttf|otf)$/,
           /\.(svg|png|jpg|jpeg|gif|ico)$/,
           /\.(mp4|mp3|ogg|swf|webp)$/,
-          /\.(css|scss|sass|sss|less)$/,
+          /\.(css|scss)$/,
           ...whitelistedExternals,
         ],
       }),
     ],
     output: {
-      path: settings.server.bundleDir,
+      path: serverSettings.bundleDir,
       pathinfo: true,
       filename: 'server.js',
       publicPath: `http://localhost:${DEV_SERVER_PORT}${settings.webPath}`,
       libraryTarget: 'commonjs2',
     },
     resolve: {
-      modules: ['node_modules', settings.projectNodeModules].concat(
+      modules: ['node_modules', PATHS.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
       extensions: BUNDLE_EXTENSIONS,
@@ -139,8 +137,6 @@ module.exports = function createConfig(
       // watch missing node modules
       new WatchMissingNodeModulesPlugin(settings.projectNodeModules),
 
-      new LoggerPlugin(logger),
-
       // Custom plugins
       ...plugins.map(pluginInstantiator =>
         pluginInstantiator(engine.getConfiguration(), VARIABLES_TO_INLINE),
@@ -149,6 +145,7 @@ module.exports = function createConfig(
       new ServerListenerPlugin(engine, logger),
     ],
     module: {
+      strictExportPresence: true,
       rules: decorateLoaders([
         { parser: { requireEnsure: false } },
 
@@ -162,9 +159,10 @@ module.exports = function createConfig(
               loader: 'cache-loader',
               options: {
                 // provide a cache directory where cache items should be stored
-                cacheDirectory: findCacheDir({
-                  name: 'boldr-cache',
-                }),
+                cacheDirectory: path.resolve(
+                  PATHS.projectNodeModules,
+                  '.cache',
+                ),
               },
             },
             {
@@ -174,9 +172,7 @@ module.exports = function createConfig(
                 compact: true,
                 sourceMaps: true,
                 comments: false,
-                cacheDirectory: findCacheDir({
-                  name: 'boldr-cache',
-                }),
+                cacheDirectory: true,
                 presets: [
                   settings.babelrc ||
                     require.resolve('babel-preset-boldr/node'),

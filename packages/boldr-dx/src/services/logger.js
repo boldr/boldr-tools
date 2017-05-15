@@ -30,6 +30,7 @@ class Logger {
    */
   render() {
     this.groups.forEach((group: LogGroup) => {
+      // no messages for this group
       if (!group.getMessages().length) {
         return;
       }

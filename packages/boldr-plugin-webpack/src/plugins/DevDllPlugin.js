@@ -10,7 +10,7 @@ function DevDllPlugin(engine) {
   const eng = engine.getConfiguration();
   const pkg = JSON.parse(fs.readFileSync(eng.settings.userPkgPath, 'utf8'));
 
-  const dllConfig = eng.settings.vendor;
+  const dllConfig = eng.settings.bundle.vendor;
 
   const devDLLDependencies = dllConfig.sort();
 
@@ -31,7 +31,7 @@ function DevDllPlugin(engine) {
   );
 
   const vendorDLLHashFilePath = path.resolve(
-    eng.settings.assetsDir,
+    eng.settings.bundle.client.bundleDir,
     '__vendor_dlls__hash',
   );
 
@@ -43,13 +43,13 @@ function DevDllPlugin(engine) {
         ['__vendor_dlls__']: devDLLDependencies,
       },
       output: {
-        path: eng.settings.assetsDir,
+        path: eng.settings.bundle.client.bundleDir,
         filename: '__vendor_dlls__.js',
         library: '__vendor_dlls__',
       },
       plugins: [
         new webpack.DllPlugin({
-          path: path.resolve(eng.settings.assetsDir, '__vendor_dlls__.json'),
+          path: path.resolve(eng.settings.bundle.client.bundleDir, '__vendor_dlls__.json'),
           name: '__vendor_dlls__',
         }),
       ],

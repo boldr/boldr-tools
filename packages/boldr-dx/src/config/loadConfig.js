@@ -8,6 +8,7 @@ module.exports = function loadConfig(engine: Engine): Config {
 
     // first clean up require cache so we always load fresh config
     delete require.cache[configModulePath];
+    // then require the fresh config
     const config = require(configModulePath); // eslint-disable-line global-require
 
     return {

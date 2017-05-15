@@ -101,7 +101,8 @@ module.exports = class ServerListenerPlugin {
 
       if (stats.hasErrors()) {
         this.logger.error(
-          `Bundle "${bundleName}" compiled with errors, keeping previous server instance running`,
+          `Bundle "${bundleName}" compiled with errors, keeping previous server instance running \n
+          ${JSON.stringify(stats.toJson({}, true), undefined, 4)}`,
         );
         return;
       }

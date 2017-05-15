@@ -60,9 +60,9 @@ const defaultConfig = {
   plugins: [require('../plugins/watchConfig')],
   settings: {
     nodePaths,
+    cssModules: true,
+    wpProfile: true,
     webPath: '/assets/',
-    // __dirname, ./../..
-    ownPath: resolveBoldr('.'),
     // __dirname, ./../../node_modules
     boldrNodeModules: resolveBoldr('node_modules'),
     // <USER_PROJECT_ROOT>/node_modules
@@ -79,8 +79,6 @@ const defaultConfig = {
 
     babelrc: null,
     eslintrc: resolveProject('.eslintrc'),
-    cssModules: true,
-    wpProfile: true,
   },
 };
 

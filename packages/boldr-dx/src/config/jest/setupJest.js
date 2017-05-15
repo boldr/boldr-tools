@@ -1,15 +1,9 @@
-require('jest-enzyme');
-
-import { EventEmitter } from 'events';
-
-const shallowToJson = require('enzyme-to-json');
+const { EventEmitter } = require('events');
 
 window.matchMedia = function matchMedia() {
   return false;
 };
 EventEmitter.defaultMaxListeners = Infinity;
-
-global.shallowToJson = shallowToJson;
 
 global.Array = Array;
 global.Date = Date;

@@ -24,19 +24,19 @@ class LogGroup {
   }
 
   info(message: string): void {
-    this.log(`✳️  ${chalk.cyan(message)}`);
+    this.log(`⚡  ${message}`);
   }
 
   success(message: string): void {
-    this.log(`👌  ${chalk.green(message)}`);
+    this.log(`👌  ${message}`);
   }
 
   warning(message: string): void {
-    this.log(`⚠️  ${chalk.yellow(message)}`);
+    this.log(`⚠️  ${message}`);
   }
 
   error(message: string): void {
-    this.log(`💩  ${chalk.red(message)}`);
+    this.log(`💩  ${message}`);
   }
 
   getMessages(): string[] {

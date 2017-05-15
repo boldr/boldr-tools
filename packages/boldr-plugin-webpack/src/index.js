@@ -48,8 +48,8 @@ const plugin: Plugin = (
         serverLogger,
       );
 
-      fs.removeSync(settings.client.bundleDir);
-      fs.removeSync(settings.server.bundleDir);
+      fs.removeSync(settings.bundle.client.bundleDir);
+      fs.removeSync(settings.bundle.server.bundleDir);
 
       const compilers = [
         createRunOnceCompiler(clientConfig),
