@@ -2,20 +2,14 @@
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import {
-  ifIsFile,
-  removeNil,
-  ifElse,
-  merge,
-  mergeDeep,
-  filterEmpty,
-} from 'boldr-utils';
 import BabiliPlugin from 'babili-webpack-plugin';
+import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import nodeExternals from 'webpack-node-externals';
+
 import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin
@@ -26,6 +20,15 @@ import postCssImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
 import discardComments from 'postcss-discard-comments';
 import reporter from 'postcss-reporter';
+import chalk from 'chalk';
+import {
+  ifIsFile,
+  removeNil,
+  ifElse,
+  merge,
+  mergeDeep,
+  filterEmpty,
+} from 'boldr-utils';
 import defineVariables from '../utils/defineVariables';
 import {
   NODE_OPTS,
@@ -35,7 +38,7 @@ import {
   NODE_NODE_OPTS,
   NODE_MAIN,
 } from '../utils/constants';
-
+import LoggerPlugin from './plugins/LoggerPlugin';
 import ServerListenerPlugin from './plugins/ServerListenerPlugin';
 
 const PATHS = require('../config/paths');
@@ -101,10 +104,7 @@ module.exports = function configBuilder(config, mode, target) {
       vendor: ifProdWeb(bundle.vendor),
     }),
     output: {
-      path: ifWeb(
-        bundle.client.bundleDir,
-        bundle.server.bundleDir,
-      ),
+      path: ifWeb(bundle.client.bundleDir, bundle.server.bundleDir),
       filename: '[name].js',
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: ifDev(
@@ -134,8 +134,8 @@ module.exports = function configBuilder(config, mode, target) {
       port: DEV_SERVER_PORT,
       hot: true,
       publicPath: bundle.webPath,
-      quiet: false,
-      noInfo: false,
+      quiet: true,
+      noInfo: true,
       watchOptions: {
         ignored: /node_modules/,
       },
@@ -410,6 +410,12 @@ module.exports = function configBuilder(config, mode, target) {
           prettyPrint: true,
         }),
       ),
+      new ProgressBarPlugin({
+        format: chalk.cyan.bold('Bundling [:bar] ') +
+          chalk.cyan.bold(':percent'),
+        clear: false,
+        summary: true,
+      }),
       new webpack.LoaderOptionsPlugin({
         minimize: _PROD,
         debug: !_PROD,
@@ -485,6 +491,12 @@ module.exports = function configBuilder(config, mode, target) {
           exclude: /a\.js|node_modules/,
           // show a warning when there is a circular dependency
           failOnError: false,
+        }),
+      ),
+      ifDev(
+        new LoggerPlugin({
+          verbose: bundle.verbose,
+          target,
         }),
       ),
       // Errors during development will kill any of our NodeJS processes.
