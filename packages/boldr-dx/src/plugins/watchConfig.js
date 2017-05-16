@@ -2,12 +2,12 @@
 /* eslint-disable require-await */
 import path from 'path';
 import chokidar from 'chokidar';
+import logger from 'boldr-utils/es/logger';
 
-function createUpdater(engine: Engine, logger: LogGroup) {
+function createUpdater(engine: Engine) {
   return (filePath: string) => {
     // eslint-disable-line no-unused-vars
-    logger.clear();
-    logger.info(
+    logger.task(
       'Detected change in configuration file, restarting environment...',
     );
     // restart environment (terminates all plugins and loads them again)
@@ -25,9 +25,8 @@ function createUpdater(engine: Engine, logger: LogGroup) {
 const plugin: Plugin = (
   engine: Engine,
   runOnce: boolean = false,
-  logger: Logger,
 ): PluginController => {
-  let logGroup, watcher;
+  let watcher;
 
   return {
     async build() {
@@ -36,10 +35,8 @@ const plugin: Plugin = (
 
     async start() {
       return new Promise((resolve, reject) => {
-        logGroup = logger.createGroup('watch configuration');
-        const updater = createUpdater(engine, logGroup);
-
-        logGroup.clear();
+        logger.start('Watching configuration');
+        const updater = createUpdater(engine);
 
         // start chokidar and watch for .boldr/boldr.js changes
         // everytime configuration changes, restart whole build
@@ -58,9 +55,8 @@ const plugin: Plugin = (
         });
 
         watcher.on('error', error => {
-          logGroup.clear();
-          logGroup.error('Watch configuration plugin failed');
-          logGroup.error(error);
+          logger.error('Watch configuration plugin failed');
+          logger.error(error);
 
           reject(error);
         });
@@ -68,7 +64,7 @@ const plugin: Plugin = (
     },
 
     async terminate() {
-      logGroup.remove();
+      logger.end('Finished watching config.');
       watcher.close();
     },
   };

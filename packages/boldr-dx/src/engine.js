@@ -1,22 +1,26 @@
 /* @flow */
+/* eslint-disable require-await */
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
+import _debug from 'debug';
+import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
+import logger from 'boldr-utils/es/logger';
 import loadConfiguration from './config/loadConfig';
+import compileOnce from './services/compileOnce';
+import DevDllPlugin from './webpack/plugins/DevDllPlugin';
+import configBuilder from './webpack/configBuilder';
+
+const debug = _debug('boldr:dx:engine');
 
 class Engine {
   cwd: string;
   configFileName: string;
-  logger: Logger;
   plugins: Array<PluginController>;
 
-  constructor(
-    cwd: string,
-    configFileName: string = 'boldr.js',
-    logger: Logger,
-  ) {
+  constructor(cwd: string, configFileName: string = 'boldr.js') {
     this.cwd = cwd;
     this.configFileName = configFileName;
-    this.logger = logger;
   }
 
   configFilePath(): string {
@@ -34,41 +38,90 @@ class Engine {
   async build(): Promise<any> {
     const config: Config = loadConfiguration(this);
 
-    // run build phase on plugins (do not instantiate them)
-    const pluginControllers: PluginController[] = await Promise.all(
-      config.plugins.map(plugin => plugin(this, true, this.logger)),
-    );
+    const clientConfig = configBuilder(config, 'production', 'web');
+    const serverConfig = configBuilder(config, 'production', 'node');
 
-    await Promise.all(
-      pluginControllers.map(pluginController => pluginController.build()),
-    );
+    fs.removeSync(config.bundle.client.bundleDir);
+    fs.removeSync(config.bundle.server.bundleDir);
+
+    const compilers = [compileOnce(clientConfig), compileOnce(serverConfig)];
+
+    return Promise.all(compilers);
   }
 
   async start(): Promise<any> {
+    logger.start('Starting development bundling process.');
+    let serverCompiler, clientDevServer;
     const config: Config = loadConfiguration(this);
-
     // instantiate plugins
-    this.plugins = await Promise.all(
-      config.plugins.map(plugin => plugin(this, false, this.logger)),
-    );
+    // eslint-disable-next-line babel/new-cap
+    await DevDllPlugin(config);
+    const clientConfig = configBuilder(config, 'development', 'web');
+    const serverConfig = configBuilder(config, 'development', 'node');
 
-    await Promise.all(this.plugins.map(p => p.start()));
+    return new Promise((resolve, reject) => {
+      try {
+        clientConfig.plugins.push(
+          new webpack.DllReferencePlugin({
+            // $FlowFixMe
+            manifest: require(path.resolve(
+              config.bundle.assetsDir,
+              '__vendor_dlls__.json',
+            )),
+          }),
+        );
+        const clientCompiler = webpack(clientConfig);
+        clientDevServer = new WebpackDevServer(
+          clientCompiler,
+          clientConfig.devServer,
+        );
+
+        clientDevServer.listen(3001, err => {
+          if (err) {
+            console.log(err);
+            return reject(err);
+          }
+        });
+
+        serverCompiler = webpack({
+          ...serverConfig,
+          watchOptions: {
+            ignored: /node_modules/,
+          },
+        }).watch({}, () => {});
+      } catch (e) {
+        reject(e);
+      }
+
+      resolve();
+    });
   }
 
   async restart(): Promise<any> {
-    // terminate all plugins
-    await Promise.all(
-      this.plugins.map(pluginController => pluginController.terminate()),
-    );
+    let clientLogger, serverLogger, serverCompiler, clientDevServer;
+    if (serverCompiler) {
+      return Promise.all([
+        // $FlowIssue
+        new Promise(resolve => serverCompiler.close(resolve)),
+        new Promise(resolve => clientDevServer.close(resolve)),
+      ]);
+    }
 
     // start all plugins
     await this.start();
   }
 
   async stop(): Promise<any> {
-    await Promise.all(
-      this.plugins.map(pluginController => pluginController.terminate()),
-    );
+    let clientLogger, serverLogger, serverCompiler, clientDevServer;
+    if (serverCompiler) {
+      return Promise.all([
+        // $FlowIssue
+        new Promise(resolve => serverCompiler.close(resolve)),
+        new Promise(resolve => clientDevServer.close(resolve)),
+      ]);
+    }
+
+    return true;
   }
 }
 

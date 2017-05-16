@@ -6,7 +6,7 @@ const path = require('path');
  * into account.
  * @type {String}
  */
-const cwd = fs.realpathSync(process.cwd());
+export const cwd = fs.realpathSync(process.cwd());
 
 /**
  * Get the path from the user's project root

@@ -3,14 +3,18 @@ import fs from 'fs-extra';
 import webpack from 'webpack';
 import md5 from 'md5';
 import Promise from 'bluebird';
+import _debug from 'debug';
 import logger from 'boldr-utils/es/logger';
 
-function DevDllPlugin(engine) {
-  logger.start('Building Webpack vendor DLLs');
-  const eng = engine.getConfiguration();
-  const pkg = JSON.parse(fs.readFileSync(eng.settings.userPkgPath, 'utf8'));
+const debug = _debug('boldr:dx:devDllPlugin');
 
-  const dllConfig = eng.settings.bundle.vendor;
+function DevDllPlugin(config) {
+  logger.start('Building Webpack vendor DLLs');
+  const pkg = JSON.parse(
+    fs.readFileSync(`${process.cwd()}/package.json`, 'utf8'),
+  );
+
+  const dllConfig = config.bundle.vendor;
 
   const devDLLDependencies = dllConfig.sort();
 
@@ -31,7 +35,7 @@ function DevDllPlugin(engine) {
   );
 
   const vendorDLLHashFilePath = path.resolve(
-    eng.settings.bundle.client.bundleDir,
+    config.bundle.assetsDir,
     '__vendor_dlls__hash',
   );
 
@@ -43,14 +47,14 @@ function DevDllPlugin(engine) {
         ['__vendor_dlls__']: devDLLDependencies,
       },
       output: {
-        path: eng.settings.bundle.client.bundleDir,
+        path: config.bundle.assetsDir,
         filename: '__vendor_dlls__.js',
         library: '__vendor_dlls__',
       },
       plugins: [
         new webpack.DllPlugin({
           path: path.resolve(
-            eng.settings.bundle.client.bundleDir,
+            config.bundle.assetsDir,
             '__vendor_dlls__.json',
           ),
           name: '__vendor_dlls__',
