@@ -14,7 +14,6 @@ module.exports = function loadConfig(engine: Engine): Config {
   const boldrconfig = new BoldrConfig('boldr', config);
 
   debug('Loaded fresh config values');
-  debug(boldrconfig);
   //@NOTE You can skip plugins entirely. we could make htis an option
   // console.log(JSON.stringify(config, null, 4));
   return boldrconfig;
