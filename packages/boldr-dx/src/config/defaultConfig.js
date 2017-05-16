@@ -54,7 +54,7 @@ function getEnvParam(param: string): string {
 }
 
 const defaultConfig = {
-  env: {
+  inline: {
     NODE_ENV: getEnvParam('NODE_ENV'),
   },
   plugins: [require('../plugins/watchConfig')],

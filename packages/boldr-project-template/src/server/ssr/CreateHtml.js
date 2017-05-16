@@ -11,7 +11,7 @@ import assets from './assets';
 // information about the files Webpack bundled. ASSETS_MANIFEST is
 // inlined as a path when processed by Webpack.
 const clientAssets = assets();
-console.log(clientAssets)
+console.log(clientAssets);
 
 function KeyedComponent({ children }) {
   return Children.only(children);
@@ -105,7 +105,9 @@ export default function CreateHtml(props: Props) {
       createScriptElement(clientAssets.vendor.js),
     ),
     ifElse(isDev)(() =>
-      createScriptElement(`http://localhost:3001/assets/__vendor_dlls__.js?t=${Date.now()}`),
+      createScriptElement(
+        `http://localhost:3001/assets/__vendor_dlls__.js?t=${Date.now()}`,
+      ),
     ),
 
     ifElse(clientAssets && clientAssets.app.js)(() =>

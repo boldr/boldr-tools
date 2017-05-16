@@ -46,41 +46,37 @@ function ssrMiddleware(req, res, next) {
   // };
   // Send response after all the action(s) are dispatched.
 
-    // Create context for React Router
-    const routerContext = {};
+  // Create context for React Router
+  const routerContext = {};
 
-    // Render our application to a string for the first time
-    const reactAppString = renderAppToString(store, routerContext, req);
+  // Render our application to a string for the first time
+  const reactAppString = renderAppToString(store, routerContext, req);
 
-    const helmet = Helmet.rewind();
-    // render styled-components styleSheets to string.
-    // Render the application to static HTML markup
-    const html = renderToStaticMarkup(
-      <CreateHtml
-        reactAppString={reactAppString}
-        nonce={nonce}
-        helmet={Helmet.rewind()}
-        preloadedState={store.getState()}
-      />,
-    );
-    // Check if the render result contains a redirect, if so we need to set
-    // the specific status and redirect header and end the response
-    if (routerContext.url) {
-      res.status(301).setHeader('Location', routerContext.url);
-      res.end();
+  const helmet = Helmet.rewind();
+  // render styled-components styleSheets to string.
+  // Render the application to static HTML markup
+  const html = renderToStaticMarkup(
+    <CreateHtml
+      reactAppString={reactAppString}
+      nonce={nonce}
+      helmet={Helmet.rewind()}
+      preloadedState={store.getState()}
+    />,
+  );
+  // Check if the render result contains a redirect, if so we need to set
+  // the specific status and redirect header and end the response
+  if (routerContext.url) {
+    res.status(301).setHeader('Location', routerContext.url);
+    res.end();
 
-      return;
-    }
-    // Checking if the response status is 404.
-    // const status = routerContext.status === '404' ? 404 : 200;
+    return;
+  }
+  // Checking if the response status is 404.
+  // const status = routerContext.status === '404' ? 404 : 200;
 
-    // Pass the route and initial state into html template
+  // Pass the route and initial state into html template
   return res
-      .status(
-        routerContext.missed
-          ? 404
-          : 200,
-      )
-      .send(`<!DOCTYPE html>${html}`);
+    .status(routerContext.missed ? 404 : 200)
+    .send(`<!DOCTYPE html>${html}`);
 }
 export default ssrMiddleware;

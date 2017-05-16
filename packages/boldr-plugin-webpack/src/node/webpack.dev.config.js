@@ -24,16 +24,16 @@ const prefetches = [];
 const prefetchPlugins = prefetches.map(
   specifier => new webpack.PrefetchPlugin(specifier),
 );
-const DEV_SERVER_PORT = parseInt(process.env.DEV_SERVER_PORT, 10) || 3001;
 
 module.exports = function createConfig(
   engine: Engine,
   logger: LogGroup,
 ): Object {
   const {
-    env: envVariables,
+    inline: envVariables,
     settings,
   }: ServerWebpackPluginConfiguration = engine.getConfiguration();
+  const DEV_SERVER_PORT = parseInt(envVariables.DEV_SERVER_PORT, 10) || 3001;
 
   const serverSettings = settings.bundle.server;
   // $FlowIssue : Not really an issue.

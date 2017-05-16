@@ -49,7 +49,10 @@ function DevDllPlugin(engine) {
       },
       plugins: [
         new webpack.DllPlugin({
-          path: path.resolve(eng.settings.bundle.client.bundleDir, '__vendor_dlls__.json'),
+          path: path.resolve(
+            eng.settings.bundle.client.bundleDir,
+            '__vendor_dlls__.json',
+          ),
           name: '__vendor_dlls__',
         }),
       ],

@@ -26,9 +26,9 @@ class Engine {
   getConfiguration(): Config {
     return loadConfiguration(this);
   }
-  // determine our environment id
+  // determine our NODE_ENV used as the identifier
   getIdentifier(): string {
-    return this.getConfiguration().env.NODE_ENV;
+    return this.getConfiguration().inline.NODE_ENV;
   }
 
   async build(): Promise<any> {

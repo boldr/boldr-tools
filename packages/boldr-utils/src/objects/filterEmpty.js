@@ -1,9 +1,9 @@
 /**
- * Remove an object with empty keys
+ * Filters empty keys from an object. Creates a new object.
  * @param  {Object} obj the object
  * @return {Object}     the new object without missing keys
  */
-function removeEmptyKeys(obj) {
+function filterEmpty(obj) {
   const copy = {};
   for (const key in obj) {
     // eslint-disable-next-line eqeqeq

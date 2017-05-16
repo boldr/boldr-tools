@@ -12,9 +12,9 @@ module.exports = function loadConfig(engine: Engine): Config {
     const config = require(configModulePath); // eslint-disable-line global-require
 
     return {
-      env: {
-        ...defaultConfig.env,
-        ...(config.env || {}),
+      inline: {
+        ...defaultConfig.inline,
+        ...(config.inline || {}),
       },
       plugins: [...defaultConfig.plugins, ...(config.plugins || [])],
       settings: {

@@ -35,7 +35,7 @@ module.exports = function createConfig(
   logger: LogGroup,
 ): Object {
   const {
-    env: envVariables,
+    inline: envVariables,
     settings,
   }: ClientWebpackPluginConfiguration = engine.getConfiguration();
 

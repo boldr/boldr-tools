@@ -4,11 +4,11 @@
  * @return {Boolean}     it is or isnt the value we're looking for.
  */
 const isSpecificValue = val =>
-  ((typeof Buffer !== 'undefined' && val instanceof Buffer) ||
+  (typeof Buffer !== 'undefined' && val instanceof Buffer) ||
     val instanceof Date ||
     val instanceof RegExp
     ? true
-    : false);
+    : false;
 
 /**
  * Clone a specific type of value

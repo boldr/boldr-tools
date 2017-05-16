@@ -1,6 +1,6 @@
 /* @flow */
 
-declare type ConfigEnv = Object & {
+declare type ConfigInline = Object & {
   NODE_ENV: string,
 };
 
@@ -15,7 +15,7 @@ declare type ConfigSettings = Object & {
 };
 
 declare type Config = {
-  env: ConfigEnv,
+  inline: ConfigInline,
   plugins: Array<Plugin>,
   settings: ConfigSettings,
 };

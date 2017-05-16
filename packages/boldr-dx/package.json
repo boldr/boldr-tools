@@ -1,6 +1,6 @@
 {
   "name": "boldr-dx",
-  "version": "0.3.0-beta.5",
+  "version": "0.3.0-beta.7",
   "description": "Webpack and build toolkit for Boldr development",
   "license": "MIT",
   "author": "Steven Truesdell <steven@strues.io>",
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "app-root-dir": "^1.0.2",
-    "babel-jest": "^20.0.1",
     "babel-preset-boldr": "^0.8.0",
     "bluebird": "^3.5.0",
     "boldr-utils": "^0.2.3",
@@ -41,20 +40,15 @@
     "cross-env": "^5.0.0",
     "cross-spawn": "^5.1.0",
     "debug": "^2.6.6",
-    "enzyme-to-json": "^1.5.1",
     "eslint": "^3.19.0",
     "eslint-config-boldr": "^0.9.5",
     "fs-extra": "^3.0.1",
     "glob": "^7.1.1",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^20.0.1",
     "path-exists": "^3.0.0",
     "react-dev-utils": "^0.5.2",
     "update-notifier": "^2.1.0"
   },
   "peerDependencies": {
-    "enzyme": "^2.8.2",
-    "jest-enzyme": "^3.0.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },

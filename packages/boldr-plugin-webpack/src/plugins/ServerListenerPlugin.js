@@ -129,7 +129,7 @@ module.exports = class ServerListenerPlugin {
 
         await this.serverManager.manage(server);
 
-        const port = this.engine.getConfiguration().env.SERVER_PORT;
+        const port = this.engine.getConfiguration().inline.SERVER_PORT;
         const url = `http://localhost:${port}`;
 
         this.logger.info(`Server is listening on ${url}`);

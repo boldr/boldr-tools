@@ -1,4 +1,3 @@
-
 import path from 'path';
 import jest from 'jest';
 import pathExists from 'path-exists';

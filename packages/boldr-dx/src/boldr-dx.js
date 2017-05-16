@@ -1,11 +1,13 @@
 #!/usr/bin/env node
+/* @flow */
+/* eslint-disable flowtype/no-types-missing-file-annotation */
 import fs from 'fs';
 import program from 'commander';
 import updateNotifier from 'update-notifier';
 import { logger as boldrUtilLogger } from 'boldr-utils/es/logger';
 import pkg from '../package.json';
 
-import testAction from './commands/test';
+// import testAction from './commands/test';
 import Engine from './engine';
 import Logger from './services/logger';
 import { cwd } from './config/defaultConfig';
@@ -69,9 +71,9 @@ program
     });
   });
 
-program
-  .command('test')
-  .description('Run test files against a browser env with Jest.')
-  .action(() => executeCmd(testAction));
+// program
+//   .command('test')
+//   .description('Run test files against a browser env with Jest.')
+//   .action(() => executeCmd(testAction));
 
 program.parse(process.argv);

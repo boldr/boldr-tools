@@ -1,6 +1,6 @@
 {
   "name": "boldr-utils",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Helpers designed for use with Boldr and fullstack react apps",
   "repository": {
     "type": "git",

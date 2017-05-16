@@ -57,7 +57,7 @@ export default class FullSetup {
     if (this.options.packageManager === 'yarn') {
       result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
     } else {
-       result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+      result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
     }
 
     if (result.status !== 0) {
@@ -81,7 +81,7 @@ export default class FullSetup {
     if (this.options.packageManager === 'yarn') {
       result = spawn.sync('yarn', ['install'], { stdio: 'inherit' });
     } else {
-     result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
+      result = spawn.sync('npm', ['install'], { stdio: 'inherit' });
     }
 
     if (result.status !== 0) {

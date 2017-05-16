@@ -24,7 +24,7 @@ import {
 
 const PATHS = require('../utils/paths');
 
-const DEV_SERVER_PORT = parseInt(process.env.DEV_SERVER_PORT, 10) || 3001;
+
 const prefetches = [];
 
 const prefetchPlugins = prefetches.map(
@@ -36,11 +36,12 @@ module.exports = function createConfig(
   logger: LogGroup,
 ): Object {
   const {
-    env: envVariables,
+    inline: envVariables,
     settings,
   }: ClientWebpackPluginConfiguration = engine.getConfiguration();
 
   const clientSettings = settings.bundle.client;
+  const DEV_SERVER_PORT = parseInt(envVariables.DEV_SERVER_PORT, 10) || 3001;
   // $FlowIssue : Not really an issue.
   let plugins: () => any[] = [];
   let decorateLoaders: (loaders: Array<any>) => any = loaders => loaders;

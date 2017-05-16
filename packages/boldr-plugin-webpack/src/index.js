@@ -28,7 +28,7 @@ const plugin: Plugin = (
   logger: Logger,
 ): PluginController => {
   let clientLogger, serverLogger, serverCompiler, clientDevServer;
-  const { env: envVariables, settings } = engine.getConfiguration();
+  const { inline: envVariables, settings } = engine.getConfiguration();
 
   return {
     // build
