@@ -1,4 +1,4 @@
-const reduce = require('lodash.reduce');
+import reduce from 'lodash.reduce';
 
 const removeByKey = (myObj, deleteKey) => {
   return (
@@ -13,4 +13,4 @@ const removeByKey = (myObj, deleteKey) => {
   );
 };
 
-module.exports = removeByKey;
+export default removeByKey;

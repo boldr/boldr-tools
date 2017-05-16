@@ -4,16 +4,17 @@
 import fs from 'fs';
 import program from 'commander';
 import updateNotifier from 'update-notifier';
-import { logger as boldrUtilLogger } from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/es/logger';
 import pkg from '../package.json';
 
 // import testAction from './commands/test';
 import Engine from './engine';
-import Logger from './services/logger';
-import { cwd } from './config/defaultConfig';
+
+import { cwd } from './config/paths';
 
 // @TODO: Remove this once babel-loader updates
 // https://github.com/babel/babel-loader/pull/391
+// $FlowIssue
 process.noDeprecation = true;
 
 updateNotifier({ pkg }).notify();
@@ -22,7 +23,6 @@ const executeCmd = (action, optionalConfig) => {
   const args = program.args.filter(item => typeof item === 'object');
   const flags = program.args.filter(item => typeof item === 'string');
   // const config = boldrConfigFactory(optionalConfig);
-
   action(flags, args[0]);
 };
 program.version(pkg.version).description('Developer utilities for Boldr.');
@@ -35,7 +35,6 @@ program
     const engine: Engine = new Engine(
       fs.realpathSync(process.cwd()),
       undefined,
-      new Logger(),
     );
     engine.build().then(
       () => {
@@ -52,15 +51,14 @@ program
 
 program
   .command('dev')
-  .option('-C, --config <path>', 'config path')
-  .description('Start an express server for development')
+  .option('-p, --port', 'use a custom port')
+  .description('Start the development process.')
   .action(() => {
     const args = program.args.filter(item => typeof item === 'object');
     const optionalConfig = args[0].config ? args[0].config : null;
     const engine: Engine = new Engine(
       fs.realpathSync(process.cwd()),
       undefined,
-      new Logger(),
     );
     engine.start().catch(e => {
       console.log(e);

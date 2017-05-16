@@ -4,20 +4,29 @@ declare type ConfigInline = Object & {
   NODE_ENV: string,
 };
 
-declare type ConfigSettings = Object & {
-  projectNodeModules: string,
-  assetsPath: string,
-  projectSrcDir: string,
+declare type ConfigBundle = Object & {
+  webPath: string,
+  publicDir: stirng,
+  assetsDir: string,
   babelrc: ?string,
   eslintrc: ?string,
   cssModules: ?boolean,
   wpProfile: ?boolean,
+  srcDir: string,
+  verbose: ?boolean,
+  debug: ?boolean,
+  client: Object,
+  server: Object,
+  vendor: Array<string>,
 };
 
 declare type Config = {
   inline: ConfigInline,
-  plugins: Array<Plugin>,
-  settings: ConfigSettings,
+  bundle: ConfigBundle,
+  server: Object,
+  logging: Object,
+  db: Object,
+  redis: Object,
 };
 
 declare interface Engine {
@@ -35,51 +44,10 @@ declare interface Engine {
   stop(): Promise<any>,
 }
 
-declare type Plugin = (
-  engine: Engine,
-  runOnce: boolean,
-  logger: Logger,
-) => PluginController;
+declare type Plugin = (engine: Engine, runOnce: boolean) => PluginController;
 
 declare type PluginController = {
   start(): ?Promise<any>,
   build(): ?Promise<any>,
   terminate(): Promise<any>,
 };
-
-declare type ClientWebpackPluginConfiguration = Config & {
-  settings: ConfigSettings & {
-    client: {
-      index: string,
-      bundleDir: string,
-    },
-  },
-};
-
-declare type ServerWebpackPluginConfiguration = Config & {
-  settings: ConfigSettings & {
-    server: {
-      index: string,
-      bundleDir: string,
-    },
-  },
-};
-
-declare interface Logger {
-  createGroup(name: string): LogGroup,
-  removeGroup(name: string): void,
-  render(): void,
-}
-
-declare interface LogGroup {
-  clear(): void,
-  constructor(name: string, logger: Logger): void,
-  getMessages(): string[],
-  getIdentifier(): string,
-  log(message: string): void,
-  info(message: string): void,
-  error(message: string): void,
-  success(message: string): void,
-  warning(message: string): void,
-  remove(): void,
-}

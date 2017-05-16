@@ -1,9 +1,12 @@
 /* @flow */
 /* eslint-disable no-console, id-match, no-multi-assign */
 import path from 'path';
+import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
+
+const debug = _debug('boldr:dx:serverlistener');
 
 class ServerManager {
-  logger: LogGroup;
   server: ?net$Server;
   socketId: number;
   sockets: { [key: string]: net$Socket };
@@ -21,8 +24,8 @@ class ServerManager {
     this.server = server;
 
     if (!this.server) {
-      this.logger.error('Server bundle did not export a http listener');
-      this.logger.info(
+      logger.error('Server bundle did not export a http listener');
+      logger.info(
         'Please export a http listener using `export default` syntax',
       );
 
@@ -30,7 +33,7 @@ class ServerManager {
     } else if (typeof this.server.on !== 'function') {
       const message =
         'Cannot attach connection handler to listener because it is missing an `on` method';
-      this.logger.error(message);
+      logger.error(message);
 
       throw new Error(message);
     }
@@ -48,10 +51,6 @@ class ServerManager {
 
       socket.on('close', () => delete this.sockets[socketId.toString()]);
     });
-  }
-
-  setLogger(logger: LogGroup) {
-    this.logger = logger;
   }
 
   async close() {
@@ -75,20 +74,18 @@ class ServerManager {
 const sharedServerManager = new ServerManager();
 
 module.exports = class ServerListenerPlugin {
-  engine: Engine;
-  logger: LogGroup;
+  config: Engine;
+  target: string;
   serverManager: Object;
 
   constructor(
-    engine: Engine,
-    logger: LogGroup,
+    config: Engine,
+    target: string,
     serverManager: ServerManager = sharedServerManager,
   ) {
-    this.engine = engine;
-    this.logger = logger;
+    this.config = config;
     this.serverManager = serverManager;
-
-    this.serverManager.setLogger(logger);
+    this.target = target;
 
     process.on('SIGINT', () => {
       this.serverManager.close();
@@ -97,13 +94,13 @@ module.exports = class ServerListenerPlugin {
 
   apply(compiler: Object): void {
     compiler.plugin('done', async stats => {
-      const bundleName = this.logger.getIdentifier();
+      const bundleName = this.target;
 
       if (stats.hasErrors()) {
-        this.logger.error(
-          `Bundle "${bundleName}" compiled with errors, keeping previous server instance running \n
-          ${JSON.stringify(stats.toJson({}, true), undefined, 4)}`,
+        logger.error(
+          `Bundle "${bundleName}" compiled with errors, keeping previous server instance running`,
         );
+        logger.error(`${JSON.stringify(stats.toJson({}, true), undefined, 4)}`);
         return;
       }
 
@@ -115,10 +112,9 @@ module.exports = class ServerListenerPlugin {
       });
 
       const serverBuildPath = path.resolve(
-        compiler.options.output.path,
-        compiler.options.output.filename,
+        this.config.bundle.server.bundleDir,
+        'app.js'
       );
-
       await this.serverManager.close();
 
       // start server
@@ -129,13 +125,13 @@ module.exports = class ServerListenerPlugin {
 
         await this.serverManager.manage(server);
 
-        const port = this.engine.getConfiguration().inline.SERVER_PORT;
+        const port = this.config.server.port;
         const url = `http://localhost:${port}`;
 
-        this.logger.info(`Server is listening on ${url}`);
+       logger.info(`\tServer is listening on ${url}`);
       } catch (e) {
-        this.logger.error('Error during server bundle start/restart');
-        this.logger.log(e);
+        logger.error('Error during server bundle start/restart');
+        logger.log(e);
 
         throw e;
       }
