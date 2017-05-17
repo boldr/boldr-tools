@@ -11,7 +11,7 @@ module.exports = {
         debug: false,
         useBuiltIns: true,
         targets: {
-          browsers: ['>1%', 'last 2 versions', 'Firefox ESR'],
+          browsers: ['>1%', 'last 2 versions', 'safari >= 9'],
         },
       },
     ],

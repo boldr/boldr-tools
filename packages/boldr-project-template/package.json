@@ -53,8 +53,7 @@
   "devDependencies": {
     "autoprefixer": "^7.0.1",
     "babel-eslint": "7.2.3",
-    "boldr-dx": "^0.3.0-beta.3",
-    "boldr-plugin-webpack": "^0.1.1",
+    "boldr-dx": "^0.3.0-rc.1",
     "eslint": "3.19.0",
     "eslint-config-boldr": "^0.9.5",
     "flow-bin": "0.46.0",
@@ -67,8 +66,8 @@
     "build": "NODE_ENV=production boldr-dx build",
     "lint": "node ./node_modules/.bin/eslint src",
     "flow": "node ./node_modules/.bin/flow check",
-    "start": "NODE_ENV=production node server/server.js",
-    "dev": "NODE_ENV=development boldr-dx dev",
+    "start": "NODE_ENV=production node server/app.js",
+    "dev": "NODE_ENV=development BOLDR__SERVER_PORT=3000 BOLDR__DEV_PORT=3001 DEBUG=boldr:* boldr-dx dev",
     "test": "NODE_ENV=test boldr-dx test"
   }
 }

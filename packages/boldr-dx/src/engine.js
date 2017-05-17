@@ -13,6 +13,8 @@ import configBuilder from './webpack/configBuilder';
 
 const debug = _debug('boldr:dx:engine');
 
+const BOLDR__DEV_PORT = parseInt(process.env.BOLDR__DEV_PORT, 10) || 3001;
+
 class Engine {
   cwd: string;
   configFileName: string;
@@ -71,12 +73,31 @@ class Engine {
           }),
         );
         const clientCompiler = webpack(clientConfig);
-        clientDevServer = new WebpackDevServer(
-          clientCompiler,
-          clientConfig.devServer,
-        );
+        clientDevServer = new WebpackDevServer(clientCompiler, {
+          clientLogLevel: 'none',
+          disableHostCheck: true,
+          contentBase: config.bundle.publicDir,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+          historyApiFallback: {
+            // Paths with dots should still use the history fallback.
+            // See https://github.com/facebookincubator/create-react-app/issues/387.
+            disableDotRule: true,
+          },
+          compress: true,
+          host: 'localhost',
+          port: BOLDR__DEV_PORT,
+          hot: true,
+          publicPath: config.bundle.webPath,
+          quiet: true,
+          noInfo: true,
+          watchOptions: {
+            ignored: /node_modules/,
+          },
+        });
 
-        clientDevServer.listen(3001, err => {
+        clientDevServer.listen(BOLDR__DEV_PORT, err => {
           if (err) {
             console.log(err);
             return reject(err);

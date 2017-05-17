@@ -9,7 +9,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import nodeExternals from 'webpack-node-externals';
-
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
 import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin
@@ -45,17 +45,24 @@ const PATHS = require('../config/paths');
 
 const debug = _debug('boldr:dx:configBuilder');
 
+const CWD = process.cwd();
 const prefetches = [];
 
 const prefetchPlugins = prefetches.map(
   specifier => new webpack.PrefetchPlugin(specifier),
 );
-
+const cache = {
+  'web-production': {},
+  'web-development': {},
+  'node-production': {},
+  'node-development': {},
+};
 // This is the Webpack configuration factory. It's the juice!
 module.exports = function configBuilder(config, mode, target) {
   debug('MODE: ', mode, 'TARGET: ', target);
   const { inline: envVariables, bundle } = config;
-
+  process.env.NODE_ENV = bundle.debug ? 'development' : mode;
+  process.env.BABEL_ENV = mode;
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
   const _WEB = target === 'web';
@@ -69,7 +76,8 @@ module.exports = function configBuilder(config, mode, target) {
   const ifDevWeb = ifElse(_DEV && _WEB);
   const ifProdWeb = ifElse(_PROD && _WEB);
   const ifProdNode = ifElse(_PROD && _NODE);
-  const DEV_SERVER_PORT = parseInt(envVariables.DEV_SERVER_PORT, 10) || 3001;
+
+  const BOLDR__DEV_PORT = parseInt(process.env.BOLDR__DEV_PORT, 10) || 3001;
   const EXCLUDES = [
     /node_modules/,
     bundle.client.bundleDir,
@@ -96,7 +104,7 @@ module.exports = function configBuilder(config, mode, target) {
     entry: filterEmpty({
       app: removeNil([
         ifDevWeb(
-          `${require.resolve('webpack-dev-server/client')}?http://localhost:${DEV_SERVER_PORT}`,
+          `${require.resolve('webpack-dev-server/client')}?http://localhost:${BOLDR__DEV_PORT}`,
         ),
         ifDevWeb(require.resolve('webpack/hot/only-dev-server')),
         _WEB ? bundle.client.entry : bundle.server.entry,
@@ -108,7 +116,7 @@ module.exports = function configBuilder(config, mode, target) {
       filename: '[name].js',
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: ifDev(
-        `http://localhost:${DEV_SERVER_PORT}${bundle.webPath}`,
+        `http://localhost:${BOLDR__DEV_PORT}${bundle.webPath}`,
         // Otherwise we expect our bundled output to be served from this path.
         bundle.webPath,
       ),
@@ -119,27 +127,7 @@ module.exports = function configBuilder(config, mode, target) {
     // true if prod
     bail: _PROD,
     // cache dev
-    cache: _DEV,
-    devServer: {
-      // @NOTE: make this a setting
-      clientLogLevel: 'none',
-      disableHostCheck: true,
-      contentBase: bundle.publicDir,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      historyApiFallback: true,
-      compress: true,
-      host: 'localhost',
-      port: DEV_SERVER_PORT,
-      hot: true,
-      publicPath: bundle.webPath,
-      quiet: true,
-      noInfo: true,
-      watchOptions: {
-        ignored: /node_modules/,
-      },
-    },
+    cache: cache[`${target}-${mode}`],
     // true if prod & enabled in settings
     profile: _PROD && bundle.wpProfile,
     node: _NODE ? NODE_NODE_OPTS : NODE_OPTS,
@@ -411,8 +399,7 @@ module.exports = function configBuilder(config, mode, target) {
         }),
       ),
       new ProgressBarPlugin({
-        format: chalk.cyan.bold('Bundling [:bar] ') +
-          chalk.cyan.bold(':percent'),
+        format: `${chalk.cyan.bold('Boldr')} compiling [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
         clear: false,
         summary: true,
       }),
@@ -421,7 +408,26 @@ module.exports = function configBuilder(config, mode, target) {
         debug: !_PROD,
         context: '/',
       }),
-
+      ifDev(
+        new HardSourceWebpackPlugin({
+          cacheDirectory: path.resolve(
+            CWD,
+            'node_modules/.cache/.hardsource',
+            `${target}-${mode}`,
+          ),
+          recordsPath: path.resolve(
+            CWD,
+            'node_modules/.cache/.hardsource',
+            `${target}-${mode}`,
+            'records.json',
+          ),
+          environmentHash: {
+            CWD,
+            directories: ['node_modules'],
+            files: ['package.json', 'yarn.lock', '.boldrrc'],
+          },
+        }),
+      ),
       ifDevWeb(new NamedModulesPlugin()),
 
       // Each key passed into DefinePlugin AND/OR EnvironmentPlugin is an identifier.
