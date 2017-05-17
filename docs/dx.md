@@ -15,19 +15,39 @@ Add Boldr-DX to your dependencies.
 
 2. `yarn add --dev boldr-dx`  
 
-Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.config.js](https://github.com/boldr/getBoldr/blob/master/packages/boldr-base-project/.boldr/boldr.config.js) and [dllConfig.js](https://github.com/boldr/getBoldr/blob/master/packages/boldr-base-project/.boldr/dllConfig.js)  
+Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.js](https://github.com/boldr/boldr-tools/blob/master/packages/boldr-project-template/.boldr/boldr.js).
 
-3. `mkdir .boldr && touch boldr.config.js dll.config.js`
+Add vendor libraries to the vendorFiles section of the config. These are included in the dev process as DLLs and are bundled separately in production. Only include client side dependencies, not node only, like Express.
+
+3. `mkdir .boldr && touch boldr.js`   
+
+Insert the config from above into the boldr.js file. The configuration is meant for an entire Boldr project, however you're more than able to use boldr-dx as your go-to webpack runner. Simply remove everything below the bundle key and go about your business.
+
+Add the commands to your `package.json`.
+
+```json
+  "scripts": {
+    "build": "NODE_ENV=production boldr-dx build",
+    "start": "NODE_ENV=production node server/app.js",
+    "dev": "NODE_ENV=development BOLDR__SERVER_PORT=3000 BOLDR__DEV_PORT=3001 boldr-dx dev",
+  }
+```
+
+The configuration allows you to customize the output directories, the entry files and ports. By default, it is separated into
+src/(client|shared|server). Client and Server contain the entrypoint of index.js in each.
+
+CSS modules can be **disabled** in the `boldr.js` file by setting `cssModules` to **false**.
+
+Scss is included.
+
+
+
+**OR** use the provided `boldr-project-template` which is a standalone universal React application.
 
 Start the development process.
 4. `yarn run dev`
 
 ### Features
-
-- A pleasant 😍 developer experience with 🔥 fast bundling, so you can get shit done. This toolbelt takes advantage of tools like, [HappyPack](https://github.com/amireh/happypack) and the DLL capabilities within Webpack itself. Your rebuilds happen fast because, nobody enjoys waiting around like a  🐢  while assets recompile.
-- [React-Hot-Loader](https://github.com/gaearon/react-hot-loader): Build your React components with less full page reloads thanks to hot module replacement and React Hot Loader.
-
-- React Router v4
 
 
 ### Commands
@@ -35,6 +55,5 @@ Start the development process.
 `boldr-dx dev`: Fire up the development process. Compile client and server bundles. Runs the main Express server on port 3000 and the development server on port 3001 for hot reloading.  
 
 Runtime env options
-  - `process.env.SERVER_PORT`
-  - `process.env.SERVER_HOST`
-  - `process.env.HMR_PORT`
+  - `process.env.BOLDR__SERVER_PORT`
+  - `process.env.BOLDR__DEV_PORT`
