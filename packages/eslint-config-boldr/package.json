@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-boldr",
-  "version": "0.9.2",
+  "version": "0.9.6",
   "description": "ESLint rules for Boldr.",
   "main": "index.js",
   "files": [
@@ -13,12 +13,14 @@
     "rules/possible-errors.js",
     "flowtype.js",
     "import.js",
-    "jsx-a11y.js"
+    "jsx-a11y.js",
+    "promise.js"
   ],
   "scripts": {
     "find-new-rules": "eslint-find-rules --unused ./index.js",
     "lint": "eslint .",
-    "test": "npm-run-all --parallel lint find-new-rules"
+    "test": "yarn lint && yarn find-new-rules",
+    "eslint-check": "eslint --print-config .eslintrc | eslint-config-prettier-check"
   },
   "repository": {
     "type": "git",
@@ -47,16 +49,18 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "eslint-config-prettier": "^2.1.0",
     "eslint-find-rules": "^1.14.3",
     "npm-run-all": "^4.0.2"
   },
   "dependencies": {
     "babel-eslint": "^7.2.3",
     "eslint-plugin-babel": "^4.1.1",
-    "eslint-plugin-flowtype": "^2.32.1",
+    "eslint-plugin-flowtype": "^2.33.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-prettier": "^2.0.1",
-    "eslint-plugin-react": "6.10.3"
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "7.0.1"
   }
 }

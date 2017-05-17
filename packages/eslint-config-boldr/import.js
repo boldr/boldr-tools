@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
   },
   parserOptions: {
-    ecmaVersion: 8,
+    ecmaVersion: 2017,
     sourceType: 'module',
     ecmaFeatures: { experimentalObjectRestSpread: true },
   },
@@ -45,17 +45,28 @@ module.exports = {
     'import/no-named-default': 0,
     'import/unambiguous': 0,
     'import/first': 0,
-    // this is an in progress rule
-    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-deprecated.md
+    /**
+     * Report imported names marked with [at]deprecated documentation tag
+     * @see https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-deprecated.md
+     * @NOTE this is an in progress rule
+     */
     'import/no-deprecated': 0,
     'import/imports-first': 0,
     'import/extensions': 0,
     'import/newline-after-import': 1,
     'import/no-amd': 2,
     'import/no-commonjs': 0,
-    // This is broken in so many ways
+    /**
+     * Forbid the use of extraneous packages
+     * @see https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
+     * @NOTE This is broken in so many ways
+     */
     'import/no-extraneous-dependencies': 0,
-    // annoying for wrapped components like redux-form.
+    /**
+     * Forbid the use of mutable exports with var or let
+     * @see https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-mutable-exports.md
+     * @NOTE annoying for wrapped components like redux-form.
+     */
     'import/no-mutable-exports': 0,
 
     'import/no-namespace': 0,

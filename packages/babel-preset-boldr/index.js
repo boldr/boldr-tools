@@ -1,6 +1,7 @@
-const client = require('./client');
+const browser = require('./browser');
+const node = require('./node');
+
 const env = process.env.BABEL_ENV || process.env.NODE_ENV;
-const server = require('./server');
 
 if (env !== 'development' && env !== 'test' && env !== 'production') {
   throw new Error(
@@ -10,5 +11,5 @@ Valid are development|production|test, instead received ${JSON.stringify(env)}`
 }
 
 module.exports = {};
-module.exports.client = client;
-module.exports.server = server;
+module.exports.browser = browser;
+module.exports.node = node;

@@ -9,6 +9,6 @@
  *
  * @return the field's value.
  */
-export default function getField(props, state, field = 'value') {
+module.exports = function getField(props, state, field = 'value') {
   return typeof props[field] !== 'undefined' ? props[field] : state[field];
-}
+};

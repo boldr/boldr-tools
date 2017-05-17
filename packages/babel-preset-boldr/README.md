@@ -2,7 +2,7 @@
 
 Babel preset for [Boldr](https://github.com/strues/boldr)
 
-**Included Presets:** 
+**Included Presets:**
 
 - babel-preset-env  
 - babel-preset-react  
@@ -10,21 +10,21 @@ Babel preset for [Boldr](https://github.com/strues/boldr)
 **Included Plugins:**  
 
 - babel-plugin-syntax-dynamic-import  
-- babel-plugin-syntax-trailing-function-commas  
+- babel-plugin-syntax-flow  
 - babel-plugin-transform-class-properties  
 - babel-plugin-transform-decorators-legacy  
-- babel-plugin-transform-es2015-arrow-functions  
-- babel-plugin-transform-es2015-parameters  
-- babel-plugin-transform-exponentiation-operator  
+- babel-plugin-transform-runtime
+- babel-plugin-transform-regenerator  
 - babel-plugin-transform-export-extensions  
 - babel-plugin-transform-object-rest-spread  
 - babel-plugin-transform-react-jsx  
-- fast-async
+- babel-plugin-transform-flow-strip-types
 
 **Production - React:**  
 
 - babel-plugin-transform-react-constant-elements  
 - babel-plugin-transform-react-inline-elements  
+- babel-plugin-transform-react-strip-prop-types
 
 **Development - React:**  
 

@@ -5,8 +5,16 @@ import {
   setIn,
   removeByKey,
   getField,
+  filterEmpty,
 } from './objects';
-import { ifElse, requiredParam, validateId, sort, uniq } from './logic';
+import {
+  ifElse,
+  requiredParam,
+  validateId,
+  sort,
+  uniq,
+  isPromise,
+} from './logic';
 import {
   removeNil,
   flatten,
@@ -15,12 +23,14 @@ import {
   removeKeyFromNestedArray,
   stringifiedArray,
   validateArray,
+  merge,
 } from './arrays';
 import reduceKey from './state/reduceKey';
 
 const logger = require('./logger');
 
 module.exports = {
+  isPromise,
   removeNil,
   logger,
   flatten,
@@ -41,4 +51,6 @@ module.exports = {
   uniq,
   reduceKey,
   getField,
+  filterEmpty,
+  merge,
 };

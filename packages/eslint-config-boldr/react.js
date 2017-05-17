@@ -6,7 +6,7 @@ module.exports = {
   plugins: ['react'],
   parser: 'babel-eslint',
   parserOptions: {
-    ecmaVersion: 7,
+    ecmaVersion: 2017,
     impliedStrict: true,
     sourceType: 'module',
     ecmaFeatures: {
@@ -20,9 +20,10 @@ module.exports = {
     },
   },
   rules: {
+    'react/no-will-update-set-state': 2,
     // specify whether double or single quotes should be used in JSX attributes
     // http://eslint.org/docs/rules/jsx-quotes
-    'jsx-quotes': [2, 'prefer-double'],
+    'jsx-quotes': 'off',
 
     // Prevent missing displayName in a React component definition
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/display-name.md
@@ -46,7 +47,7 @@ module.exports = {
     'react/require-optimization': 0,
     'react/forbid-foreign-prop-types': 0,
     'react/forbid-elements': 0,
-    'react/jsx-equals-spacing': [2, 'never'],
+    'react/jsx-equals-spacing': 'off',
     'react/jsx-first-prop-new-line': 0,
     'react/no-children-prop': 0,
     'react/no-danger-with-children': 0,
@@ -59,7 +60,9 @@ module.exports = {
     // Enforce boolean attributes notation in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
     'react/jsx-boolean-value': [2, 'never'],
-    'react/no-unescaped-entities': 2,
+    // @TODO: Enable this again once the issue is resolved
+    // @NOTE: https://github.com/prettier/eslint-config-prettier/issues/18
+    'react/no-unescaped-entities': 0,
     // Validate closing bracket location in JSX
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md
     'react/jsx-closing-bracket-location': 0,

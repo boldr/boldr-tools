@@ -1,0 +1,53 @@
+/* @flow */
+
+declare type ConfigInline = Object & {
+  NODE_ENV: string,
+};
+
+declare type ConfigBundle = Object & {
+  webPath: string,
+  publicDir: stirng,
+  assetsDir: string,
+  babelrc: ?string,
+  eslintrc: ?string,
+  cssModules: ?boolean,
+  wpProfile: ?boolean,
+  srcDir: string,
+  verbose: ?boolean,
+  debug: ?boolean,
+  client: Object,
+  server: Object,
+  vendor: Array<string>,
+};
+
+declare type Config = {
+  inline: ConfigInline,
+  bundle: ConfigBundle,
+  server: Object,
+  logging: Object,
+  db: Object,
+  redis: Object,
+};
+
+declare interface Engine {
+  cwd: string,
+  configFileName: string,
+  plugins: Array<PluginController>,
+
+  constructor(cwd: string, configFilePath: string): void,
+  configFilePath(): string,
+  getConfiguration(): Config,
+  getIdentifier(): string,
+  start(): Promise<any>,
+  build(): Promise<any>,
+  restart(): Promise<any>,
+  stop(): Promise<any>,
+}
+
+declare type Plugin = (engine: Engine, runOnce: boolean) => PluginController;
+
+declare type PluginController = {
+  start(): ?Promise<any>,
+  build(): ?Promise<any>,
+  terminate(): Promise<any>,
+};

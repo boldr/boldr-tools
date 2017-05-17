@@ -4,11 +4,6 @@
   "parserOptions": "script",
   "rules": {
     "quote-props": 'off',
-    "comma-dangle": 0,
-    "prettier/prettier": ["error", {
-      "trailingComma": "es5",
-      "singleQuote": true,
-      "printWidth": 80
-    }]
+    "comma-dangle": 0
   }
 }

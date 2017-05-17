@@ -4,6 +4,7 @@ import getIn from './getIn';
 import setIn from './setIn';
 import removeByKey from './removeByKey';
 import getField from './getField';
+import filterEmpty from './filterEmpty';
 
 export {
   filterWithRules,
@@ -12,4 +13,5 @@ export {
   setIn,
   removeByKey,
   getField,
+  filterEmpty,
 };

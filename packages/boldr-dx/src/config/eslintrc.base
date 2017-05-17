@@ -1,6 +1,0 @@
-{
-  "extends": [
-    "eslint-config-boldr",
-    "eslint-config-boldr/react"
-  ]
-}

@@ -1,9 +1,4 @@
 module.exports = {
-  env: {
-    browser: true,
-    node: true,
-    es6: true // eslint-disable-line
-  },
   rules: {
     // enforces no braces where they can be omitted
     // http://eslint.org/docs/rules/arrow-body-style

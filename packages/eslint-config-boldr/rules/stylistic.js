@@ -3,18 +3,8 @@ module.exports = {
     browser: true,
     node: true,
   },
+  plugins: ['prettier'],
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        trailingComma: 'all',
-        singleQuote: true,
-        jsxBracketSameLine: false,
-        printWidth: 80,
-        useTabs: false,
-        bracketSpacing: true,
-      },
-    ],
     // disabled for prettier
     'array-bracket-spacing': 0,
     // 'array-bracket-spacing': [2, 'never'],
@@ -72,7 +62,7 @@ module.exports = {
     'lines-around-comment': 0,
     'lines-around-directive': 0,
     'max-depth': [2, 4],
-    'max-len': [2, { code: 80, ignoreUrls: true }],
+    'max-len': 0,
     'max-lines': [
       2,
       {
@@ -144,14 +134,7 @@ module.exports = {
     // enforce padding within blocks
     'padded-blocks': 0,
     'prefer-destructuring': 0,
-    quotes: [
-      2,
-      'single',
-      {
-        avoidEscape: true,
-        allowTemplateLiterals: true,
-      },
-    ],
+    quotes: 0,
     // require quotes around object literal property names
     // http://eslint.org/docs/rules/quote-props.html
     'quote-props': [
@@ -181,5 +164,16 @@ module.exports = {
     // specify whether double or single quotes should be used in JSX attributes
     // http://eslint.org/docs/rules/jsx-quotes
     'jsx-quotes': 0,
+    'prettier/prettier': [
+      2,
+      {
+        trailingComma: 'all',
+        singleQuote: true,
+        semi: true,
+        jsxBracketSameLine: false,
+        printWidth: 80,
+        bracketSpacing: true,
+      },
+    ],
   },
 };

@@ -46,8 +46,8 @@ function displayConfig(applicationName, explanation) {
         break;
     }
 
-    const {src} = valueExplaination;
-    let {val} = valueExplaination;
+    const { src } = valueExplaination;
+    let { val } = valueExplaination;
     let valColor; // eslint-disable-line
     switch (typeof val) {
       case 'string':
