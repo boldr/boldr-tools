@@ -9,7 +9,7 @@ module.exports = {
       require('babel-preset-env'),
       {
         modules: false,
-        debug: true,
+        debug: false,
         useBuiltIns: true,
         targets: {
           node: 7,

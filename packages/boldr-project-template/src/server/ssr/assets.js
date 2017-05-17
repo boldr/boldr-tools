@@ -1,35 +1,19 @@
-/* @flow */
-
 import fs from 'fs';
-import { ABSOLUTE_ASSETSMANIFEST_PATH, IS_DEVELOPMENT } from '../config';
 
-type AssetsMap = {|
-  scripts: string[],
-  styles: string[],
-|};
-
-type Chunk = {
-  css: string[],
-  js: string[],
-};
-
-let assetsMap: AssetsMap = {
-  scripts: [],
-  styles: [],
-};
+const isDev = process.env.NODE_ENV === 'development';
 
 let resultCache;
-export default function assets(): AssetsMap {
-  if (!IS_DEVELOPMENT && resultCache) {
+export default function assets() {
+  if (!isDev && resultCache) {
     return resultCache;
   }
-  if (!fs.existsSync(ABSOLUTE_ASSETSMANIFEST_PATH)) {
+  if (!fs.existsSync(__ASSETS_MANIFEST__)) {
     throw new Error(
-      `We could not find the "${ABSOLUTE_ASSETSMANIFEST_PATH}" file, which contains a list of the assets of the client bundle.  Please ensure that the client bundle has been built.`,
+      `We could not find the "${__ASSETS_MANIFEST__}" file, which contains a list of the assets of the client bundle.  Please ensure that the client bundle has been built.`,
     );
   }
   const readAssetsJSONFile = () =>
-    JSON.parse(fs.readFileSync(ABSOLUTE_ASSETSMANIFEST_PATH, 'utf8'));
+    JSON.parse(fs.readFileSync(__ASSETS_MANIFEST__, 'utf8'));
   const assetsJSONCache = readAssetsJSONFile();
   resultCache = assetsJSONCache;
   return resultCache;

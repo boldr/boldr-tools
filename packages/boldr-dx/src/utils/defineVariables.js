@@ -11,6 +11,7 @@ function defineVariables(
   variables: Object,
   predefined: Object = {},
 ): { [key: string]: string } {
+  console.log(variables, predefined);
   if (!Object.keys(variables).length) {
     return {};
   }

@@ -29,17 +29,11 @@ Start the development process.
 
 ### Features
 
-- A pleasant 😍 developer experience with 🔥 fast bundling, so you can get shit done. This toolbelt takes advantage of tools like, [HappyPack](https://github.com/amireh/happypack) and the DLL capabilities within Webpack itself. Your rebuilds happen fast because, nobody enjoys waiting around like a  🐢  while assets recompile.
-- [React-Hot-Loader](https://github.com/gaearon/react-hot-loader): Build your React components with less full page reloads thanks to hot module replacement and React Hot Loader.
-
-- React Router v4
-
 
 ### Commands
 
 `boldr-dx dev`: Fire up the development process. Compile client and server bundles. Runs the main Express server on port 3000 and the development server on port 3001 for hot reloading.  
 
 Runtime env options
-  - `process.env.SERVER_PORT`
-  - `process.env.SERVER_HOST`
-  - `process.env.HMR_PORT`
+  - `process.env.BOLDR__SERVER_PORT`
+  - `process.env.BOLDR__DEV_PORT`
