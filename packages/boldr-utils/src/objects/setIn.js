@@ -1,5 +1,5 @@
-import stringifiedArray from '../arrays/stringifiedArray';
-import getIn from './getIn';
+const stringifiedArray = require('../arrays/stringifiedArray');
+const getIn = require('./getIn');
 
 /**
  * If the object responds to setIn, that's called directly. Otherwise
@@ -10,7 +10,7 @@ import getIn from './getIn';
  * @param  {Any} value
  * @return {Any}
  */
-export default function setIn(object, keyPath, value) {
+module.exports = function setIn(object, keyPath, value) {
   if (object.setIn) {
     return object.setIn(stringifiedArray(keyPath), value);
   }
@@ -21,4 +21,4 @@ export default function setIn(object, keyPath, value) {
   location[lastKey] = value;
 
   return object;
-}
+};

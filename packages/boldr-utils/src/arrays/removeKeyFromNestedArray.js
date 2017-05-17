@@ -16,4 +16,4 @@ const removeKeyFromNestedArray = ({
   };
 };
 
-export default removeKeyFromNestedArray;
+module.exports = removeKeyFromNestedArray;

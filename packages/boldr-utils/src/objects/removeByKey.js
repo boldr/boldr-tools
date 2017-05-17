@@ -1,6 +1,6 @@
-import reduce from 'lodash.reduce';
+const reduce = require('lodash.reduce');
 
-const removeByKey = (myObj, deleteKey) => {
+module.exports = function removeByKey(myObj, deleteKey) {
   return (
     Object.keys(myObj)
       // Filter out the key from the object
@@ -12,5 +12,3 @@ const removeByKey = (myObj, deleteKey) => {
       }, {})
   );
 };
-
-export default removeByKey;

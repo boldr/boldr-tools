@@ -1,32 +1,25 @@
-import {
-  filterWithRules,
-  mergeDeep,
-  getIn,
-  setIn,
-  removeByKey,
-  getField,
-  filterEmpty,
-} from './objects';
-import {
-  ifElse,
-  requiredParam,
-  validateId,
-  sort,
-  uniq,
-  isPromise,
-} from './logic';
-import {
-  removeNil,
-  flatten,
-  addIdToArray,
-  removeIdFromArray,
-  removeKeyFromNestedArray,
-  stringifiedArray,
-  validateArray,
-  merge,
-} from './arrays';
-import reduceKey from './state/reduceKey';
-
+const filterWithRules = require('./objects/filterWithRules');
+const mergeDeep = require('./objects/mergeDeep');
+const getIn = require('./objects/getIn');
+const setIn = require('./objects/setIn');
+const removeByKey = require('./objects/removeByKey');
+const getField = require('./objects/getField');
+const filterEmpty = require('./objects/filterEmpty');
+const ifElse = require('./logic/ifElse');
+const requiredParam = require('./logic/requiredParam');
+const validateId = require('./logic/validateId');
+const sort = require('./logic/sort');
+const uniq = require('./logic/uniq');
+const isPromise = require('./logic/isPromise');
+const flatten = require('./arrays/flatten');
+const addIdToArray = require('./arrays/addIdToArray');
+const removeIdFromArray = require('./arrays/removeIdFromArray');
+const removeKeyFromNestedArray = require('./arrays/removeKeyFromNestedArray');
+const stringifiedArray = require('./arrays/stringifiedArray');
+const validateArray = require('./arrays/validateArray');
+const merge = require('./arrays/merge');
+const removeNil = require('./arrays/removeNil');
+const reduceKey = require('./state/reduceKey');
 const logger = require('./logger');
 
 module.exports = {

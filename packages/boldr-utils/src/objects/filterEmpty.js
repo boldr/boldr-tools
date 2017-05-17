@@ -3,7 +3,7 @@
  * @param  {Object} obj the object
  * @return {Object}     the new object without missing keys
  */
-export default function filterEmpty(obj) {
+module.exports = function filterEmpty(obj) {
   const copy = {};
   for (const key in obj) {
     // eslint-disable-next-line eqeqeq
@@ -13,4 +13,4 @@ export default function filterEmpty(obj) {
   }
 
   return copy;
-}
+};

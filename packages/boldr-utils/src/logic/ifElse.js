@@ -16,7 +16,7 @@ const execIfFunc = x => (typeof x === 'function' ? x() : x);
  *   const ifDev = ifElse(process.env.NODE_ENV === 'development');
  *   ifDev('foo', () => 'lazy resolved');  // => 'foo'
  */
-export default function ifElse(condition) {
+module.exports = function ifElse(condition) {
   return (then, or) =>
-    (execIfFunc(condition) ? execIfFunc(then) : execIfFunc(or));
-}
+    execIfFunc(condition) ? execIfFunc(then) : execIfFunc(or);
+};

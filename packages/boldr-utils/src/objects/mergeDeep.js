@@ -1,8 +1,8 @@
-import removeNil from '../arrays/removeNil';
+const removeNil = require('../arrays/removeNil');
 
 // Merges a set of objects together.
 // NOTE: This performs a deep merge.
-export default function mergeDeep(...args) {
+module.exports = function mergeDeep(...args) {
   const filtered = removeNil(args);
   if (filtered.length < 1) {
     return {};
@@ -22,4 +22,4 @@ export default function mergeDeep(...args) {
     });
     return acc;
   }, {});
-}
+};

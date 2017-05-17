@@ -6,7 +6,7 @@
  *
  * @return {Node} the first positioned ancestor node
  */
-export default function getPositionedParent(elem, inclusive = false) {
+module.exports = function getPositionedParent(elem, inclusive = false) {
   function isPositioned(node) {
     const cs = getComputedStyle(node);
     const pos = cs.getPropertyValue('position');
@@ -32,4 +32,4 @@ export default function getPositionedParent(elem, inclusive = false) {
   }
 
   return document.documentElement;
-}
+};

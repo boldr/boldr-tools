@@ -17,10 +17,10 @@
  *    keys to use.
  * @return the value in the global state or undefined if it did not exist.
  */
-export default function reduceKey(globalState, fullStateKey) {
+module.exports = function reduceKey(globalState, fullStateKey) {
   return (typeof fullStateKey === 'string'
     ? fullStateKey.split('.')
     : fullStateKey)
     .filter(key => !!key)
     .reduce((state, key) => state && state[key], globalState);
-}
+};

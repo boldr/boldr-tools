@@ -1,1 +1,1 @@
-export default !!(typeof window !== 'undefined' && window);
+module.exports = !!(typeof window !== 'undefined' && window);

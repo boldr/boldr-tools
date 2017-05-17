@@ -1,4 +1,4 @@
-function sort(arr, key, ascending) {
+module.exports = function sort(arr, key, ascending) {
   const list = arr.slice();
   const multiplier = ascending ? 1 : -1;
 
@@ -14,6 +14,4 @@ function sort(arr, key, ascending) {
   });
 
   return list;
-}
-
-export default sort;
+};

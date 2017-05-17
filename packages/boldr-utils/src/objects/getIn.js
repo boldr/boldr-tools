@@ -9,10 +9,10 @@ const stringifiedArray = require('../arrays/stringifiedArray');
  * @param  {Array<string, number>} keyPath
  * @return {Any}
  */
-export default function getIn(object, keyPath) {
+module.exports = function getIn(object, keyPath) {
   if (object.getIn) {
     return object.getIn(stringifiedArray(keyPath));
   }
 
   return reduce(keyPath, (memo, key) => memo[key], object);
-}
+};

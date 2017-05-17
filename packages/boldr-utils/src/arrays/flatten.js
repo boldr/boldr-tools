@@ -1,4 +1,4 @@
-export default function flatten(arr) {
+module.exports = function flatten(arr) {
   return arr.reduce(
     (flattened, toFlatten) =>
       flattened.concat(
@@ -6,4 +6,4 @@ export default function flatten(arr) {
       ),
     [],
   );
-}
+};

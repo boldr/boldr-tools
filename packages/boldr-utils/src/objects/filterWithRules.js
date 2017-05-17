@@ -48,6 +48,6 @@ function filterWithRulesLoop(rules, obj, basePropPath = '') {
  *     },
  *   )
  */
-export default function filterWithRules(rules, obj) {
+module.exports = function filterWithRules(rules, obj) {
   return filterWithRulesLoop(rules, obj);
-}
+};

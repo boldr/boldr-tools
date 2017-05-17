@@ -1,4 +1,4 @@
-export default function uniq(list, key) {
+module.exports = function uniq(list, key) {
   const filtered = [];
   const found = {};
   list.forEach(item => {
@@ -9,4 +9,4 @@ export default function uniq(list, key) {
   });
 
   return filtered;
-}
+};
