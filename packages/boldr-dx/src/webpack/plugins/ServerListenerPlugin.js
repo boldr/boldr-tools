@@ -113,7 +113,7 @@ module.exports = class ServerListenerPlugin {
 
       const serverBuildPath = path.resolve(
         this.config.bundle.server.bundleDir,
-        'app.js'
+        'app.js',
       );
       await this.serverManager.close();
 
@@ -128,7 +128,7 @@ module.exports = class ServerListenerPlugin {
         const port = this.config.server.port;
         const url = `http://localhost:${port}`;
 
-       logger.info(`\tServer is listening on ${url}`);
+        logger.info(`\tServer is listening on ${url}`);
       } catch (e) {
         logger.error('Error during server bundle start/restart');
         logger.log(e);

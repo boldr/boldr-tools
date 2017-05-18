@@ -13,8 +13,6 @@ import configBuilder from './webpack/configBuilder';
 
 const debug = _debug('boldr:dx:engine');
 
-const BOLDR__DEV_PORT = parseInt(process.env.BOLDR__DEV_PORT, 10) || 3001;
-
 class Engine {
   cwd: string;
   configFileName: string;
@@ -34,7 +32,7 @@ class Engine {
   }
   // determine our NODE_ENV used as the identifier
   getIdentifier(): string {
-    return this.getConfiguration().inline.NODE_ENV;
+    return this.getConfiguration().env.NODE_ENV;
   }
 
   async build(): Promise<any> {
@@ -73,6 +71,8 @@ class Engine {
           }),
         );
         const clientCompiler = webpack(clientConfig);
+        const BOLDR__DEV_PORT =
+          parseInt(config.env.BOLDR__DEV_PORT, 10) || 3001;
         clientDevServer = new WebpackDevServer(clientCompiler, {
           clientLogLevel: 'none',
           disableHostCheck: true,
