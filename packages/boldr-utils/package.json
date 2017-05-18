@@ -1,13 +1,13 @@
 {
   "name": "boldr-utils",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Helpers designed for use with Boldr and fullstack react apps",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/boldr/boldr-tools.git"
   },
   "scripts": {
-    "build": "npm run build:commonjs && npm run build:es",
+    "build": "npm run clean && npm run build:commonjs && npm run build:es",
     "clean": "rimraf dist es",
     "prepublish": "npm run clean && npm run build",
     "build:commonjs": "BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",

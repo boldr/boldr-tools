@@ -3,7 +3,6 @@
 /* eslint-disable flowtype/no-types-missing-file-annotation */
 import fs from 'fs';
 import program from 'caporal';
-import Promise from 'bluebird';
 import updateNotifier from 'update-notifier';
 import logger from 'boldr-utils/es/logger';
 import pkg from '../package.json';
@@ -15,8 +14,6 @@ import build from './commands/build';
 import Engine from './engine';
 import { cwd } from './config/paths';
 
-global.Promise = Promise;
-Promise.longStackTraces();
 // @TODO: Remove this once babel-loader updates
 // https://github.com/babel/babel-loader/pull/391
 // $FlowIssue

@@ -60,7 +60,7 @@ const cache = {
 };
 
 // This is the Webpack configuration factory. It's the juice!
-module.exports = function configBuilder(config, mode, target) {
+module.exports = function configBuilder({ config, mode = 'development', target = 'web' } = {}) {
   debug('MODE: ', mode, 'TARGET: ', target);
   const { env: envVariables, bundle } = config;
   process.env.NODE_ENV = bundle.debug ? 'development' : mode;
@@ -98,9 +98,8 @@ module.exports = function configBuilder(config, mode, target) {
       app: removeNil([
         ifDevWeb(require.resolve('react-hot-loader/patch')),
         ifDevWeb(
-          `${require.resolve('webpack-dev-server/client')}?http://localhost:${BOLDR__DEV_PORT}`,
+          `${require.resolve('webpack-hot-middleware/client')}?reload=true&path=http://localhost:${BOLDR__DEV_PORT}/__webpack_hmr`,
         ),
-        ifDevWeb(require.resolve('webpack/hot/only-dev-server')),
         _WEB ? bundle.client.entry : bundle.server.entry,
       ]),
       vendor: ifProdWeb(bundle.vendor),
@@ -172,7 +171,6 @@ module.exports = function configBuilder(config, mode, target) {
       noParse: [/\.min\.js/],
       strictExportPresence: true,
       rules: removeNil([
-        { parser: { requireEnsure: false } },
         // js
         {
           test: /\.(js|jsx)$/,
@@ -550,7 +548,6 @@ module.exports = function configBuilder(config, mode, target) {
           logLevel: 'error',
         }),
       ),
-      ifNodeDev(new ServerListenerPlugin(config, target)),
     ]),
   };
 };

@@ -1,5 +1,5 @@
-import requiredParam from '../logic/requiredParam';
-import removeIdFromArray from './removeIdFromArray';
+const requiredParam = require('../logic/requiredParam');
+const removeIdFromArray = require('./removeIdFromArray');
 
 const removeKeyFromNestedArray = ({
   obj = requiredParam('obj'),

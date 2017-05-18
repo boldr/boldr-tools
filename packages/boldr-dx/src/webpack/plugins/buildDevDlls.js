@@ -16,7 +16,7 @@ function buildDevDlls(config: Config) {
   );
 
   const dllConfig = config.bundle.vendor;
-
+  debug(config.bundle.assetsDir);
   const devDLLDependencies = dllConfig.sort();
 
   // We calculate a hash of the package.json's dependencies, which we can use

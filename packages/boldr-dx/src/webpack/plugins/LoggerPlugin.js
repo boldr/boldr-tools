@@ -30,7 +30,10 @@ class LoggerPlugin {
           if (!this.verbose) {
             clearConsole();
           }
-          logger.end(`Bundle for ${this.target} compiled successfully`);
+          let time = stats.endTime - stats.startTime;
+          logger.end(
+            `Bundle for ${this.target} compiled successfully in ${time} ms`,
+          );
           IS_DONE = true;
 
           if (this.onSuccessMessage) {
