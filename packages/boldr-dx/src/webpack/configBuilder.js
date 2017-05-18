@@ -14,7 +14,7 @@ import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
-  import StatsPlugin from 'stats-webpack-plugin';
+import StatsPlugin from 'stats-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import _debug from 'debug';
 import postCssImport from 'postcss-import';
@@ -55,8 +55,8 @@ const prefetchPlugins = prefetches.map(
 const cache = {
   'web-production': {},
   'web-development': {},
-  'node-production': {},
-  'node-development': {},
+  'async-node-production': {},
+  'async-node-development': {},
 };
 
 // This is the Webpack configuration factory. It's the juice!
@@ -68,7 +68,7 @@ module.exports = function configBuilder(config, mode, target) {
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
   const _WEB = target === 'web';
-  const _NODE = target === 'node';
+  const _NODE = target === 'async-node';
 
   const ifDev = ifElse(_DEV);
   const ifProd = ifElse(_PROD);
@@ -87,23 +87,13 @@ module.exports = function configBuilder(config, mode, target) {
     bundle.server.bundleDir,
   ];
 
-  let whitelistedExternals = [];
-  const externalsWhitelist =
-    bundle.server.webpack &&
-    bundle.server.webpack.externalsWhitelist &&
-    bundle.server.webpack.externalsWhitelist.development;
-  const serverConfig = bundle.server;
-  if (Array.isArray(externalsWhitelist)) {
-    whitelistedExternals = externalsWhitelist;
-  }
-
   return {
     // pass either node or web
     target,
     // user's project root
     context: process.cwd(),
     // sourcemap
-    devtool: _DEV ? 'cheap-module-eval-source-map' : 'source-map',
+    devtool: 'source-map',
     entry: filterEmpty({
       app: removeNil([
         ifDevWeb(require.resolve('react-hot-loader/patch')),
@@ -133,7 +123,7 @@ module.exports = function configBuilder(config, mode, target) {
     // cache dev
     cache: cache[`${target}-${mode}`],
     // true if prod & enabled in settings
-    profile: _PROD && bundle.wpProfile,
+    profile: bundle.wpProfile,
     node: _NODE ? NODE_NODE_OPTS : NODE_OPTS,
     performance: _WEB && _PROD
       ? {
@@ -153,9 +143,12 @@ module.exports = function configBuilder(config, mode, target) {
     },
     resolve: {
       extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
-      modules: ['node_modules', PATHS.projectNodeModules].concat(
-        PATHS.nodePaths,
-      ),
+      modules: [
+        'node_modules',
+        config.bundle.srcDir,
+        PATHS.projectNodeModules,
+      ].concat(PATHS.nodePaths),
+      unsafeCache: true,
       mainFields: ifNode(NODE_MAIN, BROWSER_MAIN),
     },
     resolveLoader: {
@@ -171,7 +164,6 @@ module.exports = function configBuilder(config, mode, target) {
             /\.(svg|png|jpg|jpeg|gif|ico)$/,
             /\.(mp4|mp3|ogg|swf|webp)$/,
             /\.(css|scss)$/,
-            ...whitelistedExternals,
           ],
         }),
       ),
@@ -214,8 +206,15 @@ module.exports = function configBuilder(config, mode, target) {
                   ifWeb([
                     require.resolve('../utils/loadableBabel.js'),
                     {
-                      server: true,
+                      server: false,
                       webpack: true,
+                    },
+                  ]),
+                  ifNode([
+                    require.resolve('../utils/loadableBabel.js'),
+                    {
+                      server: true,
+                      webpack: false,
                     },
                   ]),
                 ]),
@@ -451,7 +450,7 @@ module.exports = function configBuilder(config, mode, target) {
       // If the value isn’t a string, it will be stringified
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
-        DEBUG: JSON.stringify(process.env.DEBUG || false),
+        DEBUG: JSON.stringify(process.env.BOLDR__DEBUG || false),
       }),
       new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
@@ -464,13 +463,21 @@ module.exports = function configBuilder(config, mode, target) {
           path.join(bundle.assetsDir || '', 'assets.json'),
         ),
       }),
-      new webpack.PrefetchPlugin(`${bundle.srcDir}/shared/components/App/App.js`),
-      new webpack.PrefetchPlugin(`${bundle.srcDir}/shared/components/SiteHeader/SiteHeaderDropdown/SiteHeaderDropdown.js`),
-      new webpack.PrefetchPlugin(`${bundle.srcDir}/shared/scenes/Blog/ArticleListing/ArticleListingContainer.js`),
-      ifProd(new StatsPlugin(`${CWD}/stats.json`, {
-      chunkModules: true,
-      exclude: [/node_modules[\\\/]react/]
-    })),
+      new webpack.PrefetchPlugin(
+        `${bundle.srcDir}/shared/components/App/App.js`,
+      ),
+      new webpack.PrefetchPlugin(
+        `${bundle.srcDir}/shared/components/SiteHeader/SiteHeaderDropdown/SiteHeaderDropdown.js`,
+      ),
+      new webpack.PrefetchPlugin(
+        `${bundle.srcDir}/shared/scenes/Blog/ArticleListing/ArticleListingContainer.js`,
+      ),
+      ifProd(
+        new StatsPlugin(`${bundle.assetsDir}/stats.json`, {
+          chunkModules: true,
+          exclude: [/node_modules[\\\/]react/],
+        }),
+      ),
       ifNode(
         () =>
           new webpack.BannerPlugin({
@@ -509,7 +516,6 @@ module.exports = function configBuilder(config, mode, target) {
         }),
       ),
 
-      ifNode(new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })),
       ifProdWeb(
         new ChunkManifestPlugin({
           filename: 'manifest.json',

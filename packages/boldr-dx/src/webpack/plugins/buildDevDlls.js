@@ -1,3 +1,4 @@
+/* @flow */
 import path from 'path';
 import fs from 'fs-extra';
 import webpack from 'webpack';
@@ -8,7 +9,7 @@ import logger from 'boldr-utils/es/logger';
 
 const debug = _debug('boldr:dx:devDllPlugin');
 
-function DevDllPlugin(config) {
+function buildDevDlls(config: Config) {
   logger.start('Building Webpack vendor DLLs');
   const pkg = JSON.parse(
     fs.readFileSync(`${process.cwd()}/package.json`, 'utf8'),
@@ -53,10 +54,7 @@ function DevDllPlugin(config) {
       },
       plugins: [
         new webpack.DllPlugin({
-          path: path.resolve(
-            config.bundle.assetsDir,
-            '__vendor_dlls__.json',
-          ),
+          path: path.resolve(config.bundle.assetsDir, '__vendor_dlls__.json'),
           name: '__vendor_dlls__',
         }),
       ],
@@ -73,13 +71,12 @@ function DevDllPlugin(config) {
       const vendorDLLCompiler = webpack(webpackConfig);
       vendorDLLCompiler.run(err => {
         if (err) {
-          reject(err);
-          return;
+          return reject(err);
         }
         // Update the dependency hash
         fs.writeFileSync(vendorDLLHashFilePath, currentDependenciesHash);
 
-        resolve();
+        return resolve();
       });
     });
   }
@@ -100,10 +97,10 @@ function DevDllPlugin(config) {
         buildVendorDLL().then(resolve).catch(reject);
       } else {
         logger.end('Dependencies did not change. Using existing vendor dll.');
-        resolve();
+        return resolve();
       }
     }
   });
 }
 
-export default DevDllPlugin;
+export default buildDevDlls;

@@ -8,7 +8,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import logger from 'boldr-utils/es/logger';
 import loadConfiguration from './config/loadConfig';
 import compileOnce from './services/compileOnce';
-import DevDllPlugin from './webpack/plugins/DevDllPlugin';
+import buildDevDlls from './webpack/plugins/buildDevDlls';
 import configBuilder from './webpack/configBuilder';
 
 const debug = _debug('boldr:dx:engine');
@@ -35,6 +35,10 @@ class Engine {
     return this.getConfiguration().env.NODE_ENV;
   }
 
+  buildDlls(config: Config) {
+    return buildDevDlls(config);
+  }
+
   async build(): Promise<any> {
     const config: Config = loadConfiguration(this);
 
@@ -55,9 +59,9 @@ class Engine {
     const config: Config = loadConfiguration(this);
     // instantiate plugins
     // eslint-disable-next-line babel/new-cap
-    await DevDllPlugin(config);
+    await this.buildDlls(config);
     const clientConfig = configBuilder(config, 'development', 'web');
-    const serverConfig = configBuilder(config, 'development', 'node');
+    const serverConfig = configBuilder(config, 'development', 'async-node');
 
     return new Promise((resolve, reject) => {
       try {
@@ -73,6 +77,7 @@ class Engine {
         const clientCompiler = webpack(clientConfig);
         const BOLDR__DEV_PORT =
           parseInt(config.env.BOLDR__DEV_PORT, 10) || 3001;
+
         clientDevServer = new WebpackDevServer(clientCompiler, {
           clientLogLevel: 'none',
           disableHostCheck: true,
@@ -93,6 +98,7 @@ class Engine {
           quiet: true,
           noInfo: true,
           watchOptions: {
+            poll: true,
             ignored: /node_modules/,
           },
         });
@@ -107,14 +113,15 @@ class Engine {
         serverCompiler = webpack({
           ...serverConfig,
           watchOptions: {
+            poll: true,
             ignored: /node_modules/,
           },
         }).watch({}, () => {});
       } catch (e) {
-        reject(e);
+        return reject(e);
       }
 
-      resolve();
+      return resolve();
     });
   }
 

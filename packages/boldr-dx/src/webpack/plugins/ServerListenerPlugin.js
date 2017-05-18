@@ -63,8 +63,11 @@ class ServerManager {
       const close = this.server
         ? this.server.close.bind(this.server)
         : cb => cb();
-
-      await new Promise(resolve => close(resolve));
+      try {
+        await new Promise(resolve => close(resolve));
+      } catch (e) {
+        return logger.error(e);
+      }
 
       this.server = null;
     }
@@ -100,8 +103,9 @@ module.exports = class ServerListenerPlugin {
         logger.error(
           `Bundle "${bundleName}" compiled with errors, keeping previous server instance running`,
         );
-        logger.error(`${JSON.stringify(stats.toJson({}, true), undefined, 4)}`);
-        return;
+        return logger.error(
+          `${JSON.stringify(stats.toJson({}, true), undefined, 2)}`,
+        );
       }
 
       // Clear out all files from this build
@@ -125,10 +129,10 @@ module.exports = class ServerListenerPlugin {
 
         await this.serverManager.manage(server);
 
-        const port = this.config.server.port;
+        const port = this.config.env.BOLDR__SERVER_PORT;
         const url = `http://localhost:${port}`;
 
-        logger.info(`\tServer is listening on ${url}`);
+        return logger.info(`\tServer is listening on ${url}`);
       } catch (e) {
         logger.error('Error during server bundle start/restart');
         logger.log(e);
