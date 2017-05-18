@@ -107,7 +107,7 @@ export default function CreateHtml(props: Props) {
     ifElse(isDev)(() =>
       createScriptElement(
         // $FlowIssue
-        `http://localhost:${process.env.BOLDR__DEV_PORT}/assets/__vendor_dlls__.js?t=${uuid()}`,
+        `/assets/__vendor_dlls__.js?t=${uuid()}`,
       ),
     ),
 
