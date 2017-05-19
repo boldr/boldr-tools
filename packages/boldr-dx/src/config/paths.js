@@ -6,10 +6,10 @@ const path = require('path');
  * into account.
  * @type {String}
  */
-export const cwd = fs.realpathSync(process.cwd());
+const cwd = fs.realpathSync(process.cwd());
 
 /**
- * Get the path from the user's project root
+ * Get the path from the user's w root
  * @param  {String} args the path we are trying to reach
  * @return {any}      whatever it is we're looking for
  */
@@ -38,6 +38,7 @@ const nodePaths = (process.env.NODE_PATH || '')
   .map(resolveProject);
 
 module.exports = {
+  cwd,
   nodePaths,
   boldrNodeModules: resolveBoldr('node_modules'),
   projectNodeModules: resolveProject('node_modules'),

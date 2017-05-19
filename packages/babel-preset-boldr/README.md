@@ -2,6 +2,22 @@
 
 Babel preset for [Boldr](https://github.com/strues/boldr)
 
+Env settings: 
+```
+{
+  modules: false,
+  debug: false,
+  useBuiltIns: true,
+  targets: {
+    browsers: ['>1%', 'last 2 versions', 'safari >= 9'],
+  },
+  // if node
+  targets: {
+    node: 7.7
+  },
+},
+```
+
 **Included Presets:**
 
 - babel-preset-env  
@@ -19,7 +35,9 @@ Babel preset for [Boldr](https://github.com/strues/boldr)
 - babel-plugin-transform-object-rest-spread  
 - babel-plugin-transform-react-jsx  
 - babel-plugin-transform-flow-strip-types
-
+- babel-plugin-dynamic-import-node  
+- babel-plugin-dynamic-import-webpack  
+   
 **Production - React:**  
 
 - babel-plugin-transform-react-constant-elements  
@@ -30,3 +48,6 @@ Babel preset for [Boldr](https://github.com/strues/boldr)
 
 - babel-plugin-transform-react-jsx-self  
 - babel-plugin-transform-react-jsx-source  
+
+
+

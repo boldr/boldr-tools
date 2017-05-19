@@ -4,11 +4,11 @@
  * @return {Boolean}     it is or isnt the value we're looking for.
  */
 const isSpecificValue = val =>
-  (typeof Buffer !== 'undefined' && val instanceof Buffer) ||
+  ((typeof Buffer !== 'undefined' && val instanceof Buffer) ||
     val instanceof Date ||
     val instanceof RegExp
     ? true
-    : false;
+    : false);
 
 /**
  * Clone a specific type of value
@@ -62,7 +62,7 @@ const deepCloneArray = arr => {
  * new object as first argument, like this:
  *   deepExtend({}, yourObj_1, [yourObj_N]);
  */
-const deepExtend = function(/*obj_1, [obj_2], [obj_N]*/) {
+const deepExtend = function() {
   if (arguments.length < 1 || typeof arguments[0] !== 'object') {
     return false;
   }
@@ -96,20 +96,16 @@ const deepExtend = function(/*obj_1, [obj_2], [obj_N]*/) {
 
       // recursion prevention
       if (val === target) {
-        return;
       } else if (typeof val !== 'object' || val === null) {
         // if new value isn't object then just overwrite by new value
         // instead of extending.
         target[key] = val;
-        return;
       } else if (Array.isArray(val)) {
         // just clone arrays (and recursive clone objects inside)
         target[key] = deepCloneArray(val);
-        return;
       } else if (isSpecificValue(val)) {
         // custom cloning and overwrite for specific objects
         target[key] = cloneSpecificValue(val);
-        return;
       } else if (
         typeof src !== 'object' ||
         src === null ||
@@ -117,11 +113,9 @@ const deepExtend = function(/*obj_1, [obj_2], [obj_N]*/) {
       ) {
         // overwrite by new value if source isn't object or array
         target[key] = deepExtend({}, val);
-        return;
       } else {
         // source value and new value is objects both, extending...
         target[key] = deepExtend(src, val);
-        return;
       }
     });
   });

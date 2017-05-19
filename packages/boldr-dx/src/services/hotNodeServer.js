@@ -1,5 +1,6 @@
 import path from 'path';
 import { spawn } from 'child_process';
+import chokidar from 'chokidar';
 import logger from 'boldr-utils/es/logger';
 import _debug from 'debug';
 import appRoot from '../utils/appRoot';
@@ -7,13 +8,14 @@ import appRoot from '../utils/appRoot';
 const debug = _debug('boldr:dx:services:hotNode');
 
 class HotNodeServer {
-  constructor(name, compiler, clientCompiler) {
+  constructor(name, compiler, clientCompiler, config) {
+    this.config = config;
+
     const compiledEntryFile = path.resolve(
       appRoot.get(),
       compiler.options.output.path,
       `${Object.keys(compiler.options.entry)[0]}.js`,
     );
-
     const startServer = () => {
       if (this.server) {
         this.server.kill();
@@ -33,7 +35,18 @@ class HotNodeServer {
       });
       this.server = newServer;
     };
+    const watcher = chokidar.watch([`${config.bundle.srcDir}/server/**.js`]);
 
+    watcher.on('ready', () => {
+      watcher.on('all', () => {
+        console.log('Clearing /server/ module cache from server');
+        Object.keys(require.cache).forEach(id => {
+          if (/[/\\]server[/\\]/.test(id)) {
+            delete require.cache[id];
+          }
+        });
+      });
+    });
     const waitForClientThenStartServer = () => {
       if (this.serverCompiling) {
         return;
@@ -55,6 +68,7 @@ class HotNodeServer {
       if (!stats.hasErrors()) {
         this.clientCompiling = false;
       }
+      // await this.server.kill();
     });
 
     compiler.plugin('compile', () => {

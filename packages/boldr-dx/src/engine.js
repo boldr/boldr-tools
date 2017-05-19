@@ -6,6 +6,7 @@ import _debug from 'debug';
 import webpack from 'webpack';
 import terminate from 'terminate';
 import logger from 'boldr-utils/es/logger';
+
 import loadConfiguration from './config/loadConfig';
 import compileOnce from './services/compileOnce';
 import configBuilder from './webpack/configBuilder';
@@ -41,14 +42,20 @@ class Engine {
     const clientConfig = configBuilder({
       config,
       mode: 'production',
-      target: 'web',
+      name: 'server',
     });
     const serverConfig = configBuilder({
       config,
       mode: 'production',
-      target: 'async-node',
+      name: 'server',
     });
+    const pluginControllers: PluginController[] = await Promise.all(
+      config.plugins.map(plugin => plugin(this, true)),
+    );
 
+    await Promise.all(
+      pluginControllers.map(pluginController => pluginController.build()),
+    );
     fs.removeSync(config.bundle.client.bundleDir);
     fs.removeSync(config.bundle.server.bundleDir);
 
@@ -61,9 +68,13 @@ class Engine {
     logger.start('Starting development bundling process.');
     const config: Config = loadConfiguration(this);
     // instantiate plugins
+    this.plugins = await Promise.all(
+      config.plugins.map(plugin => plugin(this, false)),
+    );
+
+    await Promise.all(this.plugins.map(plugin => plugin.start()));
     // eslint-disable-next-line babel/new-cap
     const HotDevelopment = require('./services/hotDevelopment').default;
-
     // Create a new development devServer.
     const devServer = new HotDevelopment(config);
     process.on(
@@ -77,22 +88,19 @@ class Engine {
   }
 
   async restart(): Promise<any> {
+    await Promise.all(
+      this.plugins.map(pluginController => pluginController.terminate()),
+    );
     let clientLogger, serverLogger, serverCompiler, clientDevServer;
-    if (serverCompiler) {
-      terminate(process.pid, err => {
-        if (err) {
-          debug(`ERR RESTART: ${err}`);
-        } else {
-          logger.task('Terminated.');
-        }
-      });
-    }
 
     // start all plugins
     await this.start();
   }
 
   async stop(): Promise<any> {
+    await Promise.all(
+      this.plugins.map(pluginController => pluginController.terminate()),
+    );
     terminate(process.pid, err => {
       if (err) {
         debug(`ERR RESTART: ${err}`);

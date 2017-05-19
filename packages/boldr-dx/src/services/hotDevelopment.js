@@ -3,6 +3,7 @@ import path from 'path';
 import webpack from 'webpack';
 import logger from 'boldr-utils/es/logger';
 import _debug from 'debug';
+import WriteFilePlugin from 'write-file-webpack-plugin';
 import buildDevDlls from '../webpack/plugins/buildDevDlls';
 import configBuilder from '../webpack/configBuilder';
 import appRoot from '../utils/appRoot';
@@ -21,11 +22,11 @@ const initializeBundle = (config, name) => {
     try {
       const webpackConfig = configBuilder({
         config,
-        target: name,
+        name,
         mode: 'development',
       });
       // Install the vendor DLL config for the client bundle if required.
-      if (name === 'web') {
+      if (name === 'client') {
         // Install the vendor DLL plugin.
         webpackConfig.plugins.push(
           new webpack.DllReferencePlugin({
@@ -36,6 +37,11 @@ const initializeBundle = (config, name) => {
             )),
           }),
         );
+      }
+      if (name !== 'client') {
+        // Save the server-side bundle files to the file system after compilation
+        // https://github.com/webpack/webpack-dev-server/issues/62
+        webpackConfig.plugins.push(new WriteFilePlugin({ log: false }));
       }
       return webpack(webpackConfig);
     } catch (err) {
@@ -55,16 +61,15 @@ class HotDevelopment {
     this.hotClientServer = null;
     this.hotNodeServer = null;
     this.config = config;
-
-    const clientBundle = initializeBundle(config, 'web');
-    const nodeBundle = initializeBundle(config, 'async-node');
-
+    const clientBundle = initializeBundle(config, 'client');
+    const nodeBundle = initializeBundle(config, 'server');
     Promise.resolve(buildDevDlls(config))
       .then(
         () =>
           new Promise(resolve => {
             const { createCompiler } = clientBundle;
             const compiler = createCompiler();
+            // const clientFS = compiler.outputFileSystem;
             compiler.plugin('done', stats => {
               if (!stats.hasErrors()) {
                 resolve(compiler);
@@ -76,9 +81,10 @@ class HotDevelopment {
       // Then start the node development server(s).
       .then(clientCompiler => {
         this.hotNodeServer = new HotNodeServer(
-          'async-node',
+          'server',
           nodeBundle.createCompiler(),
           clientCompiler,
+          config,
         );
       });
   }

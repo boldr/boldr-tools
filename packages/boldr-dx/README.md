@@ -15,9 +15,51 @@ Add Boldr-DX to your dependencies.
 
 2. `yarn add --dev boldr-dx`  
 
-Create the **SMALL** configuration files. You won't have to configure too much. Promise. Here are the configs the Boldr base project uses [boldr.js](https://github.com/boldr/boldr-tools/blob/master/packages/boldr-project-template/.boldr/boldr.js).
+Create the **SMALL** configuration files. You won't have to configure too much. Promise. 
 
-Add vendor libraries to the vendorFiles section of the config. These are included in the dev process as DLLs and are bundled separately in production. Only include client side dependencies, not node only, like Express.
+Minimal configuration:
+```javascript
+const path = require('path');
+  module.exports = {
+  env: {
+    NODE_ENV: process.env.NODE_ENV,
+    BOLDR__SERVER_PORT: process.env.BOLDR__SERVER_PORT,
+    BOLDR__DEV_PORT: process.env.BOLDR__DEV_PORT,
+  },
+  bundle: {
+    verbose: true,
+    debug: false,
+    cssModules: true,
+    wpProfile: false,
+    babelrc: null,
+    webPath: '/assets/',
+    publicDir: path.resolve(__dirname, '../public'),
+    assetsDir:  path.resolve(__dirname, '../public/assets'),
+    srcDir: path.resolve(__dirname, '../src'),
+    client: {
+      entry: path.resolve(__dirname, '../src/client/index.js'),
+      bundleDir: path.resolve(__dirname, '../public/assets'),
+    },
+    server: {
+      entry: path.resolve(__dirname, '../src/server/index.js'),
+      bundleDir: path.resolve(__dirname, '../lib'),
+    },
+    vendor: [
+      'prop-types',
+      'react-dom',
+      'react-helmet',
+      'react-redux',
+      'react-router-dom',
+      'react-router-redux',
+      'react',
+      'redux',
+      'serialize-javascript',
+    ],
+  },
+  }
+  ```
+
+Add vendor libraries to the vendor section of the config. These are included in the dev process as DLLs. A production build compiles the vendor files into a vendor bundle as well as a common chunk bundle. Only include client side dependencies, **not node**, like Express.
 
 3. `mkdir .boldr && touch boldr.js`   
 
@@ -25,11 +67,9 @@ Insert the config from above into the boldr.js file. The configuration is meant 
 
 **OR** use the provided `boldr-project-template` which is a standalone universal React application.
 
-Start the development process.
-4. `yarn run dev`
 
-### Features
-
+4. `boldr-dx dev`  
+Watches both client and server bundles. Enables hot reloading.
 
 ### Commands
 
@@ -38,3 +78,77 @@ Start the development process.
 Runtime env options
   - `process.env.BOLDR__SERVER_PORT`
   - `process.env.BOLDR__DEV_PORT`
+
+
+### Assets Information
+
+Assets are made available to the server by requiring `const assets = require(__ASSETS_MANIFEST__);` and `const chunks = require(__CHUNK_MANIFEST__)`. Then you will have access to:   
+  
+- `assets.app.js` and `assets.app.css`: All the time
+- `assets.common.js` and `assets.common.css`: During production only.  
+- `assets.vendor.js`: During production only because during development we dont compile vendor assets.  
+- During development, vendorDLLs are created to speed up build time. They must be served during development only from `/assets/__vendor_dlls_.js`
+
+Order of inclusion during production **is important**.  
+The order is:   
+    1. common  
+    2. vendor  
+    3. app  
+
+
+### Additional Information
+
+#### Helpers
+
+Feel free to modify any of the values within the bundle portion of the config. There are a few "inlined-at-compile" helpers you have access to. They are:
+```
+- __IS_CLIENT__
+- __IS_SERVER__
+- __IS_DEV__
+- __ASSETS_MANIFEST__
+- __CHUNK_MANIFEST__
+```
+
+The two manifest helpers are important. They turn into requires for your assets once Wepback builds the bundle. The remaining helpers allow you to exclude code. For example:
+
+```javascript
+if (__IS_DEV__) {
+  // this code will be included during development and not production
+}
+
+if (__IS_SERVER__) {
+  // will only run on the server
+}
+```
+
+#### Babel 
+Boldr-DX by default uses its own Babel preset with the following included:   
+   
+- babel-preset-env  
+- babel-preset-react  
+- babel-plugin-syntax-dynamic-import  
+- babel-plugin-syntax-flow  
+- babel-plugin-transform-class-properties  
+- babel-plugin-transform-decorators-legacy  
+- babel-plugin-transform-runtime
+- babel-plugin-transform-regenerator  
+- babel-plugin-transform-object-rest-spread  
+- babel-plugin-transform-react-jsx  
+   
+- babel-plugin-dynamic-import-node
+- babel-plugin-dynamic-import-webpack
+- react-loadable/babel  
+- babel-plugin-transform-flow-strip-types  
+React Production:  
+- babel-plugin-transform-react-constant-elements  
+- babel-plugin-transform-react-inline-elements  
+- babel-plugin-transform-react-strip-prop-types   
+React Development:  
+- react-hot-loader/babel  
+- babel-plugin-transform-react-jsx-self  
+- babel-plugin-transform-react-jsx-source  
+   
+You can use your own Babel configuration by adding a `.babelrc` and setting babelrc to **true** in the config (`.boldr/boldr.js`).  
+
+**Note**   
+  > Using scripts that might require babel processing, or running tests, outside of boldr-dx you will want to have a babelrc file anyways so that babel processes it. The babelrc will not be read by Webpack.   

@@ -53,19 +53,21 @@ const prefetchPlugins = prefetches.map(
   specifier => new webpack.PrefetchPlugin(specifier),
 );
 const cache = {
-  'web-production': {},
-  'web-development': {},
-  'async-node-production': {},
-  'async-node-development': {},
+  'client-production': {},
+  'client-development': {},
+  'server-production': {},
+  'server-development': {},
 };
 
 // This is the Webpack configuration factory. It's the juice!
 module.exports = function configBuilder(
-  { config, mode = 'development', target = 'web' } = {},
+  { config, mode = 'development', name = 'client' } = {},
 ) {
-  debug('MODE: ', mode, 'TARGET: ', target);
+  debug('MODE: ', mode, 'NAME: ', name);
   const { env: envVariables, bundle } = config;
   process.env.BABEL_ENV = mode;
+  const target = name === 'client' ? 'web' : 'async-node';
+  debug(target);
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
   const _WEB = target === 'web';
@@ -196,7 +198,7 @@ module.exports = function configBuilder(
                 compact: true,
                 sourceMaps: true,
                 comments: false,
-                cacheDirectory: _DEV,
+                cacheDirectory: !!_DEV,
                 presets: removeNil([
                   ifWeb(require.resolve('babel-preset-boldr/browser')),
                   ifNode(require.resolve('babel-preset-boldr/node')),
@@ -415,7 +417,7 @@ module.exports = function configBuilder(
       }),
       new webpack.LoaderOptionsPlugin({
         minimize: _PROD,
-        debug: !_PROD,
+        debug: !!_DEV,
         context: CWD,
       }),
       ifDev(
@@ -433,7 +435,7 @@ module.exports = function configBuilder(
           ),
           environmentHash: {
             CWD,
-            directories: ['node_modules'],
+            directories: ['node_modules', PATHS.projectNodeModules],
             files: ['package.json', 'yarn.lock', '.boldrrc'],
           },
         }),
@@ -450,7 +452,6 @@ module.exports = function configBuilder(
       // If the value isn’t a string, it will be stringified
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
-        DEBUG: JSON.stringify(envVariables.BOLDR__DEBUG || false),
       }),
       new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
@@ -472,20 +473,20 @@ module.exports = function configBuilder(
           exclude: [/node_modules[\\/]react/],
         }),
       ),
-      ifNode(
-        () =>
-          new webpack.BannerPlugin({
-            banner: 'require("source-map-support").install();',
-            raw: true,
-            entryOnly: false,
-          }),
-      ),
       ifProdWeb(new webpack.HashedModuleIdsPlugin()),
       ifWeb(new WebpackMd5Hash()),
       ifProdWeb(
         new webpack.optimize.CommonsChunkPlugin({
           name: 'vendor',
-          minChunks: module => /node_modules/.test(module.resource),
+          minChunks(module) {
+            // A module is extracted into the vendor chunk when...
+            return (
+              // If it's inside node_modules
+              /node_modules/.test(module.context) &&
+              // Do not externalize if the request is a CSS file
+              !/\.(css|less|scss|sass|styl|stylus)$/.test(module.request)
+            );
+          },
         }),
       ),
       ifProdWeb(

@@ -1,32 +1,35 @@
+/* @flow */
 import express from 'express';
 import devMiddleware from 'webpack-dev-middleware';
 import hotMiddleware from 'webpack-hot-middleware';
 import historyAPIFallback from 'connect-history-api-fallback';
+
 import _debug from 'debug';
 import logger from 'boldr-utils/es/logger';
+
 import ListenerManager from './listenerManager';
 
 const debug = _debug('boldr:dx:services:hotClient');
 
 class HotClientServer {
-  constructor(compiler, config) {
-    this.config = config;
+  constructor(compiler: Object, config: Config) {
+    (this: any).config = config;
 
     const app = express();
 
     const httpPathRegex = /^https?:\/\/(.*):([\d]{1,5})/i;
     const httpPath = compiler.options.output.publicPath;
-    debug('httpPath', httpPath);
+    debug('httpPath (compiler.options.output.publicPath)', httpPath);
+
     if (!httpPath.startsWith('http') && !httpPathRegex.test(httpPath)) {
       throw new Error(
         `You must supply an absolute public path to a development build`,
       );
     }
-
-    // eslint-disable-next-line no-unused-vars
+    // @NOTE: _ = http://localhost:<DEV_PORT>
     const [_, host, port] = httpPathRegex.exec(httpPath);
 
-    this.webpackDevMiddleware = devMiddleware(compiler, {
+    (this: any).webpackDevMiddleware = devMiddleware(compiler, {
       quiet: true,
       noInfo: true,
       lazy: false,
@@ -45,12 +48,14 @@ class HotClientServer {
       publicPath: compiler.options.output.publicPath,
     });
     app.use(historyAPIFallback());
-    app.use(this.webpackDevMiddleware);
-    app.use(hotMiddleware(compiler, { log: debug, heartbeat: 10 * 1000 }));
-    const devPort = parseInt(config.env.BOLDR__DEV_PORT, 10);
-    const listener = app.listen(devPort, host);
+    app.use((this: any).webpackDevMiddleware);
+    app.use(
+      hotMiddleware(compiler, { log: console.log, heartbeat: 10 * 1000 }),
+    );
 
-    this.listenerManager = new ListenerManager(listener, 'web');
+    const listener = app.listen(port, host);
+
+    (this: any).listenerManager = new ListenerManager(listener, 'client');
 
     compiler.plugin('compile', () => {
       logger.start('Building new bundle...');
@@ -67,10 +72,10 @@ class HotClientServer {
   }
 
   dispose() {
-    this.webpackDevMiddleware.close();
+    (this: any).webpackDevMiddleware.close();
 
-    return this.listenerManager
-      ? this.listenerManager.dispose()
+    return (this: any).listenerManager
+      ? (this: any).listenerManager.dispose()
       : Promise.resolve();
   }
 }
