@@ -1,6 +1,8 @@
 /* @flow */
 import webpack from 'webpack';
+import _debug from 'debug';
 
+const debug = _debug('boldr:dx:services:compileOnce');
 /**
  * Exactly like its name, this function starts webpack, runs it and resolves
  * @param  {Object} webpackConfig webpack configuration
@@ -11,6 +13,7 @@ function compileOnce(webpackConfig: Object): Promise<any> {
     try {
       webpack(webpackConfig, (err, stats) => {
         if (err || stats.hasErrors()) {
+          debug(err);
           return reject(err);
         }
 

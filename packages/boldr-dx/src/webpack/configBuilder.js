@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -14,6 +15,7 @@ import NamedModulesPlugin from 'webpack/lib/NamedModulesPlugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin
   from 'react-dev-utils/WatchMissingNodeModulesPlugin';
+import StatsPlugin from 'stats-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import _debug from 'debug';
 import postCssImport from 'postcss-import';
@@ -39,11 +41,10 @@ import {
   NODE_MAIN,
 } from '../utils/constants';
 import LoggerPlugin from './plugins/LoggerPlugin';
-import ServerListenerPlugin from './plugins/ServerListenerPlugin';
 
 const PATHS = require('../config/paths');
 
-const debug = _debug('boldr:dx:configBuilder');
+const debug = _debug('boldr:dx:webpack:configBuilder');
 
 const CWD = process.cwd();
 const prefetches = [];
@@ -52,21 +53,25 @@ const prefetchPlugins = prefetches.map(
   specifier => new webpack.PrefetchPlugin(specifier),
 );
 const cache = {
-  'web-production': {},
-  'web-development': {},
-  'node-production': {},
-  'node-development': {},
+  'client-production': {},
+  'client-development': {},
+  'server-production': {},
+  'server-development': {},
 };
+
 // This is the Webpack configuration factory. It's the juice!
-module.exports = function configBuilder(config, mode, target) {
-  debug('MODE: ', mode, 'TARGET: ', target);
-  const { inline: envVariables, bundle } = config;
-  process.env.NODE_ENV = bundle.debug ? 'development' : mode;
+module.exports = function configBuilder(
+  { config, mode = 'development', name = 'client' } = {},
+) {
+  debug('MODE: ', mode, 'NAME: ', name);
+  const { env: envVariables, bundle } = config;
   process.env.BABEL_ENV = mode;
+  const target = name === 'client' ? 'web' : 'async-node';
+  debug(target);
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
   const _WEB = target === 'web';
-  const _NODE = target === 'node';
+  const _NODE = target === 'async-node';
 
   const ifDev = ifElse(_DEV);
   const ifProd = ifElse(_PROD);
@@ -76,23 +81,15 @@ module.exports = function configBuilder(config, mode, target) {
   const ifDevWeb = ifElse(_DEV && _WEB);
   const ifProdWeb = ifElse(_PROD && _WEB);
   const ifProdNode = ifElse(_PROD && _NODE);
+  const dir = _WEB ? 'client' : 'server';
 
-  const BOLDR__DEV_PORT = parseInt(process.env.BOLDR__DEV_PORT, 10) || 3001;
+  const BOLDR__DEV_PORT = parseInt(envVariables.BOLDR__DEV_PORT, 10) || 3001;
   const EXCLUDES = [
     /node_modules/,
     bundle.client.bundleDir,
     bundle.server.bundleDir,
+    bundle.publicDir,
   ];
-
-  let whitelistedExternals = [];
-  const externalsWhitelist =
-    bundle.server.webpack &&
-    bundle.server.webpack.externalsWhitelist &&
-    bundle.server.webpack.externalsWhitelist.development;
-
-  if (Array.isArray(externalsWhitelist)) {
-    whitelistedExternals = externalsWhitelist;
-  }
 
   return {
     // pass either node or web
@@ -100,20 +97,20 @@ module.exports = function configBuilder(config, mode, target) {
     // user's project root
     context: process.cwd(),
     // sourcemap
-    devtool: _DEV ? 'cheap-module-eval-source-map' : 'source-map',
+    devtool: 'source-map',
     entry: filterEmpty({
       app: removeNil([
+        ifDevWeb(require.resolve('react-hot-loader/patch')),
         ifDevWeb(
-          `${require.resolve('webpack-dev-server/client')}?http://localhost:${BOLDR__DEV_PORT}`,
+          `${require.resolve('webpack-hot-middleware/client')}?path=http://localhost:${BOLDR__DEV_PORT}/__webpack_hmr&overlay=false&timeout=3000&reload=true`,
         ),
-        ifDevWeb(require.resolve('webpack/hot/only-dev-server')),
         _WEB ? bundle.client.entry : bundle.server.entry,
       ]),
       vendor: ifProdWeb(bundle.vendor),
     }),
     output: {
       path: ifWeb(bundle.client.bundleDir, bundle.server.bundleDir),
-      filename: '[name].js',
+      filename: ifProdWeb('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: ifDev(
         `http://localhost:${BOLDR__DEV_PORT}${bundle.webPath}`,
@@ -129,7 +126,7 @@ module.exports = function configBuilder(config, mode, target) {
     // cache dev
     cache: cache[`${target}-${mode}`],
     // true if prod & enabled in settings
-    profile: _PROD && bundle.wpProfile,
+    profile: bundle.wpProfile,
     node: _NODE ? NODE_NODE_OPTS : NODE_OPTS,
     performance: _WEB && _PROD
       ? {
@@ -149,9 +146,12 @@ module.exports = function configBuilder(config, mode, target) {
     },
     resolve: {
       extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
-      modules: ['node_modules', PATHS.projectNodeModules].concat(
-        PATHS.nodePaths,
-      ),
+      modules: [
+        'node_modules',
+        config.bundle.srcDir,
+        PATHS.projectNodeModules,
+      ].concat(PATHS.nodePaths),
+      unsafeCache: true,
       mainFields: ifNode(NODE_MAIN, BROWSER_MAIN),
     },
     resolveLoader: {
@@ -161,12 +161,12 @@ module.exports = function configBuilder(config, mode, target) {
       ifNode(() =>
         nodeExternals({
           whitelist: [
+            'source-map-support/register',
             'webpack/hot/poll?300',
             /\.(eot|woff|woff2|ttf|otf)$/,
             /\.(svg|png|jpg|jpeg|gif|ico)$/,
             /\.(mp4|mp3|ogg|swf|webp)$/,
             /\.(css|scss)$/,
-            ...whitelistedExternals,
           ],
         }),
       ),
@@ -175,7 +175,6 @@ module.exports = function configBuilder(config, mode, target) {
       noParse: [/\.min\.js/],
       strictExportPresence: true,
       rules: removeNil([
-        { parser: { requireEnsure: false } },
         // js
         {
           test: /\.(js|jsx)$/,
@@ -199,17 +198,25 @@ module.exports = function configBuilder(config, mode, target) {
                 compact: true,
                 sourceMaps: true,
                 comments: false,
-                cacheDirectory: _DEV,
+                cacheDirectory: !!_DEV,
                 presets: removeNil([
                   ifWeb(require.resolve('babel-preset-boldr/browser')),
                   ifNode(require.resolve('babel-preset-boldr/node')),
                 ]),
                 plugins: removeNil([
+                  ifDevWeb(require.resolve('react-hot-loader/babel')),
                   ifWeb([
                     require.resolve('../utils/loadableBabel.js'),
                     {
-                      server: true,
+                      server: false,
                       webpack: true,
+                    },
+                  ]),
+                  ifNode([
+                    require.resolve('../utils/loadableBabel.js'),
+                    {
+                      server: true,
+                      webpack: false,
                     },
                   ]),
                 ]),
@@ -365,6 +372,11 @@ module.exports = function configBuilder(config, mode, target) {
           test: /\.json$/,
           loader: 'json-loader',
         },
+        {
+          test: /\.(graphql|gql)$/,
+          exclude: EXCLUDES,
+          loader: require.resolve('graphql-tag/loader'),
+        },
         // url
         {
           test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
@@ -399,14 +411,14 @@ module.exports = function configBuilder(config, mode, target) {
         }),
       ),
       new ProgressBarPlugin({
-        format: `${chalk.cyan.bold('Boldr')} compiling [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
+        format: `${chalk.cyan.bold('Boldr')} status [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
         clear: false,
         summary: true,
       }),
       new webpack.LoaderOptionsPlugin({
         minimize: _PROD,
-        debug: !_PROD,
-        context: '/',
+        debug: !!_DEV,
+        context: CWD,
       }),
       ifDev(
         new HardSourceWebpackPlugin({
@@ -423,7 +435,7 @@ module.exports = function configBuilder(config, mode, target) {
           ),
           environmentHash: {
             CWD,
-            directories: ['node_modules'],
+            directories: ['node_modules', PATHS.projectNodeModules],
             files: ['package.json', 'yarn.lock', '.boldrrc'],
           },
         }),
@@ -440,7 +452,6 @@ module.exports = function configBuilder(config, mode, target) {
       // If the value isn’t a string, it will be stringified
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
-        DEBUG: JSON.stringify(process.env.DEBUG || false),
       }),
       new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
@@ -453,12 +464,29 @@ module.exports = function configBuilder(config, mode, target) {
           path.join(bundle.assetsDir || '', 'assets.json'),
         ),
       }),
+      new webpack.PrefetchPlugin(
+        `${bundle.srcDir}/shared/components/App/App.js`,
+      ),
+      ifProd(
+        new StatsPlugin(`${bundle.assetsDir}/stats.json`, {
+          chunkModules: true,
+          exclude: [/node_modules[\\/]react/],
+        }),
+      ),
       ifProdWeb(new webpack.HashedModuleIdsPlugin()),
-      ifProdWeb(new WebpackMd5Hash()),
+      ifWeb(new WebpackMd5Hash()),
       ifProdWeb(
         new webpack.optimize.CommonsChunkPlugin({
           name: 'vendor',
-          minChunks: module => /node_modules/.test(module.resource),
+          minChunks(module) {
+            // A module is extracted into the vendor chunk when...
+            return (
+              // If it's inside node_modules
+              /node_modules/.test(module.context) &&
+              // Do not externalize if the request is a CSS file
+              !/\.(css|less|scss|sass|styl|stylus)$/.test(module.request)
+            );
+          },
         }),
       ),
       ifProdWeb(
@@ -482,7 +510,7 @@ module.exports = function configBuilder(config, mode, target) {
           ignoreOrder: bundle.cssModules,
         }),
       ),
-      ifNode(new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })),
+
       ifProdWeb(
         new ChunkManifestPlugin({
           filename: 'manifest.json',
@@ -507,7 +535,7 @@ module.exports = function configBuilder(config, mode, target) {
       ),
       // Errors during development will kill any of our NodeJS processes.
       // this prevents that from happening.
-      ifDevWeb(new webpack.NoEmitOnErrorsPlugin()),
+      ifDev(new webpack.NoEmitOnErrorsPlugin()),
       //  We need this plugin to enable hot module reloading
       ifDevWeb(new webpack.HotModuleReplacementPlugin()),
       ifProd(
@@ -517,9 +545,6 @@ module.exports = function configBuilder(config, mode, target) {
           logLevel: 'error',
         }),
       ),
-      // watch missing node modules
-      ifDev(new WatchMissingNodeModulesPlugin(PATHS.projectNodeModules)),
-      ifNodeDev(new ServerListenerPlugin(config, target)),
     ]),
   };
 };

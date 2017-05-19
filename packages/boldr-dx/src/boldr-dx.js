@@ -5,6 +5,7 @@ import fs from 'fs';
 import program from 'caporal';
 import updateNotifier from 'update-notifier';
 import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
 import pkg from '../package.json';
 import dev from './commands/dev';
 import clean from './commands/clean';
@@ -14,6 +15,7 @@ import build from './commands/build';
 import Engine from './engine';
 import { cwd } from './config/paths';
 
+const debug = _debug('boldr:dx:dx');
 // @TODO: Remove this once babel-loader updates
 // https://github.com/babel/babel-loader/pull/391
 // $FlowIssue

@@ -30,18 +30,20 @@
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "babel-jest": "^20.0.3",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-boldr": "^0.8.2",
     "babel-preset-env": "^1.4.0",
     "cz-conventional-changelog-emoji": "^0.1.0",
     "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
-    "eslint-config-boldr": "^0.9.5",
+    "eslint-config-boldr": "^0.9.8",
     "flow-bin": "0.46.0",
-    "jest": "20.0.1",
+    "jest": "20.0.3",
     "lerna": "2.0.0-rc.4",
     "minimist": "^1.2.0",
     "node-fetch": "^1.6.3",
@@ -56,7 +58,7 @@
       "examples/.*",
       "packages/.*/es",
       "packages/.*/dist",
-      "packages/boldr-base-project/.*"
+      "packages/boldr-project-template/.*"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -72,13 +74,16 @@
     "coveragePathIgnorePatterns": [
       "**/node_modules/",
       "**/packages/*/node_modules/",
-      "**/packages/boldr-base-project/**",
+      "**/packages/boldr-project-template/**",
       "**/coverage/",
       "**/packages/boldr-dx/src/utils/jest"
     ],
     "coverageReporters": [
       "json"
     ],
+    "transform": {
+      ".js": "./internal/transform.js"
+    },
     "testEnvironment": "node",
     "testMatch": [
       "**/*.test.js"

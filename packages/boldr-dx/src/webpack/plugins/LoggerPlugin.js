@@ -16,7 +16,7 @@ class LoggerPlugin {
     (this: any).verbose = options.verbose;
     (this: any).onSuccessMessage = options.onSuccessMessage;
     (this: any).deprecationMessage = options.deprecationMessage;
-    (this: any).target = options.target === 'web' ? 'CLIENT' : 'SERVER';
+    (this: any).target = options.target;
   }
 
   apply(compiler: Object) {
@@ -30,17 +30,18 @@ class LoggerPlugin {
           if (!this.verbose) {
             clearConsole();
           }
-          logger.end('Bundle compiled successfully');
+          let time = stats.endTime - stats.startTime;
+          logger.end(
+            `Bundle for ${this.target} compiled successfully in ${time} ms`,
+          );
           IS_DONE = true;
 
           if (this.onSuccessMessage) {
             logger.end(this.onSuccessMessage);
-            logger.info('');
           }
 
           if (this.deprecationMessage) {
             logger.warn(this.deprecationMessage);
-            logger.log('');
           }
         }
       }
@@ -49,8 +50,8 @@ class LoggerPlugin {
         messages.errors.forEach(e => {
           logger.error(
             `Failed to compile ${this.target} with ${messages.errors.length} errors`,
-            e
           );
+          logger.error(e);
         });
         return;
       }
