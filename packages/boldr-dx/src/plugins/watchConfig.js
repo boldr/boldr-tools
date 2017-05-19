@@ -3,6 +3,9 @@
 import path from 'path';
 import chokidar from 'chokidar';
 import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
+
+const debug = _debug('boldr:dx:plugins:watchConfig');
 
 function createUpdater(engine: Engine) {
   return (filePath: string) => {

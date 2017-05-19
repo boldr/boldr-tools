@@ -1,4 +1,7 @@
 import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
+
+const debug = _debug('boldr:dx:services:listener');
 
 class ListenerManager {
   constructor(listener, name) {

@@ -1,9 +1,10 @@
 import path from 'path';
 import { spawn } from 'child_process';
 import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
 import appRoot from '../utils/appRoot';
 
-const debug = require('debug')('boldr:webpack');
+const debug = _debug('boldr:dx:services:hotNode');
 
 class HotNodeServer {
   constructor(name, compiler, clientCompiler) {
@@ -38,17 +39,19 @@ class HotNodeServer {
         return;
       }
       if (this.clientCompiling) {
-        setTimeout(waitForClientThenStartServer, 100);
+        setTimeout(waitForClientThenStartServer, 40);
       } else {
         startServer();
       }
     };
 
     clientCompiler.plugin('compile', () => {
+      logger.start('Building a new client bundle...');
       this.clientCompiling = true;
     });
 
     clientCompiler.plugin('done', stats => {
+      logger.end('Client bundle compiled.');
       if (!stats.hasErrors()) {
         this.clientCompiling = false;
       }
@@ -56,7 +59,7 @@ class HotNodeServer {
 
     compiler.plugin('compile', () => {
       this.serverCompiling = true;
-      logger.task('Building new bundle...');
+      logger.start('Building a new server bundle...');
     });
 
     compiler.plugin('done', stats => {

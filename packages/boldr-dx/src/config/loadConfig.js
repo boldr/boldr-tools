@@ -2,11 +2,11 @@
 import BoldrConfig from 'boldr-config';
 import _debug from 'debug';
 
-const debug = _debug('boldr:dx:loadConfig');
+const debug = _debug('boldr:dx:config:loadConfig');
 
 module.exports = function loadConfig(engine: Engine): Config {
   const configModulePath = engine.configFilePath();
-  debug('Clearing require cache', configModulePath);
+  debug('Clearing require cache');
   // first clean up require cache so we always load fresh config
   delete require.cache[configModulePath];
   // then require the fresh config

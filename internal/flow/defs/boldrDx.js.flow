@@ -29,6 +29,12 @@ declare type Config = {
   redis: Object,
 };
 
+declare type WebpackConfig = {
+  config: Config,
+  mode: string,
+  target: string,
+};
+
 declare interface Engine {
   cwd: string,
   configFileName: string,

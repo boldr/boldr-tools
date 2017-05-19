@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -40,11 +41,10 @@ import {
   NODE_MAIN,
 } from '../utils/constants';
 import LoggerPlugin from './plugins/LoggerPlugin';
-import ServerListenerPlugin from './plugins/ServerListenerPlugin';
 
 const PATHS = require('../config/paths');
 
-const debug = _debug('boldr:dx:configBuilder');
+const debug = _debug('boldr:dx:webpack:configBuilder');
 
 const CWD = process.cwd();
 const prefetches = [];
@@ -60,10 +60,11 @@ const cache = {
 };
 
 // This is the Webpack configuration factory. It's the juice!
-module.exports = function configBuilder({ config, mode = 'development', target = 'web' } = {}) {
+module.exports = function configBuilder(
+  { config, mode = 'development', target = 'web' } = {},
+) {
   debug('MODE: ', mode, 'TARGET: ', target);
   const { env: envVariables, bundle } = config;
-  process.env.NODE_ENV = bundle.debug ? 'development' : mode;
   process.env.BABEL_ENV = mode;
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
@@ -80,11 +81,12 @@ module.exports = function configBuilder({ config, mode = 'development', target =
   const ifProdNode = ifElse(_PROD && _NODE);
   const dir = _WEB ? 'client' : 'server';
 
-  const BOLDR__DEV_PORT = parseInt(process.env.BOLDR__DEV_PORT, 10) || 3001;
+  const BOLDR__DEV_PORT = parseInt(envVariables.BOLDR__DEV_PORT, 10) || 3001;
   const EXCLUDES = [
     /node_modules/,
     bundle.client.bundleDir,
     bundle.server.bundleDir,
+    bundle.publicDir,
   ];
 
   return {
@@ -98,7 +100,7 @@ module.exports = function configBuilder({ config, mode = 'development', target =
       app: removeNil([
         ifDevWeb(require.resolve('react-hot-loader/patch')),
         ifDevWeb(
-          `${require.resolve('webpack-hot-middleware/client')}?reload=true&path=http://localhost:${BOLDR__DEV_PORT}/__webpack_hmr`,
+          `${require.resolve('webpack-hot-middleware/client')}?path=http://localhost:${BOLDR__DEV_PORT}/__webpack_hmr&overlay=false&timeout=3000&reload=true`,
         ),
         _WEB ? bundle.client.entry : bundle.server.entry,
       ]),
@@ -448,7 +450,7 @@ module.exports = function configBuilder({ config, mode = 'development', target =
       // If the value isn’t a string, it will be stringified
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
-        DEBUG: JSON.stringify(process.env.BOLDR__DEBUG || false),
+        DEBUG: JSON.stringify(envVariables.BOLDR__DEBUG || false),
       }),
       new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
@@ -464,16 +466,10 @@ module.exports = function configBuilder({ config, mode = 'development', target =
       new webpack.PrefetchPlugin(
         `${bundle.srcDir}/shared/components/App/App.js`,
       ),
-      new webpack.PrefetchPlugin(
-        `${bundle.srcDir}/shared/components/SiteHeader/SiteHeaderDropdown/SiteHeaderDropdown.js`,
-      ),
-      new webpack.PrefetchPlugin(
-        `${bundle.srcDir}/shared/scenes/Blog/ArticleListing/ArticleListingContainer.js`,
-      ),
       ifProd(
         new StatsPlugin(`${bundle.assetsDir}/stats.json`, {
           chunkModules: true,
-          exclude: [/node_modules[\\\/]react/],
+          exclude: [/node_modules[\\/]react/],
         }),
       ),
       ifNode(

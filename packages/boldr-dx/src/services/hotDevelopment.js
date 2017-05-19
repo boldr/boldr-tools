@@ -2,16 +2,17 @@
 import path from 'path';
 import webpack from 'webpack';
 import logger from 'boldr-utils/es/logger';
+import _debug from 'debug';
 import buildDevDlls from '../webpack/plugins/buildDevDlls';
 import configBuilder from '../webpack/configBuilder';
 import appRoot from '../utils/appRoot';
 import HotNodeServer from './hotNodeServer';
 import HotClientServer from './hotClientServer';
 
-const debug = require('debug')('boldr:webpack');
+const debug = _debug('boldr:dx:services:hotDev');
 
 function safeDisposer(server) {
-  debug(server);
+  debug('Disposing');
   return server ? server.dispose() : Promise.resolve();
 }
 
@@ -53,7 +54,6 @@ class HotDevelopment {
   constructor(config) {
     this.hotClientServer = null;
     this.hotNodeServer = null;
-    this.timeout = 0;
     this.config = config;
 
     const clientBundle = initializeBundle(config, 'web');

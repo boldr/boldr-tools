@@ -3,7 +3,7 @@ const GLOBAL_KEY = 'appRoot';
 let _rootDir;
 
 exports.get = function() {
-  const dir = global[GLOBAL_KEY];
+  const dir = global.GLOBAL_KEY;
   if (dir) {
     return dir;
   }
@@ -32,5 +32,5 @@ exports.get = function() {
 };
 
 exports.set = function(dir) {
-  global[GLOBAL_KEY] = _rootDir = dir;
+  global.GLOBAL_KEY = _rootDir = dir;
 };

@@ -1,11 +1,12 @@
 import express from 'express';
-import createWebpackMiddleware from 'webpack-dev-middleware';
-import createWebpackHotMiddleware from 'webpack-hot-middleware';
+import devMiddleware from 'webpack-dev-middleware';
+import hotMiddleware from 'webpack-hot-middleware';
 import historyAPIFallback from 'connect-history-api-fallback';
+import _debug from 'debug';
 import logger from 'boldr-utils/es/logger';
 import ListenerManager from './listenerManager';
 
-const debug = require('debug')('boldr:webpack');
+const debug = _debug('boldr:dx:services:hotClient');
 
 class HotClientServer {
   constructor(compiler, config) {
@@ -15,6 +16,7 @@ class HotClientServer {
 
     const httpPathRegex = /^https?:\/\/(.*):([\d]{1,5})/i;
     const httpPath = compiler.options.output.publicPath;
+    debug('httpPath', httpPath);
     if (!httpPath.startsWith('http') && !httpPathRegex.test(httpPath)) {
       throw new Error(
         `You must supply an absolute public path to a development build`,
@@ -24,7 +26,7 @@ class HotClientServer {
     // eslint-disable-next-line no-unused-vars
     const [_, host, port] = httpPathRegex.exec(httpPath);
 
-    this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
+    this.webpackDevMiddleware = devMiddleware(compiler, {
       quiet: true,
       noInfo: true,
       lazy: false,
@@ -32,6 +34,7 @@ class HotClientServer {
       watchOptions: {
         aggregateTimeout: 300,
         poll: true,
+        ignored: /node_modules/,
       },
       stats: {
         colors: true,
@@ -43,7 +46,7 @@ class HotClientServer {
     });
     app.use(historyAPIFallback());
     app.use(this.webpackDevMiddleware);
-    app.use(createWebpackHotMiddleware(compiler));
+    app.use(hotMiddleware(compiler, { log: debug, heartbeat: 10 * 1000 }));
     const devPort = parseInt(config.env.BOLDR__DEV_PORT, 10);
     const listener = app.listen(devPort, host);
 

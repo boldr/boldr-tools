@@ -31,6 +31,7 @@ class Engine {
   }
   // determine our NODE_ENV used as the identifier
   getIdentifier(): string {
+    debug('getIdentifier: ', this.getConfiguration());
     return this.getConfiguration().env.NODE_ENV;
   }
 
@@ -58,7 +59,6 @@ class Engine {
 
   async start(): Promise<any> {
     logger.start('Starting development bundling process.');
-    let serverCompiler, clientDevServer;
     const config: Config = loadConfiguration(this);
     // instantiate plugins
     // eslint-disable-next-line babel/new-cap
@@ -81,9 +81,9 @@ class Engine {
     if (serverCompiler) {
       terminate(process.pid, err => {
         if (err) {
-          console.log('Oopsy: ' + err);
+          debug(`ERR RESTART: ${err}`);
         } else {
-          console.log('done');
+          logger.task('Terminated.');
         }
       });
     }
@@ -95,9 +95,9 @@ class Engine {
   async stop(): Promise<any> {
     terminate(process.pid, err => {
       if (err) {
-        console.log('Oopsy: ' + err);
+        debug(`ERR RESTART: ${err}`);
       } else {
-        console.log('done');
+        logger.task('Terminated.');
       }
     });
   }
