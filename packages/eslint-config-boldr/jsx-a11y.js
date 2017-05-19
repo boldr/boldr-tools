@@ -9,6 +9,11 @@ module.exports = {
   },
   plugins: ['react', 'jsx-a11y'],
   rules: {
+    //
+    'jsx-a11y/media-has-caption': 2,
+    'jsx-a11y/no-interactive-element-to-noninteractive-role': 2,
+    'jsx-a11y/no-noninteractive-element-to-interactive-role': 2,
+    'jsx-a11y/no-noninteractive-tabindex': 2,
     // aria-label=
     'jsx-a11y/accessible-emoji': 2,
     // Enforce that anchors have content and that the content is
