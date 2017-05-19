@@ -33,3 +33,26 @@ Webpack and build toolkit for universal React applications. Use it any any appli
 
 
 > This project will adhere to semver upon the 1.0.0 release.
+
+
+## Boldr-DX
+
+Boldr Developer Experience is a build toolkit. If you happen to find Webpack configuration tedious, BoldrDX is for you. BoldrDX uses Webpack in a tailored environment specifically for Boldr. However, you can use it in any project without any troubles.
+
+
+### Quick Setup
+[README](/packages/boldr-dx/README.md)  
+
+1. `npm init -y`
+
+Add Boldr-DX to your dependencies.  
+
+2. `yarn add --dev boldr-dx`  
+
+Create the **SMALL** configuration files. You won't have to configure too much. Promise. 
+
+3. `mkdir .boldr && touch boldr.js`   
+
+
+4. `package.json`  
+Add the commands to your `package.json`.   

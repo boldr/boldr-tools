@@ -68,8 +68,16 @@ Insert the config from above into the boldr.js file. The configuration is meant 
 **OR** use the provided `boldr-project-template` which is a standalone universal React application.
 
 
-4. `boldr-dx dev`  
-Watches both client and server bundles. Enables hot reloading.
+4. `package.json`  
+Add the commands to your `package.json`.   
+
+```json
+  "scripts": {
+    "build": "NODE_ENV=production boldr-dx build",
+    "start": "NODE_ENV=production node server/app.js",
+    "dev": "NODE_ENV=development BOLDR__SERVER_PORT=3000 BOLDR__DEV_PORT=3001 boldr-dx dev",
+  }
+```
 
 ### Commands
 
@@ -78,6 +86,12 @@ Watches both client and server bundles. Enables hot reloading.
 Runtime env options
   - `process.env.BOLDR__SERVER_PORT`
   - `process.env.BOLDR__DEV_PORT`
+
+`boldr-dx build`: Compile server and client bundles for production.
+  - Set `NODE_ENV=production`.
+
+`boldr-dx clean`: Remove compiled files as well as any compiler caches.
+  - Use `-d` along with a path (starting from your CWD) to remove additional directories. 
 
 
 ### Assets Information
@@ -97,6 +111,14 @@ The order is:
 
 
 ### Additional Information
+  
+The configuration allows you to customize the output directories, the entry files and ports. By default, it is separated into
+src/(client|shared|server). Client and Server contain the entrypoint of index.js in each.
+
+CSS modules can be **disabled** in the `boldr.js` file by setting `cssModules` to **false**.
+
+Scss is included.
+
 
 #### Helpers
 
