@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-boldr",
-  "version": "0.8.2",
+  "version": "0.8.4",
   "description": "Babel preset used by Boldr",
   "license": "MIT",
   "author": "Steven Truesdell <steven@strues.io>",

@@ -3,16 +3,15 @@ const path = require('path');
 const env = process.env.BABEL_ENV || process.env.NODE_ENV;
 
 module.exports = {
-  compact: false,
   presets: [
     [
-      require('babel-preset-env'),
+      require.resolve('babel-preset-env'),
       {
         modules: false,
         debug: false,
         useBuiltIns: true,
         targets: {
-          node: 7.7,
+          node: '7.7',
         },
       },
     ],
