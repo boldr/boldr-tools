@@ -4,9 +4,6 @@ module.exports = {
     BOLDR__SERVER_PORT: process.env.BOLDR__SERVER_PORT,
     BOLDR__DEV_PORT: process.env.BOLDR__DEV_PORT,
   },
-  plugins: [
-    require('../plugins/watchConfig'), // eslint-disable-line global-require
-  ],
   bundle: {
     cssModules: true,
     wpProfile: false,

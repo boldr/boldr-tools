@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import logger from 'boldr-utils/es/logger';
-import Engine from '../engine';
+import loadConfig from '../config/loadConfig';
 
 function clean(config) {
   const rootDir = process.cwd();
@@ -18,8 +18,7 @@ function cleanInput(directory) {
 
 function task(args, options) {
   logger.task('Cleaning up');
-  const engine = new Engine(fs.realpathSync(process.cwd()), undefined);
-  const config = engine.getConfiguration();
+  const config = loadConfig();
   clean(config);
 
   const { directory } = options;

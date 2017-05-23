@@ -1,3 +1,4 @@
+/* @flow */
 const fs = require('fs');
 const path = require('path');
 
@@ -6,7 +7,7 @@ const path = require('path');
  * into account.
  * @type {String}
  */
-const cwd = fs.realpathSync(process.cwd());
+const ROOT_DIR = fs.realpathSync(process.cwd());
 
 /**
  * Get the path from the user's w root
@@ -14,7 +15,7 @@ const cwd = fs.realpathSync(process.cwd());
  * @return {any}      whatever it is we're looking for
  */
 function resolveProject(...args) {
-  return path.resolve(cwd, ...args);
+  return path.resolve(ROOT_DIR, ...args);
 }
 
 /**
@@ -38,7 +39,7 @@ const nodePaths = (process.env.NODE_PATH || '')
   .map(resolveProject);
 
 module.exports = {
-  cwd,
+  ROOT_DIR,
   nodePaths,
   boldrNodeModules: resolveBoldr('node_modules'),
   projectNodeModules: resolveProject('node_modules'),

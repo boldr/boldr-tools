@@ -5,7 +5,7 @@ const env = process.env.BABEL_ENV || process.env.NODE_ENV;
 module.exports = {
   presets: [
     [
-      require('babel-preset-env'),
+      require.resolve('babel-preset-env'),
       {
         modules: false,
         debug: false,

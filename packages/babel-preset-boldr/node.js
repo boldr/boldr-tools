@@ -7,12 +7,12 @@ module.exports = {
     [
       require.resolve('babel-preset-env'),
       {
-        modules: false,
         debug: false,
         useBuiltIns: true,
         targets: {
-          node: '7.7',
+          node: 7,
         },
+        exclude: ['transform-async-to-generator'],
       },
     ],
     require.resolve('babel-preset-react'),
