@@ -1,11 +1,13 @@
 /* @flow */
 import path from 'path';
 import fs from 'fs-extra';
-import webpack from 'webpack';
+import Webpack from 'webpack';
+import DllPlugin from 'webpack/lib/DllPlugin';
 import md5 from 'md5';
 import Promise from 'bluebird';
 import _debug from 'debug';
 import logger from 'boldr-utils/es/logger';
+
 
 const debug = _debug('boldr:dx:devDllPlugin');
 
@@ -16,7 +18,6 @@ function buildDevDlls(config: Config) {
   );
 
   const dllConfig = config.bundle.vendor;
-  debug(config.bundle.assetsDir);
   const devDLLDependencies = dllConfig.sort();
 
   // We calculate a hash of the package.json's dependencies, which we can use
@@ -53,7 +54,7 @@ function buildDevDlls(config: Config) {
         library: '__vendor_dlls__',
       },
       plugins: [
-        new webpack.DllPlugin({
+        new DllPlugin({
           path: path.resolve(config.bundle.assetsDir, '__vendor_dlls__.json'),
           name: '__vendor_dlls__',
         }),
@@ -68,7 +69,7 @@ function buildDevDlls(config: Config) {
         included:\n\t-${devDLLDependencies.join('\n\t-')}\n`);
 
       const webpackConfig = webpackInstance();
-      const vendorDLLCompiler = webpack(webpackConfig);
+      const vendorDLLCompiler = Webpack(webpackConfig);
       vendorDLLCompiler.run(err => {
         if (err) {
           return reject(err);
@@ -85,21 +86,19 @@ function buildDevDlls(config: Config) {
     if (!fs.existsSync(vendorDLLHashFilePath)) {
       // builddll
       logger.task('Generating a new Vendor DLL.');
-      buildVendorDLL().then(resolve).catch(reject);
-    } else {
-      // first check if the md5 hashes match
-      const dependenciesHash = fs.readFileSync(vendorDLLHashFilePath, 'utf8');
-      const dependenciesChanged = dependenciesHash !== currentDependenciesHash;
-
-      if (dependenciesChanged) {
-        logger.info('New vendor dependencies detected.');
-        logger.task('Regenerating the vendor dll...');
-        buildVendorDLL().then(resolve).catch(reject);
-      } else {
-        logger.end('Dependencies did not change. Using existing vendor dll.');
-        return resolve();
-      }
+      return buildVendorDLL().then(resolve).catch(reject);
     }
+    // first check if the md5 hashes match
+    const dependenciesHash = fs.readFileSync(vendorDLLHashFilePath, 'utf8');
+    const dependenciesChanged = dependenciesHash !== currentDependenciesHash;
+
+    if (dependenciesChanged) {
+      logger.info('New vendor dependencies detected.');
+      logger.task('Regenerating the vendor dll...');
+      return buildVendorDLL().then(resolve).catch(reject);
+    }
+    logger.end('Dependencies did not change. Using existing vendor dll.');
+    return resolve();
   });
 }
 

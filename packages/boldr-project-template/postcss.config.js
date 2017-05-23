@@ -13,6 +13,5 @@ module.exports = {
     'postcss-reporter': {
       'clear-reported-messages': true,
     }
-
   },
 };

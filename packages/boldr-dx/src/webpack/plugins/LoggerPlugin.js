@@ -11,7 +11,7 @@ let IS_COMPILING = false;
 let IS_DONE = false;
 
 class LoggerPlugin {
-  constructor(options: Object) {
+  constructor(options: LoggerPluginOptions) {
     options = options || {};
     (this: any).verbose = options.verbose;
     (this: any).onSuccessMessage = options.onSuccessMessage;
@@ -30,7 +30,7 @@ class LoggerPlugin {
           if (!this.verbose) {
             clearConsole();
           }
-          let time = stats.endTime - stats.startTime;
+          const time = stats.endTime - stats.startTime;
           logger.end(
             `Bundle for ${this.target} compiled successfully in ${time} ms`,
           );

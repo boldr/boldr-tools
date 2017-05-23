@@ -2,6 +2,9 @@
 
 declare type ConfigEnv = Object & {
   NODE_ENV: string,
+  BOLDR__DEV_PORT: ?number,
+  BOLDR__DEBUG: ?number,
+  BOLDR__SERVER_PORT: ?number,
 };
 
 declare type ConfigBundle = Object & {
@@ -22,7 +25,6 @@ declare type ConfigBundle = Object & {
 
 declare type Config = {
   env: ConfigEnv,
-  plugins: Array<PluginController>,
   bundle: ConfigBundle,
   server: ?Object,
   logging: ?Object,
@@ -33,32 +35,22 @@ declare type Config = {
   cors: ?Object,
 };
 
+declare type WebpackCompiler = {
+  config: Config,
+};
+
 declare type WebpackConfig = {
   config: Config,
   mode: string,
+};
+
+declare type LoggerPluginOptions = {
+  verbose: ?boolean,
+  onSuccessMessage: ?string,
+  deprecationMessage: ?string,
   target: string,
 };
 
-declare interface Engine {
-  cwd: string,
-  configFileName: string,
-  plugins: Array<PluginController>,
-
-  constructor(cwd: string, configFilePath: string): void,
-  configFilePath(): string,
-  getConfiguration(): Config,
-  getIdentifier(): string,
-  start(): Promise<any>,
-  dev(): Promise<any>,
-  build(): Promise<any>,
-  restart(): Promise<any>,
-  stop(): Promise<any>,
+declare interface LoggerPlugin {
+  options: LoggerPluginOptions,
 }
-
-declare type Plugin = (engine: Engine, runOnce: boolean) => PluginController;
-
-declare type PluginController = {
-  start(): ?Promise<any>,
-  build(): ?Promise<any>,
-  terminate(): Promise<any>,
-};
