@@ -1,21 +1,20 @@
-/* @flow */
 const fs = require('fs');
 const path = require('path');
-
+const appRoot = require('boldr-utils/es/node/appRoot');
 /**
  * Path of the current working directory, with symlinks taken
  * into account.
  * @type {String}
  */
-const ROOT_DIR = fs.realpathSync(process.cwd());
+export const cwd = appRoot.get();
 
 /**
- * Get the path from the user's w root
+ * Get the path from the user's project root
  * @param  {String} args the path we are trying to reach
  * @return {any}      whatever it is we're looking for
  */
 function resolveProject(...args) {
-  return path.resolve(ROOT_DIR, ...args);
+  return path.resolve(cwd, ...args);
 }
 
 /**
@@ -39,8 +38,9 @@ const nodePaths = (process.env.NODE_PATH || '')
   .map(resolveProject);
 
 module.exports = {
-  ROOT_DIR,
-  nodePaths,
+  nodePaths: nodePaths,
   boldrNodeModules: resolveBoldr('node_modules'),
   projectNodeModules: resolveProject('node_modules'),
+  projectPkg: resolveProject('package.json'),
+  cacheDir: resolveProject('node_modules/.boldr_cache'),
 };

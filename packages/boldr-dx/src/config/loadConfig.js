@@ -7,9 +7,10 @@ import defaultConfig from './defaultConfig';
 
 const debug = _debug('boldr:dx:config:loadConfig');
 
-export default function loadConfig(): Config {
+export default function loadConfig(engine): Config {
   try {
-    const configModulePath = path.resolve(appRoot.get(), './.boldr/boldr.js');
+    const configModulePath = engine.configFilePath();
+    const inputOpts = engine.getInputOptions();
     debug('Clearing require cache');
     // first clean up require cache so we always load fresh config
     delete require.cache[configModulePath];
@@ -24,6 +25,7 @@ export default function loadConfig(): Config {
         ...defaultConfig.env,
         ...(boldrconfig.env || {}),
       },
+      plugins: [...defaultConfig.plugins, ...(boldrconfig.plugins || [])],
       bundle: {
         ...defaultConfig.bundle,
         ...boldrconfig.bundle,

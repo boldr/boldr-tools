@@ -1,13 +1,12 @@
 /* @flow */
 import path from 'path';
 import fs from 'fs-extra';
-import Webpack from 'webpack';
+import webpack from 'webpack';
 import DllPlugin from 'webpack/lib/DllPlugin';
 import md5 from 'md5';
 import Promise from 'bluebird';
 import _debug from 'debug';
 import logger from 'boldr-utils/es/logger';
-
 
 const debug = _debug('boldr:dx:devDllPlugin');
 
@@ -69,7 +68,7 @@ function buildDevDlls(config: Config) {
         included:\n\t-${devDLLDependencies.join('\n\t-')}\n`);
 
       const webpackConfig = webpackInstance();
-      const vendorDLLCompiler = Webpack(webpackConfig);
+      const vendorDLLCompiler = webpack(webpackConfig);
       vendorDLLCompiler.run(err => {
         if (err) {
           return reject(err);
