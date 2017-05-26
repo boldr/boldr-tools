@@ -11,7 +11,7 @@ let IS_COMPILING = false;
 let IS_DONE = false;
 
 class LoggerPlugin {
-  constructor(options: LoggerPluginOptions) {
+  constructor(options: Object) {
     options = options || {};
     (this: any).verbose = options.verbose;
     (this: any).onSuccessMessage = options.onSuccessMessage;

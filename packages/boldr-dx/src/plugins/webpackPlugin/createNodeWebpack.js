@@ -1,33 +1,26 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, prefer-template */
 
 import path from 'path';
+import { createHash } from 'crypto';
 import _debug from 'debug';
 import chalk from 'chalk';
 import removeNil from 'boldr-utils/es/arrays/removeNil';
 import ifElse from 'boldr-utils/es/logic/ifElse';
 import appRoot from 'boldr-utils/es/node/appRoot';
+import webpack from 'webpack';
 
-import LimitChunkCountPlugin from 'webpack/lib/optimize/LimitChunkCountPlugin';
-import LoaderOptionsPlugin from 'webpack/lib/LoaderOptionsPlugin';
-import DefinePlugin from 'webpack/lib/DefinePlugin';
-import EnvironmentPlugin from 'webpack/lib/EnvironmentPlugin';
-import HotModuleReplacementPlugin from 'webpack/lib/HotModuleReplacementPlugin';
-import NoEmitOnErrorsPlugin from 'webpack/lib/NoEmitOnErrorsPlugin';
-
+import WriteFilePlugin from 'write-file-webpack-plugin';
 import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
-import WriteFilePlugin from 'write-file-webpack-plugin';
-import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 
 import LoggerPlugin from './plugins/LoggerPlugin';
-import ServerListenerPlugin from './plugins/ServerListenerPlugin';
+// import ServerListenerPlugin from './plugins/ServerListenerPlugin';
 
-const PATHS = require('../config/paths');
+const PATHS = require('../../config/paths');
 
 const debug = _debug('boldr:dx:webpack:createNodeWebpack');
-
 const CWD = appRoot.get();
 const prefetches = [];
 
@@ -62,37 +55,35 @@ export default function createNodeWebpack(
     bundle.publicDir,
   ];
 
-  return {
+  const nodeConfig = {
     // pass either node or web
     target: 'async-node',
     // user's project root
     context: appRoot.get(),
     // sourcemap
-    devtool: 'source-map',
-    entry: removeNil([
-      ifDev('webpack/hot/poll?300'),
-      require.resolve('./polyfills/node'),
-      bundle.server.entry,
-    ]),
+    devtool: '#source-map',
+    entry: [require.resolve('./polyfills/node'), bundle.server.entry],
     output: {
       path: bundle.server.bundleDir,
       filename: 'server.js',
       publicPath: ifDev(
-        `http://localhost:${BOLDR__DEV_PORT}${bundle.webPath}`,
+        `http://localhost:${BOLDR__DEV_PORT}`,
         // Otherwise we expect our bundled output to be served from this path.
         bundle.webPath,
       ),
       // only prod
       pathinfo: _DEV,
       libraryTarget: 'commonjs2',
+      strictModuleExceptionHandling: true,
+      devtoolModuleFilenameTemplate: info =>
+        path.resolve(info.absoluteResourcePath),
     },
     // true if prod
     bail: _PROD,
-    watch: true,
     // cache dev
     cache: cache[`server-${mode}`],
     // true if prod & enabled in settings
-    profile: bundle.wpProfile,
+    profile: _PROD && bundle.wpProfile,
     node: {
       console: true,
       __filename: true,
@@ -116,10 +107,11 @@ export default function createNodeWebpack(
       modules: ['node_modules', PATHS.projectNodeModules].concat(
         PATHS.nodePaths,
       ),
-      unsafeCache: true,
       mainFields: ['module', 'jsnext:main', 'main'],
       alias: {
-        'webpack/hot/poll': require.resolve('webpack/hot/poll'),
+        'babel-runtime': path.dirname(
+          require.resolve('babel-runtime/package.json'),
+        ),
       },
     },
     resolveLoader: {
@@ -128,7 +120,6 @@ export default function createNodeWebpack(
     externals: nodeExternals({
       whitelist: [
         'source-map-support/register',
-        _DEV ? 'webpack/hot/poll?300' : null,
         /\.(eot|woff|woff2|ttf|otf)$/,
         /\.(svg|png|jpg|jpeg|gif|ico)$/,
         /\.(mp4|mp3|ogg|swf|webp)$/,
@@ -137,7 +128,6 @@ export default function createNodeWebpack(
     }),
     module: {
       noParse: [/\.min\.js/],
-      strictExportPresence: true,
       rules: removeNil([
         // js
         {
@@ -149,10 +139,7 @@ export default function createNodeWebpack(
               loader: 'cache-loader',
               options: {
                 // provide a cache directory where cache items should be stored
-                cacheDirectory: path.resolve(
-                  PATHS.projectNodeModules,
-                  '.cache',
-                ),
+                cacheDirectory: PATHS.cacheDir,
               },
             }),
             {
@@ -162,9 +149,16 @@ export default function createNodeWebpack(
                 compact: true,
                 sourceMaps: true,
                 comments: false,
-                cacheDirectory: !!_DEV,
+                cacheDirectory: _DEV,
                 presets: [require.resolve('babel-preset-boldr/node')],
-                plugins: [],
+                plugins: [
+                  [
+                    require.resolve('babel-plugin-styled-components'),
+                    {
+                      ssr: true,
+                    },
+                  ],
+                ],
               },
             },
           ]),
@@ -178,12 +172,16 @@ export default function createNodeWebpack(
         {
           test: /\.scss$/,
           exclude: EXCLUDES,
-          use: ['css-loader/locals', 'postcss-loader', 'sass-loader'],
+          use: ['css-loader/locals', 'postcss-loader', 'fast-sass-loader'],
         },
         // json
         {
           test: /\.json$/,
           loader: 'json-loader',
+        },
+        {
+          test: /\.graphqls/,
+          use: 'raw-loader',
         },
         {
           test: /\.(graphql|gql)$/,
@@ -215,36 +213,18 @@ export default function createNodeWebpack(
     },
     plugins: removeNil([
       ...prefetchPlugins,
-      new LoaderOptionsPlugin({
+      new webpack.LoaderOptionsPlugin({
         minimize: _PROD,
         debug: !!_DEV,
         context: CWD,
       }),
       new ProgressBarPlugin({
-        format: `${chalk.cyan.bold('Boldr')} server status [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
+        format: `${chalk.cyan.bold('Boldr')} status [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
         clear: false,
         summary: true,
       }),
-      new LimitChunkCountPlugin({ maxChunks: 1 }),
-
-      ifDev(new WriteFilePlugin({ log: false })),
-      ifDev(
-        new HardSourceWebpackPlugin({
-          cacheDirectory: path.resolve(
-            CWD,
-            'node_modules/.cache/.hardsource',
-            `server-${mode}`,
-          ),
-          recordsPath: path.resolve(
-            CWD,
-            'node_modules/.cache/.hardsource',
-            `server-${mode}`,
-            'records.json',
-          ),
-          configHash: config => require('node-object-hash')().hash(config),
-        }),
-      ),
-
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
       // Each key passed into DefinePlugin AND/OR EnvironmentPlugin is an identifier.
       // @NOTE EnvironmentPlugin allows you to skip writing process.env for each
       // definition. It is the same thing as DefinePlugin.
@@ -253,10 +233,10 @@ export default function createNodeWebpack(
       // instances of the keys that are found.
       // If the value is a string it will be used as a code fragment.
       // If the value isn’t a string, it will be stringified
-      new EnvironmentPlugin({
+      new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
       }),
-      new DefinePlugin({
+      new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
         __IS_SERVER__: JSON.stringify(true),
         __IS_CLIENT__: JSON.stringify(false),
@@ -268,34 +248,28 @@ export default function createNodeWebpack(
         ),
       }),
       // case sensitive paths
-      ifDev(new CaseSensitivePathsPlugin()),
-
+      ifDev(() => new CaseSensitivePathsPlugin()),
       ifDev(
-        new LoggerPlugin({
-          verbose: bundle.verbose,
-          target: 'server',
-        }),
+        () =>
+          new LoggerPlugin({
+            verbose: bundle.verbose,
+            target: 'server',
+          }),
       ),
       ifDev(
-        new CircularDependencyPlugin({
-          exclude: /a\.js|node_modules/,
-          // show a warning when there is a circular dependency
-          failOnError: false,
-        }),
-      ),
-      ifDev(new HotModuleReplacementPlugin()),
-      // Errors during development will kill any of our NodeJS processes.
-      // this prevents that from happening.
-      ifDev(new NoEmitOnErrorsPlugin()),
-      ifDev(
-        new ServerListenerPlugin({
-          name: 'server.js',
-          nodeArgs: removeNil([
-            ifNodeDeubg('--inspect'),
-            ifNodeDeubg('--trace-warnings'),
-          ]),
-        }),
+        () =>
+          new CircularDependencyPlugin({
+            exclude: /a\.js|node_modules/,
+            // show a warning when there is a circular dependency
+            failOnError: false,
+          }),
       ),
     ]),
   };
+
+  if (_DEV) {
+    nodeConfig.stats = 'none';
+  }
+  nodeConfig.plugins.push(new WriteFilePlugin({ log: false }));
+  return nodeConfig;
 }
