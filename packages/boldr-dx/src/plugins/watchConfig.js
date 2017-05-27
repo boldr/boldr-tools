@@ -42,12 +42,9 @@ const plugin: Plugin = (
 
         // start chokidar and watch for .boldr/boldr.js changes
         // everytime configuration changes, restart whole build
-        watcher = chokidar.watch(
-          `${path.resolve(engine.cwd, './.boldr/boldr.js')}`,
-          {
-            cwd: engine.cwd,
-          },
-        );
+        watcher = chokidar.watch(`${path.resolve(engine.cwd, './.boldr')}`, {
+          cwd: engine.cwd,
+        });
 
         watcher.on('ready', () => {
           ['add', 'change', 'unlink'].forEach(event =>

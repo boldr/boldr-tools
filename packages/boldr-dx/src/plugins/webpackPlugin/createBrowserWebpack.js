@@ -135,6 +135,13 @@ export default function createBrowserWebpack(
         'babel-runtime': path.dirname(
           require.resolve('babel-runtime/package.json'),
         ),
+        '~scenes': PATHS.scenesDir,
+        '~state': PATHS.stateDir,
+        '~admin': PATHS.adminDir,
+        '~blog': PATHS.blogDir,
+        '~components': PATHS.componentsDir,
+        '~core': PATHS.coreDir,
+        '~templates': PATHS.tmplDir,
       },
     },
     resolveLoader: {

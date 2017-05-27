@@ -11,7 +11,6 @@ import dev from './commands/dev';
 import clean from './commands/clean';
 import build from './commands/build';
 
-// import testAction from './commands/test';
 import Engine from './engine';
 import { cwd } from './config/paths';
 

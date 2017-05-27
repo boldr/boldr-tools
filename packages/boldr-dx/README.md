@@ -15,11 +15,24 @@ Add Boldr-DX to your dependencies.
 
 2. `yarn add --dev boldr-dx`  
 
-Create the **SMALL** configuration files. You won't have to configure too much. Promise. 
+Create the **SMALL** configuration files. You won't need to configure very much. Promise.
 
-Minimal configuration:
+**Minimal configuration:**   
+
+Create a `.env` file with the two variables defined inside.  
+
+```
+BOLDR__SERVER_PORT=3000
+BOLDR__DEV_PORT=30001
+```
+
+Create the `boldr.dx.js` file inside `.boldr` folder of your project root.   
+
 ```javascript
+/// .boldr/boldr.dx.js
 const path = require('path');
+const dotenv = require('dotenv');
+dotenv.load();
   module.exports = {
   env: {
     NODE_ENV: process.env.NODE_ENV,
@@ -61,9 +74,9 @@ const path = require('path');
 
 Add vendor libraries to the vendor section of the config. These are included in the dev process as DLLs. A production build compiles the vendor files into a vendor bundle as well as a common chunk bundle. Only include client side dependencies, **not node**, like Express.
 
-3. `mkdir .boldr && touch boldr.js`   
+3. `mkdir .boldr && touch boldr.dx.js`   
 
-Insert the config from above into the boldr.js file. The configuration is meant for an entire Boldr project, however you're more than able to use boldr-dx as your go-to webpack runner. Simply remove everything below the bundle key and go about your business.
+Insert the config from above into the boldr.dx.js file. The configuration is meant for an entire Boldr project, however you're more than able to use boldr-dx as your go-to webpack runner. Simply remove everything below the bundle key and go about your business.
 
 **OR** use the provided `boldr-project-template` which is a standalone universal React application.
 
@@ -75,7 +88,7 @@ Add the commands to your `package.json`.
   "scripts": {
     "build": "NODE_ENV=production boldr-dx build",
     "start": "NODE_ENV=production node server/app.js",
-    "dev": "NODE_ENV=development BOLDR__SERVER_PORT=3000 BOLDR__DEV_PORT=3001 boldr-dx dev",
+    "dev": "NODE_ENV=development boldr-dx dev",
   }
 ```
 
@@ -91,13 +104,13 @@ Runtime env options
   - Set `NODE_ENV=production`.
 
 `boldr-dx clean`: Remove compiled files as well as any compiler caches.
-  - Use `-d` along with a path (starting from your CWD) to remove additional directories. 
+  - Use `-d` along with a path (starting from your CWD) to remove additional directories.
 
 
 ### Assets Information
 
 Assets are made available to the server by requiring `const assets = require(__ASSETS_MANIFEST__);` and `const chunks = require(__CHUNK_MANIFEST__)`. Then you will have access to:   
-  
+
 - `assets.app.js` and `assets.app.css`: All the time
 - `assets.common.js` and `assets.common.css`: During production only.  
 - `assets.vendor.js`: During production only because during development we dont compile vendor assets.  
@@ -111,11 +124,11 @@ The order is:
 
 
 ### Additional Information
-  
+
 The configuration allows you to customize the output directories, the entry files and ports. By default, it is separated into
 src/(client|shared|server). Client and Server contain the entrypoint of index.js in each.
 
-CSS modules can be **disabled** in the `boldr.js` file by setting `cssModules` to **false**.
+CSS modules can be **disabled** in the `boldr.dx.js` file by setting `cssModules` to **false**.
 
 Scss is included.
 
@@ -143,9 +156,9 @@ if (__IS_SERVER__) {
 }
 ```
 
-#### Babel 
+#### Babel
 Boldr-DX by default uses its own Babel preset with the following included:   
-   
+
 - babel-preset-env  
 - babel-preset-react  
 - babel-plugin-syntax-dynamic-import  
@@ -156,7 +169,7 @@ Boldr-DX by default uses its own Babel preset with the following included:
 - babel-plugin-transform-regenerator  
 - babel-plugin-transform-object-rest-spread  
 - babel-plugin-transform-react-jsx  
-   
+
 - babel-plugin-dynamic-import-node
 - babel-plugin-dynamic-import-webpack
 - react-loadable/babel  
@@ -169,8 +182,8 @@ React Development:
 - react-hot-loader/babel  
 - babel-plugin-transform-react-jsx-self  
 - babel-plugin-transform-react-jsx-source  
-   
-You can use your own Babel configuration by adding a `.babelrc` and setting babelrc to **true** in the config (`.boldr/boldr.js`).  
+
+You can use your own Babel configuration by adding a `.babelrc` and setting babelrc to **true** in the config (`.boldr/boldr.dx.js`).  
 
 **Note**   
   > Using scripts that might require babel processing, or running tests, outside of boldr-dx you will want to have a babelrc file anyways so that babel processes it. The babelrc will not be read by Webpack.   

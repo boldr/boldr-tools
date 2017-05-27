@@ -1,6 +1,6 @@
 /* eslint-disable require-await */
 import path from 'path';
-import execa from 'execa';
+import { spawn } from 'child_process';
 import notifier from 'node-notifier';
 import logger from 'boldr-utils/es/logger';
 import appRoot from 'boldr-utils/es/node/appRoot';
@@ -24,9 +24,9 @@ class HotNodeServer {
         logger.info('Restarting server...');
       }
 
-      const newServer = execa(
+      const newServer = spawn(
         'node',
-        [compiledEntryFile, '--colors', '--inspect', '--trace-warnings'],
+        ['--inspect', compiledEntryFile, '--colors'],
         {
           stdio: [process.stdin, process.stdout, 'pipe'],
         },

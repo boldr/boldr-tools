@@ -1,6 +1,5 @@
 /* @flow */
 import path from 'path';
-import BoldrConfig from 'boldr-config';
 import _debug from 'debug';
 import appRoot from 'boldr-utils/es/node/appRoot';
 import defaultConfig from './defaultConfig';
@@ -16,47 +15,18 @@ export default function loadConfig(engine): Config {
     delete require.cache[configModulePath];
     // then require the fresh config
     const config = require(configModulePath); // eslint-disable-line global-require
-    const boldrconfig = new BoldrConfig('boldr', config);
 
     debug('Loaded fresh config values');
 
     return {
       env: {
         ...defaultConfig.env,
-        ...(boldrconfig.env || {}),
+        ...(config.env || {}),
       },
-      plugins: [...defaultConfig.plugins, ...(boldrconfig.plugins || [])],
+      plugins: [...defaultConfig.plugins, ...(config.plugins || [])],
       bundle: {
         ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      server: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      logging: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      db: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      redis: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      token: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      mail: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
-      },
-      cors: {
-        ...defaultConfig.bundle,
-        ...boldrconfig.bundle,
+        ...config.bundle,
       },
     };
   } catch (e) {

@@ -18,12 +18,12 @@ class Engine {
 
   constructor(inputOptions) {
     this.cwd = appRoot.get();
-    this.configFileName = './.boldr/boldr.js';
+    this.configFileName = './.boldr/boldr.dx.js';
     this.inputOptions = inputOptions;
   }
 
   configFilePath(): string {
-    return path.resolve(this.cwd, './.boldr/boldr.js');
+    return path.resolve(this.cwd, './.boldr/boldr.dx.js');
   }
   getInputOptions() {
     return this.inputOptions;

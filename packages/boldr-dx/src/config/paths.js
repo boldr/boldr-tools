@@ -39,8 +39,16 @@ const nodePaths = (process.env.NODE_PATH || '')
 
 module.exports = {
   nodePaths: nodePaths,
+  dotEnvPath: resolveProject('.env'),
   boldrNodeModules: resolveBoldr('node_modules'),
   projectNodeModules: resolveProject('node_modules'),
+  adminDir: resolveProject('src/shared/scenes/Admin'),
+  blogDir: resolveProject('src/shared/scenes/Blog'),
+  componentsDir: resolveProject('src/shared/components'),
+  scenesDir: resolveProject('src/shared/scenes'),
+  stateDir: resolveProject('src/shared/state'),
+  coreDir: resolveProject('src/shared/core'),
+  tmplDir: resolveProject('src/shared/templates'),
   projectPkg: resolveProject('package.json'),
   cacheDir: resolveProject('node_modules/.boldr_cache'),
 };

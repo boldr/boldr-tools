@@ -112,6 +112,13 @@ export default function createNodeWebpack(
         'babel-runtime': path.dirname(
           require.resolve('babel-runtime/package.json'),
         ),
+        '~scenes': PATHS.scenesDir,
+        '~state': PATHS.stateDir,
+        '~admin': PATHS.adminDir,
+        '~blog': PATHS.blogDir,
+        '~components': PATHS.componentsDir,
+        '~core': PATHS.coreDir,
+        '~templates': PATHS.tmplDir,
       },
     },
     resolveLoader: {
@@ -269,6 +276,7 @@ export default function createNodeWebpack(
 
   if (_DEV) {
     nodeConfig.stats = 'none';
+    nodeConfig.watch = true;
   }
   nodeConfig.plugins.push(new WriteFilePlugin({ log: false }));
   return nodeConfig;
