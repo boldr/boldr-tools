@@ -1,82 +1,71 @@
 /* eslint-disable max-lines, prefer-template */
-
 import path from 'path';
-import { createHash } from 'crypto';
+import fs from 'fs';
 import _debug from 'debug';
-import chalk from 'chalk';
-import removeNil from 'boldr-utils/es/arrays/removeNil';
-import ifElse from 'boldr-utils/es/logic/ifElse';
-import appRoot from 'boldr-utils/es/node/appRoot';
 import webpack from 'webpack';
-
-import WriteFilePlugin from 'write-file-webpack-plugin';
-import ProgressBarPlugin from 'progress-bar-webpack-plugin';
+import removeNil from 'boldr-utils/lib/arrays/removeNil';
+import ifElse from 'boldr-utils/lib/logic/ifElse';
+import appRoot from 'boldr-utils/lib/node/appRoot';
 import nodeExternals from 'webpack-node-externals';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
-
+import nodeObjectHash from 'node-object-hash';
+import PATHS from '../../config/paths';
 import LoggerPlugin from './plugins/LoggerPlugin';
-// import ServerListenerPlugin from './plugins/ServerListenerPlugin';
-
-const PATHS = require('../../config/paths');
 
 const debug = _debug('boldr:dx:webpack:createNodeWebpack');
-const CWD = appRoot.get();
-const prefetches = [];
+const CWD = fs.realpathSync(process.cwd());
 
-const prefetchPlugins = prefetches.map(
-  specifier => new webpack.PrefetchPlugin(specifier),
-);
+const prefetches = [
+  path.resolve(PATHS.srcDir, 'server/ssr/assets.js'),
+  path.resolve(PATHS.srcDir, 'server/ssr/CreateHtml.js'),
+  path.resolve(PATHS.srcDir, 'shared/App.js'),
+];
+
+const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 const cache = {
   'server-production': {},
   'server-development': {},
 };
 
 // This is the Webpack configuration for Node
-export default function createNodeWebpack(
-  { config, mode = 'development', name = 'server' } = {},
-) {
+export default function createNodeWebpack({ config, mode = 'development', name = 'server' } = {}) {
   debug('MODE: ', mode);
+
   const { env: envVariables, bundle } = config;
   process.env.BABEL_ENV = mode;
 
   const _DEV = mode === 'development';
   const _PROD = mode === 'production';
-  const _DEBUG = envVariables.BOLDR__DEBUG === '1';
+  const _DEBUG = envVariables.BOLDR_DEBUG === '1';
   const ifDev = ifElse(_DEV);
   const ifProd = ifElse(_PROD);
   const ifNodeDeubg = ifElse(_DEBUG);
 
-  const BOLDR__DEV_PORT = parseInt(envVariables.BOLDR__DEV_PORT, 10) || 3001;
-  const EXCLUDES = [
-    /node_modules/,
-    bundle.client.bundleDir,
-    bundle.server.bundleDir,
-    bundle.publicDir,
-  ];
+  const BOLDR_DEV_PORT = parseInt(envVariables.BOLDR_DEV_PORT, 10) || 3001;
+  const EXCLUDES = [/node_modules/, bundle.client.bundleDir, bundle.server.bundleDir];
 
   const nodeConfig = {
     // pass either node or web
-    target: 'async-node',
+    target: 'node',
     // user's project root
-    context: appRoot.get(),
+    context: CWD,
     // sourcemap
     devtool: '#source-map',
-    entry: [require.resolve('./polyfills/node'), bundle.server.entry],
+    entry: [require.resolve('./polyfills/node.js'), bundle.server.entry],
     output: {
       path: bundle.server.bundleDir,
       filename: 'server.js',
+      sourcePrefix: '  ',
       publicPath: ifDev(
-        `http://localhost:${BOLDR__DEV_PORT}`,
+        `http://localhost:${BOLDR_DEV_PORT}`,
         // Otherwise we expect our bundled output to be served from this path.
         bundle.webPath,
       ),
       // only prod
       pathinfo: _DEV,
       libraryTarget: 'commonjs2',
-      strictModuleExceptionHandling: true,
-      devtoolModuleFilenameTemplate: info =>
-        path.resolve(info.absoluteResourcePath),
+      devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath),
     },
     // true if prod
     bail: _PROD,
@@ -91,34 +80,22 @@ export default function createNodeWebpack(
       fs: true,
     },
     performance: false,
-    stats: {
-      colors: true,
-      reasons: bundle.debug,
-      hash: bundle.verbose,
-      version: bundle.verbose,
-      timings: true,
-      chunks: bundle.verbose,
-      chunkModules: bundle.verbose,
-      cached: bundle.verbose,
-      cachedAssets: bundle.verbose,
-    },
     resolve: {
       extensions: ['.js', '.json', '.jsx'],
-      modules: ['node_modules', PATHS.projectNodeModules].concat(
-        PATHS.nodePaths,
+      modules: ['node_modules', PATHS.srcDir, PATHS.projectNodeModules].concat(
+        // It is guaranteed to exist because we tweak it in `env.js`
+        process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
       ),
       mainFields: ['module', 'jsnext:main', 'main'],
       alias: {
-        'babel-runtime': path.dirname(
-          require.resolve('babel-runtime/package.json'),
-        ),
-        '~scenes': PATHS.scenesDir,
-        '~state': PATHS.stateDir,
-        '~admin': PATHS.adminDir,
-        '~blog': PATHS.blogDir,
-        '~components': PATHS.componentsDir,
-        '~core': PATHS.coreDir,
-        '~templates': PATHS.tmplDir,
+        'babel-runtime': path.dirname(require.resolve('babel-runtime/package.json')),
+        '~scenes': path.resolve(bundle.srcDir, 'shared/scenes'),
+        '~state': path.resolve(bundle.srcDir, 'shared/state'),
+        '~admin': path.resolve(bundle.srcDir, 'shared/scenes/Admin'),
+        '~blog': path.resolve(bundle.srcDir, 'shared/scenes/Blog'),
+        '~components': path.resolve(bundle.srcDir, 'shared/components'),
+        '~core': path.resolve(bundle.srcDir, 'shared/core'),
+        '~templates': path.resolve(bundle.srcDir, 'shared/templates'),
       },
     },
     resolveLoader: {
@@ -126,43 +103,64 @@ export default function createNodeWebpack(
     },
     externals: nodeExternals({
       whitelist: [
-        'source-map-support/register',
+        require.resolve('source-map-support/register'),
         /\.(eot|woff|woff2|ttf|otf)$/,
         /\.(svg|png|jpg|jpeg|gif|ico)$/,
         /\.(mp4|mp3|ogg|swf|webp)$/,
         /\.(css|scss)$/,
       ],
+      modulesDir: PATHS.projectNodeModules,
     }),
     module: {
       noParse: [/\.min\.js/],
-      rules: removeNil([
+      rules: [
         // js
         {
-          test: /\.(js|jsx)$/,
+          test: /\.js$/,
           include: bundle.srcDir,
-          exclude: EXCLUDES,
+          // exclude: EXCLUDES,
           use: removeNil([
             ifDev({
-              loader: 'cache-loader',
+              loader: require.resolve('cache-loader'),
               options: {
                 // provide a cache directory where cache items should be stored
                 cacheDirectory: PATHS.cacheDir,
               },
             }),
             {
-              loader: 'babel-loader',
+              loader: require.resolve('babel-loader'),
               options: {
                 babelrc: false,
                 compact: true,
                 sourceMaps: true,
                 comments: false,
                 cacheDirectory: _DEV,
-                presets: [require.resolve('babel-preset-boldr/node')],
+                presets: [
+                  [
+                    require.resolve('babel-preset-boldr/node'),
+                    {
+                      debug: false,
+                      useBuiltins: true,
+                      modules: false,
+                      targets: {
+                        node: 8,
+                      },
+                      exclude: ['transform-regenerator', 'transform-async-to-generator'],
+                    },
+                  ],
+                ],
                 plugins: [
                   [
                     require.resolve('babel-plugin-styled-components'),
                     {
                       ssr: true,
+                    },
+                  ],
+                  [
+                    require.resolve('babel-plugin-import-inspector'),
+                    {
+                      serverSideRequirePath: true,
+                      webpackRequireWeakId: true,
                     },
                   ],
                 ],
@@ -173,50 +171,60 @@ export default function createNodeWebpack(
         {
           test: /\.css$/,
           exclude: EXCLUDES,
-          use: ['css-loader/locals', 'postcss-loader'],
+          use: [
+            {
+              loader: require.resolve('css-loader/locals'),
+              options: {
+                importLoaders: 1,
+              },
+            },
+            { loader: require.resolve('postcss-loader') },
+          ],
         },
         // scss
         {
           test: /\.scss$/,
           exclude: EXCLUDES,
-          use: ['css-loader/locals', 'postcss-loader', 'fast-sass-loader'],
+          use: [
+            {
+              loader: require.resolve('css-loader/locals'),
+              options: {
+                importLoaders: 1,
+              },
+            },
+            { loader: require.resolve('postcss-loader') },
+            { loader: require.resolve('sass-loader') },
+          ],
         },
         // json
         {
           test: /\.json$/,
           loader: 'json-loader',
         },
-        {
-          test: /\.graphqls/,
-          use: 'raw-loader',
-        },
-        {
-          test: /\.(graphql|gql)$/,
-          exclude: EXCLUDES,
-          loader: require.resolve('graphql-tag/loader'),
-        },
         // url
         {
           test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
-          loader: 'url-loader',
+          loader: require.resolve('url-loader'),
           exclude: EXCLUDES,
           options: { limit: 10000, emitFile: false },
         },
         {
           test: /\.svg(\?v=\d+.\d+.\d+)?$/,
           exclude: EXCLUDES,
-          loader: 'url-loader?limit=10000&mimetype=image/svg+xml&name=[name].[ext]', // eslint-disable-line
+          loader: `${require.resolve(
+            'url-loader',
+          )}?limit=10000&mimetype=image/svg+xml&name=[name].[ext]`, // eslint-disable-line
         },
         // file
         {
           test: /\.(ico|eot|ttf|otf|mp4|mp3|ogg|pdf|html)$/, // eslint-disable-line
-          loader: 'file-loader',
+          loader: require.resolve('file-loader'),
           exclude: EXCLUDES,
           options: {
             emitFile: false,
           },
         },
-      ]),
+      ],
     },
     plugins: removeNil([
       ...prefetchPlugins,
@@ -225,59 +233,42 @@ export default function createNodeWebpack(
         debug: !!_DEV,
         context: CWD,
       }),
-      new ProgressBarPlugin({
-        format: `${chalk.cyan.bold('Boldr')} status [:bar] ${chalk.magenta(':percent')} (:elapsed seconds)`,
-        clear: false,
-        summary: true,
-      }),
+      new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-      // Each key passed into DefinePlugin AND/OR EnvironmentPlugin is an identifier.
-      // @NOTE EnvironmentPlugin allows you to skip writing process.env for each
-      // definition. It is the same thing as DefinePlugin.
-      //
-      // The values for each key will be inlined into the code replacing any
-      // instances of the keys that are found.
-      // If the value is a string it will be used as a code fragment.
-      // If the value isn’t a string, it will be stringified
+
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
       }),
+      // new webpack.IgnorePlugin(/any-promise/),
       new webpack.DefinePlugin({
         __IS_DEV__: JSON.stringify(_DEV),
         __IS_SERVER__: JSON.stringify(true),
         __IS_CLIENT__: JSON.stringify(false),
         __CHUNK_MANIFEST__: JSON.stringify(
-          path.join(bundle.assetsDir || '', 'manifest.json'),
+          path.join(bundle.assetsDir || '', 'chunk-manifest.json'),
         ),
         __ASSETS_MANIFEST__: JSON.stringify(
-          path.join(bundle.assetsDir || '', 'assets.json'),
+          path.join(bundle.assetsDir || '', 'assets-manifest.json'),
         ),
       }),
-      // case sensitive paths
-      ifDev(() => new CaseSensitivePathsPlugin()),
-      ifDev(
-        () =>
-          new LoggerPlugin({
-            verbose: bundle.verbose,
-            target: 'server',
-          }),
-      ),
-      ifDev(
-        () =>
-          new CircularDependencyPlugin({
-            exclude: /a\.js|node_modules/,
-            // show a warning when there is a circular dependency
-            failOnError: false,
-          }),
-      ),
+      new LoggerPlugin({
+        verbose: bundle.verbose,
+        target: 'node',
+      }),
     ]),
   };
 
   if (_DEV) {
     nodeConfig.stats = 'none';
     nodeConfig.watch = true;
+    nodeConfig.plugins.push(
+      new CaseSensitivePathsPlugin(),
+      new CircularDependencyPlugin({
+        exclude: /a\.js|node_modules/,
+        // show a warning when there is a circular dependency
+        failOnError: false,
+      }),
+    );
   }
-  nodeConfig.plugins.push(new WriteFilePlugin({ log: false }));
   return nodeConfig;
 }

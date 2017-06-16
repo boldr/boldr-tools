@@ -1,3 +1,8 @@
+/*
+ * This is pretty much line for line taken from Create React App because
+ * it more than gets the job done. Thanks guys :)
+ * https://github.com/facebookincubator/create-react-app
+ */
 const fs = require('fs');
 const path = require('path');
 const PATHS = require('./paths');
@@ -7,9 +12,7 @@ delete require.cache[require.resolve('./paths')];
 // eslint-disable-next-line
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {
-  throw new Error(
-    'The NODE_ENV environment variable is required but was not specified.',
-  );
+  throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
@@ -35,15 +38,6 @@ dotenvFiles.forEach(dotenvFile => {
   }
 });
 
-// We support resolving modules according to `NODE_PATH`.
-// This lets you use absolute paths in imports inside large monorepos:
-// https://github.com/facebookincubator/create-react-app/issues/253.
-// It works similar to `NODE_PATH` in Node itself:
-// https://nodejs.org/api/modules.html#modules_loading_from_the_global_folders
-// Note that unlike in Node, only *relative* paths from `NODE_PATH` are honored.
-// Otherwise, we risk importing Node.js core modules into an app instead of Webpack shims.
-// https://github.com/facebookincubator/create-react-app/issues/1023#issuecomment-265344421
-// We also resolve them to make sure all tools using them work consistently.
 const appDirectory = fs.realpathSync(process.cwd());
 process.env.NODE_PATH = (process.env.NODE_PATH || '')
   .split(path.delimiter)
@@ -56,10 +50,7 @@ process.env.NODE_PATH = (process.env.NODE_PATH || '')
 const BOLDR = /^BOLDR__/i;
 
 function getClientEnvironment(publicUrl) {
-  const raw = Object.keys(process.env).filter(key => BOLDR.test(key)).reduce((
-    env,
-    key,
-  ) => {
+  const raw = Object.keys(process.env).filter(key => BOLDR.test(key)).reduce((env, key) => {
     env[key] = process.env[key];
     return env;
   }, {

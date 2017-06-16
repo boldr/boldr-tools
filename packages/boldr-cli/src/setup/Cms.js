@@ -5,7 +5,7 @@ import spawn from 'cross-spawn';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import shell from 'shelljs';
-import logger from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/lib/logger';
 import spinner from '../util/spinner';
 
 const simpleGit = require('simple-git')();

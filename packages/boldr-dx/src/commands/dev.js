@@ -1,12 +1,12 @@
-import fs from 'fs';
-import logger from 'boldr-utils/es/logger';
+import appRoot from 'boldr-utils/lib/node/appRoot';
+import logger from 'boldr-utils/lib/logger';
 import Engine from '../engine';
 
 function task(args, options) {
   logger.info('Loading configuration.');
-  const inputOptions = options;
-  const engine = new Engine(inputOptions);
-  engine.start().catch(e => {
+  const cwd = appRoot.get();
+  const engine = new Engine(cwd);
+  engine.dev().catch(e => {
     logger.error(e);
     process.exit(1);
   });

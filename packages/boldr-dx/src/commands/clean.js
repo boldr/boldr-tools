@@ -1,14 +1,13 @@
 import path from 'path';
 import fs from 'fs-extra';
-import logger from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/lib/logger';
 import Engine from '../engine';
 
 function clean(config) {
   const rootDir = process.cwd();
-  fs.removeSync(`${rootDir}/node_modules/.cache/`);
+  fs.removeSync(`${rootDir}/node_modules/.boldr_cache/`);
   fs.removeSync(config.bundle.assetsDir);
   fs.removeSync(config.bundle.server.bundleDir);
-  fs.removeSync(config.bundle.assetsDir);
 }
 
 function cleanInput(directory) {

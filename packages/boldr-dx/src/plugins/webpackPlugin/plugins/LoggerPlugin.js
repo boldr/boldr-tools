@@ -5,7 +5,7 @@ import path from 'path';
 import chalk from 'chalk';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
-import logger from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/lib/logger';
 
 let IS_COMPILING = false;
 let IS_DONE = false;
@@ -31,9 +31,7 @@ class LoggerPlugin {
             clearConsole();
           }
           const time = stats.endTime - stats.startTime;
-          logger.end(
-            `Bundle for ${this.target} compiled successfully in ${time} ms`,
-          );
+          logger.end(`Bundle for ${this.target} compiled successfully in ${time} ms`);
           IS_DONE = true;
 
           if (this.onSuccessMessage) {
@@ -48,18 +46,14 @@ class LoggerPlugin {
 
       if (messages.errors.length) {
         messages.errors.forEach(e => {
-          logger.error(
-            `Failed to compile ${this.target} with ${messages.errors.length} errors`,
-          );
+          logger.error(`Failed to compile ${this.target} with ${messages.errors.length} errors`);
           logger.error(e);
         });
         return;
       }
 
       if (messages.warnings.length) {
-        logger.warn(
-          `Failed to compile with ${messages.warnings.length} warnings`,
-        );
+        logger.warn(`Failed to compile with ${messages.warnings.length} warnings`);
         messages.warnings.forEach(w => logger.info(w));
       }
     });
@@ -70,7 +64,7 @@ class LoggerPlugin {
         if (!this.verbose) {
           clearConsole();
         }
-        logger.start('Compiling...');
+        logger.info('Compiling...');
         IS_COMPILING = true;
       }
     });

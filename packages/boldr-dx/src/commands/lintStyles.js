@@ -1,7 +1,7 @@
 import path from 'path';
 import glob from 'glob';
 import stylelint from 'stylelint';
-import logger from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/lib/logger';
 
 import paths from '../config/paths';
 

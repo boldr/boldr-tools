@@ -1,5 +1,5 @@
 import fs from 'fs';
-import logger from 'boldr-utils/es/logger';
+import logger from 'boldr-utils/lib/logger';
 import Engine from '../engine';
 
 function task(args, options) {
@@ -19,9 +19,7 @@ function task(args, options) {
 }
 
 function register(program) {
-  program
-    .command('build', 'Compile the browser and server bundles for production.')
-    .action(task);
+  program.command('build', 'Compile the browser and server bundles for production.').action(task);
 }
 
 export default { register };

@@ -14,9 +14,7 @@ module.exports = (config, flags) => {
   }
 
   const rootDir = process.cwd();
-  const setupTestsFile = pathExists.sync(
-    path.resolve(rootDir, './.boldr/setupTests.js'),
-  )
+  const setupTestsFile = pathExists.sync(path.resolve(rootDir, './.boldr/setupTests.js'))
     ? '<rootDir>/.boldr/setupTests.js'
     : undefined;
 

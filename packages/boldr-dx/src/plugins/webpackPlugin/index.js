@@ -5,19 +5,19 @@ import fs from 'fs-extra';
 import _debug from 'debug';
 import webpack from 'webpack';
 import terminate from 'terminate';
-import logger from 'boldr-utils/es/logger';
+import execa from 'execa';
+import getDefault from 'boldr-utils/lib/node/getDefault';
+import logger from 'boldr-utils/lib/logger';
+
 import loadConfiguration from '../../config/loadConfig';
-import createSingleCompiler from './services/createSingleCompiler';
+import createSingleCompiler from './compilers/createSingleCompiler';
+import buildDevDlls from './dev/buildDevDlls';
 import createBrowserWebpack from './createBrowserWebpack';
 import createNodeWebpack from './createNodeWebpack';
-import buildDevDlls from './plugins/buildDevDlls';
 
 const debug = _debug('boldr:dx:plugins:webpack');
 
-const plugin: Plugin = (
-  engine: Engine,
-  runOnce: boolean = false,
-): PluginController => {
+const plugin: Plugin = (engine: Engine, runOnce: boolean = false): PluginController => {
   const { engine: envVariables, bundle } = engine.getConfiguration();
   return {
     async build() {
@@ -37,50 +37,37 @@ const plugin: Plugin = (
       fs.removeSync(config.bundle.client.bundleDir);
       fs.removeSync(config.bundle.server.bundleDir);
 
-      const compilers = [
-        createSingleCompiler(clientConfig),
-        createSingleCompiler(serverConfig),
-      ];
+      const compilers = [createSingleCompiler(clientConfig), createSingleCompiler(serverConfig)];
 
       return Promise.all(compilers);
     },
-
     async start() {
+      return Promise.resolve();
+    },
+    async dev() {
       logger.start('Starting development bundling process.');
       const config = engine.getConfiguration();
-      const inputOpts = engine.getInputOptions();
       await buildDevDlls(config);
 
       // instantiate plugins
       // eslint-disable-next-line babel/new-cap
-      const BoldrDev = require('./services/boldrDev').default;
+      const BoldrDev = getDefault(require('./dev/boldrDev'));
 
       // Create a new development devServer.
-      const devServer = new BoldrDev(config, inputOpts);
+      const devServer = new BoldrDev(config);
 
       ['SIGINT', 'SIGTERM'].forEach(signal => {
         process.on(signal, () => {
           devServer.shutdown();
+          logger.end('Development stopped. 💠  All listeners removed.');
           process.exit(0);
         });
       });
-
-      process.on('exit', () => {
-        logger.end('All listeners cleaned up. Goodbye. 🐧');
-      });
     },
-
     async end() {
       if (serverCompiler) {
-        terminate(process.pid, err => {
-          if (err) {
-            debug(`ERR RESTART: ${err}`);
-          } else {
-            logger.task('Terminated.');
-          }
-        });
+        terminate(process.pid);
       }
-
       return true;
     },
   };
